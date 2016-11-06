@@ -30,6 +30,11 @@ import static org.junit.Assert.*;
  */
 public class STUNTypeLengthValueTest {
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void noInstances() {
+        new STUNTypeLengthValue();
+    }
+
     @Test
     public void typePosition() {
         final byte[] result = STUNTypeLengthValue.value(257, new byte[] {});

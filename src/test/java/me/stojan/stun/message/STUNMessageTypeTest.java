@@ -22,35 +22,15 @@
 
 package me.stojan.stun.message;
 
-import java.math.BigInteger;
+import org.junit.Test;
 
 /**
- * Defines a STUN transaction.
+ * Created by vuk on 06/11/16.
  */
-public final class STUNTransaction {
-    /** Maximum value for a STUN transaction. */
-    public static final BigInteger MAX = BigInteger.ONE.shiftLeft(96).subtract(BigInteger.ONE);
+public class STUNMessageTypeTest {
 
-    /**
-     * Create the bytes for a transaction from a transaction ID.
-     * @param transaction the transaction ID, must not be null
-     * @return the transaction bytes, never null
-     */
-    public static byte[] transaction(BigInteger transaction) {
-        final byte[] raw = new byte[12];
-
-        final byte[] bytes = transaction.toByteArray();
-
-        if (bytes.length > 12) {
-            System.arraycopy(bytes, 1, raw, 0, 12);
-        } else {
-            System.arraycopy(bytes, 0, raw, 12 - bytes.length, bytes.length);
-        }
-
-        return raw;
-    }
-
-    STUNTransaction() {
-        throw new UnsupportedOperationException();
+    @Test(expected = UnsupportedOperationException.class)
+    public void noInstances() {
+        new STUNMessageType();
     }
 }

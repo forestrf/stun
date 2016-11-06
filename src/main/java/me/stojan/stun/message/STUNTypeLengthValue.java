@@ -53,4 +53,8 @@ public final class STUNTypeLengthValue {
 
         return raw;
     }
+
+    STUNTypeLengthValue() {
+        throw new UnsupportedOperationException();
+    }
 }

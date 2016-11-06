@@ -82,4 +82,8 @@ public final class STUNMethod {
 
         return joined;
     }
+
+    STUNMethod() {
+        throw new UnsupportedOperationException();
+    }
 }

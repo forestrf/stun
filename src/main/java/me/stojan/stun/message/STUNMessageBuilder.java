@@ -119,10 +119,11 @@ public final class STUNMessageBuilder {
 
         try {
             build(stream);
-            return stream.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Unable to build STUN message", e);
+            throw new RuntimeException("Unable to build message as byte array", e);
         }
+
+        return stream.toByteArray();
     }
 
     private void intAs16Bit(int value, byte[] out, int position) {

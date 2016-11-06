@@ -31,6 +31,11 @@ import static org.junit.Assert.*;
  */
 public class STUNHeaderTest {
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void noInstances() {
+        new STUNHeader();
+    }
+
     @Test
     public void groupExtracionFromMessageType() {
         assertEquals(0b11, STUNHeader.group(0b0000_0001_0001_0000));

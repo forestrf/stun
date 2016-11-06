@@ -40,4 +40,8 @@ public final class STUNMessageType {
 
     /** STUN method "binding" */
     public static final int METHOD_BINDING = 1;
+
+    STUNMessageType() {
+        throw new UnsupportedOperationException();
+    }
 }

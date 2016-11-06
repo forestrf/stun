@@ -31,6 +31,11 @@ import static org.junit.Assert.*;
  */
 public class STUNMethodTest {
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void noInstances() {
+        new STUNMethod();
+    }
+
     @Test
     public void groupPosition() {
         assertEquals(0b0000_0001_0001_0000, STUNMethod.group(0b11));

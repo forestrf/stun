@@ -72,4 +72,8 @@ public final class STUNHeader {
     public static int twoStartingBits(byte[] header) {
         return header[0] >> 6;
     }
+
+    STUNHeader() {
+        throw new UnsupportedOperationException();
+    }
 }

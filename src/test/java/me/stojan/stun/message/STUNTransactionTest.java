@@ -36,6 +36,11 @@ public class STUNTransactionTest {
     private static final byte OX7F = (byte) 0x7F;
     private static final byte OXFF = (byte) 0xFF;
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void noInstances() {
+        new STUNTransaction();
+    }
+
     @Test
     public void upTo95Bits() {
         final byte[] val = new byte[] { OX7F,  OXFF, OXFF, OXFF, OXFF, OXFF, OXFF, OXFF, OXFF, OXFF, OXFF, OXFF };
