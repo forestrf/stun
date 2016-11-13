@@ -20,38 +20,17 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+package me.stojan.stun.message.attribute;
 
 /**
- * Created by vuk on 24/10/16.
+ * Thrown when a STUN attribute is not validly represented.
  */
-public class STUNHeaderTest {
+public class InvalidSTUNAttributeException extends Exception {
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void noInstances() {
-        new STUNHeader();
-    }
-
-    @Test
-    public void groupExtracionFromMessageType() {
-        assertEquals(0b11, STUNHeader.group(0b0000_0001_0001_0000));
-        assertEquals(0b01, STUNHeader.group(0b0000_0000_0001_0000));
-        assertEquals(0b10, STUNHeader.group(0b0000_0001_0000_0000));
-    }
-
-    @Test
-    public void methodExtractionFromMessageType() {
-        assertEquals(0b111_111_111_111, STUNHeader.method(0b1111_1111_1111_1111));
-        assertEquals(0b111_111_111_111, STUNHeader.method(0b1111_1110_1110_1111));
-        assertEquals(0b101_010_101_010, STUNHeader.method(0b1010_1011_0101_1010));
-    }
-
-    @Test
-    public void int16FromBytes() {
-        assertEquals(257, STUNHeader.int16(new byte[] { 1, 1 }, 0));
+    /**
+     * @see Exception#Exception(String)
+     */
+    public InvalidSTUNAttributeException(String message) {
+        super(message);
     }
 }

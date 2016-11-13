@@ -22,7 +22,6 @@
 
 package me.stojan.stun.message.attribute;
 
-import java.net.InetAddress;
 import java.util.Locale;
 
 /**
@@ -72,5 +71,78 @@ public final class STUNAttributeMappedAddress {
         System.arraycopy(addr, 0, bytes, 4, addr.length);
 
         return bytes;
+    }
+
+    /**
+     * Get the port from an attribute and header.
+     * @param attribute the attribute, msut be a valid attribute
+     * @return the port
+     * @throws IllegalArgumentException if attribute is null
+     * @throws InvalidSTUNAttributeException if attribute is not valid
+     */
+    public static int port(byte[] attribute) throws InvalidSTUNAttributeException {
+        checkAttribute(attribute);
+
+        return ((attribute[2] & 255) << 8) | (attribute[3] & 255);
+    }
+
+    /**
+     * Get the address from an attribute and header.
+     * @param attribute the attribute, must be a valid attribute
+     * @return the address
+     * @throws IllegalArgumentException if attribute is null
+     * @throws InvalidSTUNAttributeException if attribute is not valid
+     */
+    public static byte[] address(byte[] attribute) throws InvalidSTUNAttributeException {
+        checkAttribute(attribute);
+
+        final int addressLength;
+
+        switch (attribute[1]) {
+            case ADDRESS_IPV4:
+                addressLength = 4;
+                break;
+
+            case ADDRESS_IPV6:
+                addressLength = 16;
+                break;
+
+            default:
+                throw new InvalidSTUNAttributeException("Unknown address family");
+        }
+
+        if (4 + addressLength != attribute.length) {
+            throw new InvalidSTUNAttributeException("Attribute has invalid length");
+        }
+
+        final byte[] address = new byte[addressLength];
+
+        System.arraycopy(attribute, 4, address, 0, address.length);
+
+        return address;
+    }
+
+    /**
+     * Check that the attribute is valid.
+     * @param attribute the attribute
+     * @throws IllegalArgumentException if attribute is null
+     * @throws InvalidSTUNAttributeException if attribute is not valid per STUN spec
+     */
+    static void checkAttribute(byte[] attribute) throws InvalidSTUNAttributeException {
+        if (null == attribute) {
+            throw new IllegalArgumentException("Argument attribute must not be null");
+        }
+
+        if (0 != attribute.length % 4) {
+            throw new InvalidSTUNAttributeException("Attribute has length which is not a multiple of 4");
+        }
+
+        if (4 > attribute.length) {
+            throw new InvalidSTUNAttributeException("Attribute length is less than 4");
+        }
+
+        if (0 != attribute[0]) {
+            throw new InvalidSTUNAttributeException("(XOR-)MAPPED-ADDRESS attribute does not start with 0");
+        }
     }
 }

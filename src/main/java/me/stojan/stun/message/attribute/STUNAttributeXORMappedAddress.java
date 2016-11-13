@@ -24,14 +24,19 @@ package me.stojan.stun.message.attribute;
 
 /**
  * Supports the creation of the STUN XOR-MAPPED-ADDRESS attribute.
+ *
+ * @see STUNAttributeMappedAddress
  */
 public final class STUNAttributeXORMappedAddress {
 
     /** STUN reserved type for this attribute. */
     public static final int TYPE = 0x0020;
 
-    public static final int ADDRESS_IPV4 = STUNAttributeMappedAddress.ADDRESS_IPV4;
-    public static final int ADDRESS_IPV6 = STUNAttributeMappedAddress.ADDRESS_IPV6;
+    /** STUN XOR-MAPPED-ADDRESS IPv4 address family. */
+    public static final byte ADDRESS_IPV4 = STUNAttributeMappedAddress.ADDRESS_IPV4;
+
+    /** STUN XOR-MAPPED-ADDRESS IPv6 address family. */
+    public static final byte ADDRESS_IPV6 = STUNAttributeMappedAddress.ADDRESS_IPV6;
 
     STUNAttributeXORMappedAddress() {
         throw new UnsupportedOperationException();
@@ -56,4 +61,61 @@ public final class STUNAttributeXORMappedAddress {
 
         return attribute;
     }
+
+    /**
+     * Get the port from an attribute and header.
+     * @param header the header, must be a valid STUN header
+     * @param attribute the attribute, msut be a valid attribute
+     * @return the port
+     * @throws IllegalArgumentException if arguments, and header are not valid
+     * @throws InvalidSTUNAttributeException if attribute is not valid
+     */
+    public static int port(byte[] header, byte[] attribute) throws InvalidSTUNAttributeException {
+        checkHeader(header);
+
+        final int port = STUNAttributeMappedAddress.port(attribute);
+        final int xor = ((header[4] & 255) << 8) | (header[5] & 255);
+
+        return xor ^ port;
+    }
+
+    /**
+     * Get the address from an attribute and header.
+     * @param header the header, must be a valid STUN header
+     * @param attribute the attribute, must be a valid attribute
+     * @return the address
+     * @throws IllegalArgumentException if arguments, and header are not valid
+     * @throws InvalidSTUNAttributeException if attribute is not valid
+     */
+    public static byte[] address(byte[] header, byte[] attribute) throws InvalidSTUNAttributeException {
+        checkHeader(header);
+
+        final byte[] address = STUNAttributeMappedAddress.address(attribute);
+
+        for (int i = 0; i < address.length; i++) {
+            address[i] = (byte) (attribute[4 + i] ^ header[4 + i]);
+        }
+
+        return address;
+    }
+
+    /**
+     * Checks that the provided header is valid as an argument and as STUN data.
+     * @param header the header
+     * @throws IllegalArgumentException if header is null, not 20 bytes long or does not start with 00 bits
+     */
+    static void checkHeader(byte[] header) {
+        if (null == header) {
+            throw new IllegalArgumentException("Argument header must not be null");
+        }
+
+        if (20 != header.length) {
+            throw new IllegalArgumentException("Argument header is not 20 bytes long");
+        }
+
+        if (0 != (0b1100_0000 & header[0])) {
+            throw new IllegalArgumentException("Argument header does not start with 00 as MSB");
+        }
+    }
+
 }

@@ -24,11 +24,10 @@ package me.stojan.stun.message.attribute;
 
 import org.junit.Test;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
+import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by vuk on 06/11/16.
@@ -106,5 +105,76 @@ public class STUNAttributeMappedAddressTest {
         for (int i = 0; i < addr.length; i++) {
             assertEquals(addr[i], attribute[4 + i]);
         }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullAttribute() throws Exception {
+        STUNAttributeMappedAddress.checkAttribute(null);
+    }
+
+    @Test(expected = InvalidSTUNAttributeException.class)
+    public void shortAttribute() throws Exception {
+        STUNAttributeMappedAddress.checkAttribute(new byte[0]);
+    }
+
+    @Test(expected = InvalidSTUNAttributeException.class)
+    public void nonZeroFirstByte() throws Exception {
+        STUNAttributeMappedAddress.checkAttribute(new byte[] { 1, 0, 0, 0 });
+    }
+
+    @Test
+    public void extractPort() throws Exception {
+        final int port = 0b1010_1010_1010_1010;
+
+        final byte[] attribute = STUNAttributeMappedAddress.value(new byte[] { (byte) 192, (byte) 168, 0, 1 }, port);
+
+        assertEquals(port, STUNAttributeMappedAddress.port(attribute));
+    }
+
+    @Test
+    public void extractIPV4Address() throws Exception {
+        final byte[] address = new byte[] { (byte) 192, (byte) 168, 7, (byte) 254};
+
+        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+
+        assertTrue(Arrays.equals(address, STUNAttributeMappedAddress.address(attribute)));
+    }
+
+    @Test
+    public void extractIPV6Address() throws Exception {
+        final byte[] address = new byte[] { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x08, (byte) 0xd3, 0x13, 0x19, (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
+
+        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+
+        assertTrue(Arrays.equals(address, STUNAttributeMappedAddress.address(attribute)));
+    }
+
+    @Test(expected = InvalidSTUNAttributeException.class)
+    public void wrongAddressType() throws Exception {
+        final byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
+
+        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+
+        attribute[1] = (byte) 192;
+
+        STUNAttributeMappedAddress.address(attribute);
+    }
+
+    @Test(expected = InvalidSTUNAttributeException.class)
+    public void wrongAddressLength() throws Exception {
+        final byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
+
+        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+
+        final byte[] wrongAttribute = new byte[attribute.length + 4];
+
+        System.arraycopy(attribute, 0, wrongAttribute, 0, attribute.length);
+
+        STUNAttributeMappedAddress.address(wrongAttribute);
+    }
+
+    @Test(expected = InvalidSTUNAttributeException.class)
+    public void lengthNotMultipleOf4() throws Exception {
+        STUNAttributeMappedAddress.checkAttribute(new byte[15]);
     }
 }
