@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,9 +35,7 @@ import java.util.List;
  */
 public final class STUNMessageBuilder {
 
-    private int group;
-    private int method;
-    private BigInteger transaction = BigInteger.ZERO;
+    private final byte[] header = new byte[20];
 
     private int totalValues = 0;
     private final List<byte[]> values = new LinkedList<>();
@@ -48,8 +47,7 @@ public final class STUNMessageBuilder {
      * @return this builder, never null
      */
     public STUNMessageBuilder messageType(int group, int method) {
-        this.group = group;
-        this.method = method;
+        intAs16Bit(STUNMethod.join(method, group) & 0b0011_1111_1111_1111, header, 0);
 
         return this;
     }
@@ -60,7 +58,10 @@ public final class STUNMessageBuilder {
      * @return this builder, never null
      */
     public STUNMessageBuilder transaction(BigInteger transaction) {
-        this.transaction = transaction.and(STUNTransaction.MAX);
+        final byte[] tx = STUNTransaction.transaction(transaction);
+
+        System.arraycopy(STUNHeader.MAGIC_COOKIE, 0, header, 4, STUNHeader.MAGIC_COOKIE.length);
+        System.arraycopy(tx, 0, header, 4 + STUNHeader.MAGIC_COOKIE.length, tx.length);
 
         return this;
     }
@@ -77,37 +78,18 @@ public final class STUNMessageBuilder {
         totalValues += raw.length;
         values.add(raw);
 
+        intAs16Bit(totalValues & 0xFFFF, header, 2);
+
         return this;
     }
 
     /**
-     * Build the STUN message into the provided output stream.
-     * @param stream the output stream, must not be null
-     * @throws IOException thrown when writing to the stream
+     * Return a copy of the current header value. The STUN magic cookie will not be set if
+     * {@link #transaction(BigInteger)} has not been called.
+     * @return the header value, never null, will always have length of 20
      */
-    public void build(OutputStream stream) throws IOException {
-        final byte[] intBytes = new byte[2];
-
-        intAs16Bit(STUNMethod.join(method, group) & 0b0011_1111_1111_1111, intBytes, 0);
-        stream.write(intBytes);
-
-        stream.flush();
-
-        intAs16Bit(totalValues & 0b1111_1111_1111_1111, intBytes, 0);
-        stream.write(intBytes);
-
-        stream.flush();
-
-        stream.write(STUNHeader.MAGIC_COOKIE);
-        stream.write(STUNTransaction.transaction(transaction));
-
-        stream.flush();
-
-        for (byte[] tlv : values) {
-            stream.write(tlv);
-        }
-
-        stream.flush();
+    public byte[] header() {
+        return Arrays.copyOf(header, header.length);
     }
 
     /**
@@ -115,15 +97,18 @@ public final class STUNMessageBuilder {
      * @return the byte representation of the message, never null
      */
     public byte[] build() {
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream(20 + totalValues);
+        final byte[] built = new byte[header.length + totalValues];
 
-        try {
-            build(stream);
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to build message as byte array", e);
+        System.arraycopy(header, 0, built, 0, header.length);
+
+        int position = header.length;
+
+        for (byte[] tlv : values) {
+            System.arraycopy(tlv, 0, built, position, tlv.length);
+            position += tlv.length;
         }
 
-        return stream.toByteArray();
+        return built;
     }
 
     private void intAs16Bit(int value, byte[] out, int position) {

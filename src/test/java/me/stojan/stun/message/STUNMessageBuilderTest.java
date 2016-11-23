@@ -28,6 +28,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -83,5 +84,40 @@ public class STUNMessageBuilderTest {
         assertEquals(0, message[20 + 2 + 2 + 2]);
         // check fourth byte of tlv value
         assertEquals(0, message[20 + 2 + 2 + 3]);
+    }
+
+    @Test
+    public void header() throws Exception {
+        final STUNMessageBuilder builder = new STUNMessageBuilder();
+
+        builder.messageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
+        builder.transaction(BigInteger.TEN);
+        builder.value(0xABABA, new byte[20]);
+
+        final byte[] header = builder.header();
+
+        final byte[] transaction = new byte[12];
+
+        System.arraycopy(header, 8, transaction, 0, 12);
+
+        final BigInteger transactionInt = new BigInteger(transaction);
+
+        final byte[] magicCookie = new byte[STUNHeader.MAGIC_COOKIE.length];
+
+        System.arraycopy(header, 4, magicCookie, 0, 4);
+
+        assertNotNull(header);
+        assertEquals(20, header.length);
+
+        // check group
+        assertEquals(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.group(STUNHeader.int16(header, 0)));
+        // check method
+        assertEquals(STUNMessageType.METHOD_BINDING, STUNHeader.method(STUNHeader.int16(header, 0)));
+        // check tlv length
+        assertEquals(20 + 4, STUNHeader.int16(header, 2));
+        // check magic cookie
+        assertTrue(Arrays.equals(STUNHeader.MAGIC_COOKIE, magicCookie));
+        // check transaction
+        assertEquals(transactionInt, BigInteger.TEN);
     }
 }

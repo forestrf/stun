@@ -26,6 +26,9 @@ package me.stojan.stun.message;
  * Defines a STUN method.
  */
 public final class STUNMethod {
+    private static final int GROUP_MAX = 0b11;
+    private static final int METHOD_MAX = 0xFFF;
+
     private static final int BITS_5 = 0b111111;
     private static final int BITS_4 = 0b1111;
     private static final int BITS_3 = 0b111;
@@ -36,7 +39,9 @@ public final class STUNMethod {
      * @return the upper-5 bits
      */
     public static int upper5(int method) {
-        return (method  >> 7) & BITS_5;
+        method = METHOD_MAX & method;
+
+        return (method >> 7) & BITS_5;
     }
 
     /**
@@ -45,6 +50,8 @@ public final class STUNMethod {
      * @return the lower-4 bits
      */
     public static int lower4(int method) {
+        method = METHOD_MAX & method;
+
         return (method & BITS_4);
     }
 
@@ -54,6 +61,8 @@ public final class STUNMethod {
      * @return the inner-3 bits
      */
     public static int inner3(int method) {
+        method = METHOD_MAX & method;
+
         return (method >> 4) & BITS_3;
     }
 
@@ -63,7 +72,9 @@ public final class STUNMethod {
      * @return the formatted class
      */
     public static int group(int group) {
-        return (((group >> 1) & 1) << 8) | ((group & 1) << 4);
+        group = GROUP_MAX & group;
+
+        return ((group & 0b10) << 7) | ((group & 1) << 4);
     }
 
     /**
