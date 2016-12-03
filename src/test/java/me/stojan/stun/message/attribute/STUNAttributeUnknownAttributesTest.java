@@ -38,6 +38,11 @@ public class STUNAttributeUnknownAttributesTest {
         new STUNAttributeUnknownAttributes();
     }
 
+    @Test
+    public void TYPE() {
+        assertEquals(0x000A, STUNAttributeUnknownAttributes.TYPE);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void value_nullAttribute() throws Exception {
         STUNAttributeUnknownAttributes.value(null);

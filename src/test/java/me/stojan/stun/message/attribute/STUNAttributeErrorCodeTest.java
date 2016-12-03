@@ -38,6 +38,11 @@ public class STUNAttributeErrorCodeTest {
         new STUNAttributeErrorCode();
     }
 
+    @Test
+    public void TYPE() {
+        assertEquals(0x0009, STUNAttributeErrorCode.TYPE);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void value_nullReason() throws Exception {
         STUNAttributeErrorCode.value(300, null);
