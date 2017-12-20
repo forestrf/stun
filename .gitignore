@@ -4,3 +4,5 @@
 .idea/
 .gradle/
 build/
+obj/
+.vs/
