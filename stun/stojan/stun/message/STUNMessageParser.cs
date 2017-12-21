@@ -119,7 +119,7 @@ namespace me.stojan.stun.message {
 			 * @return the method
 			 */
 			public int method() {
-				return STUNHeader.Bethod(messageType());
+				return STUNHeader.Method(messageType());
 			}
 
 			/**

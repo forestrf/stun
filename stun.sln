@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun", "stun.csproj", "{E579594B-DB1F-4FF5-95DD-3E25528E64C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun", "stun\stun.csproj", "{E579594B-DB1F-4FF5-95DD-3E25528E64C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun.Tests", "stun.Tests\stun.Tests.csproj", "{D9B4E76E-2E35-48B4-8D3C-0674276476F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{E579594B-DB1F-4FF5-95DD-3E25528E64C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E579594B-DB1F-4FF5-95DD-3E25528E64C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E579594B-DB1F-4FF5-95DD-3E25528E64C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9B4E76E-2E35-48B4-8D3C-0674276476F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9B4E76E-2E35-48B4-8D3C-0674276476F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9B4E76E-2E35-48B4-8D3C-0674276476F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9B4E76E-2E35-48B4-8D3C-0674276476F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84201146-7D4C-48BC-9BAD-98F6AAFC99B0}
 	EndGlobalSection
 EndGlobal

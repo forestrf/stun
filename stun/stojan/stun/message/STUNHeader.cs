@@ -59,7 +59,7 @@ namespace me.stojan.stun.message {
 		 * @param messageType the message type
 		 * @return the method
 		 */
-		public static int Bethod(int messageType) {
+		public static int Method(int messageType) {
 			return (((messageType & BITS_HIGH_5) >> 1) | (messageType & BITS_INNER_3)) >> 1 | (messageType & BITS_LOWER_4);
 		}
 

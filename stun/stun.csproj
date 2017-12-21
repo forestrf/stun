@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>stun</RootNamespace>
     <AssemblyName>stun</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,32 +46,18 @@
     <Compile Include="Logger\InternalLogger.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="src\main\java\me\stojan\stun\message\attribute\STUNAttributeErrorCode.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\attribute\STUNAttributeMappedAddress.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\attribute\STUNAttributeSoftware.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\attribute\STUNAttributeUnknownAttributes.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\attribute\STUNAttributeXORMappedAddress.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNHeader.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNMessageBuilder.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNMessageParser.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNMessageType.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNMethod.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNTransaction.cs" />
-    <Compile Include="src\main\java\me\stojan\stun\message\STUNTypeLengthValue.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\attribute\STUNAttributeErrorCodeTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\attribute\STUNAttributeMappedAddressTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\attribute\STUNAttributeSoftwareTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\attribute\STUNAttributeUnknownAttributesTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\attribute\STUNAttributeXORMappedAddressTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNHeaderTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNMessageBuilderTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNMessageParserTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNMessageTypeTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNMethodTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNTransactionTest.cs" />
-    <Compile Include="src\test\java\me\stojan\stun\message\STUNTypeLengthValueTest.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttributeErrorCode.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttributeMappedAddress.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftware.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributes.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttributeXORMappedAddress.cs" />
+    <Compile Include="stojan\stun\message\STUNHeader.cs" />
+    <Compile Include="stojan\stun\message\STUNMessageBuilder.cs" />
+    <Compile Include="stojan\stun\message\STUNMessageParser.cs" />
+    <Compile Include="stojan\stun\message\STUNMessageType.cs" />
+    <Compile Include="stojan\stun\message\STUNMethod.cs" />
+    <Compile Include="stojan\stun\message\STUNTransaction.cs" />
+    <Compile Include="stojan\stun\message\STUNTypeLengthValue.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
