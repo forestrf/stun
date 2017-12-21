@@ -20,37 +20,24 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message;
+namespace me.stojan.stun.message {
+	/**
+	 * Defines the STUN message types.
+	 */
+	public enum STUNMessageType : int {
+		/** STUN class "request" */
+		GROUP_REQUEST = 0b00,
 
-import java.math.BigInteger;
+		/** STUN class "indication" */
+		GROUP_INDICATION = 0b01,
 
-/**
- * Defines a STUN transaction.
- */
-public final class STUNTransaction {
-    /** Maximum value for a STUN transaction. */
-    public static final BigInteger MAX = BigInteger.ONE.shiftLeft(96).subtract(BigInteger.ONE);
+		/** STUN class "response success" */
+		GROUP_RESPONSE_SUCCESS = 0b10,
 
-    /**
-     * Create the bytes for a transaction from a transaction ID.
-     * @param transaction the transaction ID, must not be null
-     * @return the transaction bytes, never null
-     */
-    public static byte[] transaction(BigInteger transaction) {
-        final byte[] raw = new byte[12];
+		/** STUN class "response error" */
+		GROUP_RESPONSE_ERROR = 0b11,
 
-        final byte[] bytes = transaction.toByteArray();
-
-        if (bytes.length > 12) {
-            System.arraycopy(bytes, 1, raw, 0, 12);
-        } else {
-            System.arraycopy(bytes, 0, raw, 12 - bytes.length, bytes.length);
-        }
-
-        return raw;
-    }
-
-    STUNTransaction() {
-        throw new UnsupportedOperationException();
-    }
+		/** STUN method "binding" */
+		METHOD_BINDING = 1,
+	}
 }

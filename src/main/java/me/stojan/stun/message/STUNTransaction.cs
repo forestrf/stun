@@ -20,17 +20,34 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message;
+using Org.BouncyCastle.Math;
+using System;
 
-/**
- * Thrown when a STUN message was invalid (i.e. was not properly formatted).
- */
-public class InvalidSTUNMessageException extends Exception {
+namespace me.stojan.stun.message {
+	/**
+	 * Defines a STUN transaction.
+	 */
+	public static class STUNTransaction {
+		/** Maximum value for a STUN transaction. */
+		public static BigInteger MAX = BigInteger.One.ShiftLeft(96).Subtract(BigInteger.One);
 
-    /**
-     * @see Exception#Exception(String)
-     */
-    public InvalidSTUNMessageException(String message) {
-        super(message);
-    }
+		/**
+		 * Create the bytes for a transaction from a transaction ID.
+		 * @param transaction the transaction ID, must not be null
+		 * @return the transaction bytes, never null
+		 */
+		public static byte[] Transaction(BigInteger transaction) {
+			byte[] raw = new byte[12];
+
+			byte[] bytes = transaction.ToByteArray();
+
+			if (bytes.Length > 12) {
+				Array.Copy(bytes, 1, raw, 0, 12);
+			} else {
+				Array.Copy(bytes, 0, raw, 12 - bytes.Length, bytes.Length);
+			}
+
+			return raw;
+		}
+	}
 }

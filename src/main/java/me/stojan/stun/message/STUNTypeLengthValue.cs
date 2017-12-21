@@ -20,17 +20,38 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message.attribute;
+using System;
 
-/**
- * Thrown when a STUN attribute is not validly represented.
- */
-public class InvalidSTUNAttributeException extends Exception {
+namespace me.stojan.stun.message {
+	/**
+	 * Defines a STUN Type-Length-Value.
+	 */
+	public static class STUNTypeLengthValue {
+		/**
+		 * Create a value from the provided type and value.
+		 * @param type the type
+		 * @param value the value
+		 * @return the TLV bytes, never null
+		 */
+		public static byte[] Value(int type, byte[] value) {
+			int paddingLength;
 
-    /**
-     * @see Exception#Exception(String)
-     */
-    public InvalidSTUNAttributeException(String message) {
-        super(message);
-    }
+			if (0 == value.Length % 4) {
+				paddingLength = value.Length;
+			} else {
+				paddingLength = value.Length + (4 - (value.Length % 4));
+			}
+
+			byte[] raw = new byte[4 + paddingLength];
+
+			raw[0] = (byte) ((type >> 8) & 255);
+			raw[1] = (byte) (type & 255);
+			raw[2] = (byte) ((value.Length >> 8) & 255);
+			raw[3] = (byte) (value.Length & 255);
+
+			Array.Copy(value, 0, raw, 4, value.Length);
+
+			return raw;
+		}
+	}
 }
