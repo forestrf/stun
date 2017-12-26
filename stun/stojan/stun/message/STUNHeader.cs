@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
+
 namespace me.stojan.stun.message {
 	/**
 	 * Utilities for forming STUN message headers.
@@ -41,7 +43,7 @@ namespace me.stojan.stun.message {
 		 * @param position the position, must be at most {@code values.length - 2}
 		 * @return the integer
 		 */
-		public static int Int16(byte[] values, int position) {
+		public static int Int16(ByteBuffer values, int position) {
 			return (values[position + 0] << 8) | values[position + 1];
 		}
 
@@ -50,8 +52,8 @@ namespace me.stojan.stun.message {
 		 * @param messageType the message type
 		 * @return the group
 		 */
-		public static int Group(int messageType) {
-			return ((messageType & C1) >> 7) | ((messageType & C0) >> 4);
+		public static STUNMessageType Group(int messageType) {
+			return (STUNMessageType) (((messageType & C1) >> 7) | ((messageType & C0) >> 4));
 		}
 
 		/**
@@ -59,8 +61,8 @@ namespace me.stojan.stun.message {
 		 * @param messageType the message type
 		 * @return the method
 		 */
-		public static int Method(int messageType) {
-			return (((messageType & BITS_HIGH_5) >> 1) | (messageType & BITS_INNER_3)) >> 1 | (messageType & BITS_LOWER_4);
+		public static STUNMessageType Method(int messageType) {
+			return (STUNMessageType) ((((messageType & BITS_HIGH_5) >> 1) | (messageType & BITS_INNER_3)) >> 1 | (messageType & BITS_LOWER_4));
 		}
 
 		/**
@@ -68,7 +70,7 @@ namespace me.stojan.stun.message {
 		 * @param header the header
 		 * @return the two starting bits
 		 */
-		public static int TwoStartingBits(byte[] header) {
+		public static int TwoStartingBits(ByteBuffer header) {
 			return header[0] >> 6;
 		}
 	}

@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities;
 
 namespace Org.BouncyCastle.Math
 {
@@ -180,7 +178,7 @@ namespace Org.BouncyCastle.Math
         private const int chunk2 = 1, chunk8 = 1, chunk10 = 19, chunk16 = 16;
         private static readonly BigInteger radix2, radix2E, radix8, radix8E, radix10, radix10E, radix16, radix16E;
 
-        private static readonly SecureRandom RandomSource = new SecureRandom();
+        private static readonly Random RandomSource = new Random();
 
         /*
          * These are the threshold bit-lengths (of an exponent) where we increase the window size.
@@ -1969,13 +1967,13 @@ namespace Org.BouncyCastle.Math
             int[][] oddPowers = new int[numPowers][];
             oddPowers[0] = zVal;
 
-            int[] zSquared = Arrays.Clone(zVal);
+            int[] zSquared = new List<int>(zVal).ToArray();
             SquareMonty(yAccum, zSquared, m.magnitude, mDash, smallMontyModulus);
 
             for (int i = 1; i < numPowers; ++i)
             {
-                oddPowers[i] = Arrays.Clone(oddPowers[i - 1]);
-                MultiplyMonty(yAccum, oddPowers[i], zSquared, m.magnitude, mDash, smallMontyModulus);
+                oddPowers[i] = new List<int>(oddPowers[i - 1]).ToArray();
+				MultiplyMonty(yAccum, oddPowers[i], zSquared, m.magnitude, mDash, smallMontyModulus);
             }
 
             int[] windowList = GetWindowList(e.magnitude, extraBits);
@@ -1992,7 +1990,7 @@ namespace Org.BouncyCastle.Math
             }
             else
             {
-                yVal = Arrays.Clone(oddPowers[mult >> 1]);
+                yVal = new List<int>(oddPowers[mult >> 1]).ToArray();
             }
 
             int windowPos = 1;
@@ -3234,7 +3232,7 @@ namespace Org.BouncyCastle.Math
                 int mask = (1 << 30) - 1;
                 BigInteger u = this.Abs();
                 int bits = u.BitLength;
-                IList S = Platform.CreateArrayList();
+				List<string> S = new List<string>();
                 while (bits > 30)
                 {
                     S.Add(Convert.ToString(u.IntValue & mask, 8));
@@ -3284,7 +3282,7 @@ namespace Org.BouncyCastle.Math
 
                 BigInteger bigPower = BigInteger.ValueOf(power);
 
-                IList S = Platform.CreateArrayList();
+				List<string> S = new List<string>();
                 while (q.CompareTo(bigPower) >= 0)
                 {
                     BigInteger[] qr = q.DivideAndRemainder(bigPower);

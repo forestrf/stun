@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
 using NUnit.Framework;
 using Org.BouncyCastle.Math;
+using System;
 
 namespace me.stojan.stun.message {
 	/**
@@ -40,93 +42,103 @@ namespace me.stojan.stun.message {
 
 			byte[] message = builder.Build();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(message));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message));
 
-			STUNMessageParser.Header header = parser.start();
+			STUNMessageParser.Header header;
+			Assert.IsTrue(parser.Start(out header));
 
-			CollectionAssert.AreEqual(Arrays.copyOf(message, 20), header.raw()));
+			byte[] copy = new byte[20];
+			Buffer.BlockCopy(message, 0, copy, 0, 20);
+			CollectionAssert.AreEqual(copy, header.header.ToArray());
 
-			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, header.group());
-			Assert.AreEqual(STUNMessageType.METHOD_BINDING, header.method());
-			Assert.AreEqual(BigInteger.One, new BigInteger(header.transaction()));
-			Assert.IsTrue(0 == header.length() % 4);
-			Assert.IsTrue(header.isMagicCookieValid());
+			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, header.Group());
+			Assert.AreEqual(STUNMessageType.METHOD_BINDING, header.Method());
+			Assert.AreEqual(BigInteger.One, new BigInteger(header.Transaction().ToArray()));
+			Assert.IsTrue(0 == header.Length() % 4);
+			Assert.IsTrue(header.IsMagicCookieValid());
 
-			STUNMessageParser.TypeLengthValue tlv1 = header.next();
+			STUNMessageParser.TypeLengthValue tlv1 = header.Next(parser);
 
 			Assert.IsNotNull(tlv1);
-			Assert.AreEqual(0b111, tlv1.type());
-			CollectionAssert.AreEqual(new byte [] { 0, 0b111, 0, 1 }, tlv1.header());
-			CollectionAssert.AreEqual(new byte[] { 255 }, tlv1.value());
-			Assert.AreEqual(1, tlv1.length());
-			Assert.AreEqual(3, tlv1.padding());
+			Assert.AreEqual(0b111, tlv1.Type());
+			CollectionAssert.AreEqual(new byte[] { 0, 0b111, 0, 1 }, tlv1.Header().ToArray());
+			CollectionAssert.AreEqual(new byte[] { 255 }, tlv1.Value().ToArray());
+			Assert.AreEqual(1, tlv1.Length());
+			Assert.AreEqual(3, tlv1.Padding());
 
-			STUNMessageParser.TypeLengthValue tlv2 = tlv1.next();
+			STUNMessageParser.TypeLengthValue tlv2 = tlv1.Next(parser);
 
 			Assert.IsNotNull(tlv2);
-			Assert.AreEqual(0b010, tlv2.type());
-			CollectionAssert.AreEqual(new byte[] { 0, 0b010, 0, 4 }, tlv2.header());
-			CollectionAssert.AreEqual(new byte[] { 0, 255, 0, 255 }, tlv2.value());
-			Assert.AreEqual(4, tlv2.length());
-			Assert.AreEqual(0, tlv2.padding());
+			Assert.AreEqual(0b010, tlv2.Type());
+			CollectionAssert.AreEqual(new byte[] { 0, 0b010, 0, 4 }, tlv2.Header().ToArray());
+			CollectionAssert.AreEqual(new byte[] { 0, 255, 0, 255 }, tlv2.Value().ToArray());
+			Assert.AreEqual(4, tlv2.Length());
+			Assert.AreEqual(0, tlv2.Padding());
 
-			assertNull(tlv2.next());
+			Assert.IsNull(tlv2.Next(parser));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void shortHeader() {
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(new byte[19]));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]));
 
-			parser.start();
+			STUNMessageParser.Header o;
+			Assert.IsFalse(parser.Start(out o));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void headerDoesNotStartWith00() {
 			byte[] header = new byte[20];
 			header[0] = 255;
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(header));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
 
-			parser.start();
+			STUNMessageParser.Header o;
+			Assert.IsFalse(parser.Start(out o));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void lengthNotAMultipleOf4() {
 			byte[] header = new byte[20];
 
 			header[2] = 0;
 			header[3] = 3;
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(header));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
 
-			parser.start();
+			STUNMessageParser.Header o;
+			Assert.IsFalse(parser.Start(out o));
 		}
 
 		[Test]
 		public void noTLV() {
 			byte[] header = new byte[20];
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(header));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
 
-			assertNull(parser.start().next());
+			STUNMessageParser.Header h;
+			Assert.IsTrue(parser.Start(out h));
+			Assert.IsNull(h.Next(parser));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void eosAtReadingFirstTLVHeader() {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.TEN);
+			builder.Transaction(BigInteger.Ten);
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.build();
+			byte[] message = builder.Build();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(Arrays.copyOf(message, 20 + 1)));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1));
 
-			parser.start().next();
+			STUNMessageParser.Header h;
+			Assert.IsTrue(parser.Start(out h));
+			Assert.IsNull(h.Next(parser));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void eosAtReadingFirstTLVValue() {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
@@ -134,14 +146,16 @@ namespace me.stojan.stun.message {
 			builder.Transaction(BigInteger.Ten);
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.build();
+			byte[] message = builder.Build();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(Arrays.copyOf(message, 20 + 4 + 1)));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1));
 
-			parser.start().next();
+			STUNMessageParser.Header h;
+			Assert.IsTrue(parser.Start(out h));
+			Assert.IsNull(h.Next(parser));
 		}
 
-		[Test](expected = InvalidSTUNMessageException.class)
+		[Test]
 		public void eosAtReadingFirstTLVPadding() {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
@@ -149,11 +163,13 @@ namespace me.stojan.stun.message {
 			builder.Transaction(BigInteger.Ten);
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.build();
+			byte[] message = builder.Build();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteArrayInputStream(Arrays.copyOf(message, 20 + 4 + 2 + 1)));
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1));
 
-			parser.start().next();
+			STUNMessageParser.Header h;
+			Assert.IsTrue(parser.Start(out h));
+			Assert.IsNull(h.Next(parser));
 		}
 	}
 }

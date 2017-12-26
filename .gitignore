@@ -8,3 +8,5 @@ obj/
 .vs/
 Backup/
 packages/
+stun.Tests/bin/
+stun/bin/

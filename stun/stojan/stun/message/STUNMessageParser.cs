@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
+using STUN;
 using System;
 
 namespace me.stojan.stun.message {
@@ -28,13 +30,13 @@ namespace me.stojan.stun.message {
 	 */
 	public class STUNMessageParser {
 
-		private InputStream inputStream;
+		private ByteBuffer inputStream;
 
 		/**
 		 * Create a parser from the input stream.
 		 * @param inputStream the input stream, must not be null
 		 */
-		public STUNMessageParser(InputStream inputStream) {
+		public STUNMessageParser(ByteBuffer inputStream) {
 			this.inputStream = inputStream;
 		}
 
@@ -42,35 +44,31 @@ namespace me.stojan.stun.message {
 		 * A STUN message header.
 		 */
 		public class Header {
-			private byte[] header;
+			public ByteBuffer header;
 
-			private Header(byte[] header) {
-				this.header = header;
+			public static bool Create(ByteBuffer buffer, out Header header) {
+				header = new Header();
+				header.header = buffer;
 
-				if (0 != STUNHeader.TwoStartingBits(header)) {
-					throw new InvalidSTUNMessageException(String.format((Locale) null, "STUN header does not start with 0b00, first byte is [0x%x]", header[0]));
+				if (0 != STUNHeader.TwoStartingBits(buffer)) {
+					Logger.Error("STUN header does not start with 0b00, first byte is [0x" + buffer[0].ToString("X") + "]");
+					return false;
 				}
 
-				int length = length();
+				int length = header.Length();
 
 				if (0 != length % 4) {
-					throw new InvalidSTUNMessageException(String.format((Locale) null, "STUN header reports length [%d] which is not a multiple of 4", length));
+					Logger.Error("STUN header reports length [" + length + "] which is not a multiple of 4");
+					return false;
 				}
-			}
-
-			/**
-			 * Returns a copy of the raw header.
-			 * @return the raw bytes of the header
-			 */
-			public byte[] raw() {
-				return Arrays.copyOf(header, header.length);
+				return true;
 			}
 
 			/**
 			 * Returns the message type.
 			 * @return the message type
 			 */
-			public int messageType() {
+			public int MessageType() {
 				return STUNHeader.Int16(header, 0);
 			}
 
@@ -78,7 +76,7 @@ namespace me.stojan.stun.message {
 			 * Returns the length of the message.
 			 * @return the message length
 			 */
-			public int length() {
+			public int Length() {
 				return STUNHeader.Int16(header, 2);
 			}
 
@@ -86,48 +84,54 @@ namespace me.stojan.stun.message {
 			 * Returns a copy of the magic cookie.
 			 * @return the magic cookie
 			 */
-			public byte[] magicCookie() {
-				byte[] cookie = new byte[4];
-
-				Array.Copy(header, 4, cookie, 0, 4);
-
-				return cookie;
+			public bool MagicCookie(out FastBit.Uint cookie) {
+				if (header.Length >= 8) {
+					cookie = new FastBit.Uint(header[4], header[5], header[6], header[7]);
+					return true;
+				} else {
+					cookie = new FastBit.Uint();
+					return false;
+				}
 			}
 
 			/**
 			 * Returns a copy of the transcation-ID bytes.
 			 * @return the transaction ID bytes
 			 */
-			public byte[] transaction() {
-				byte[] transaction = new byte[12];
-
-				Array.Copy(header, 8, transaction, 0, 12);
-
-				return transaction;
+			public ByteBuffer Transaction() {
+				return new ByteBuffer(header.Data, header.positionAbsolute + 8, 12);
 			}
 
 			/**
 			 * Returns the STUN "class" of the message.
 			 * @return the class
 			 */
-			public int group() {
-				return STUNHeader.Group(messageType());
+			public STUNMessageType Group() {
+				return STUNHeader.Group(MessageType());
 			}
 
 			/**
 			 * Returns the STUN "method" of the message.
 			 * @return the method
 			 */
-			public int method() {
-				return STUNHeader.Method(messageType());
+			public STUNMessageType Method() {
+				return STUNHeader.Method(MessageType());
 			}
 
 			/**
 			 * Checks if the {@link #magicCookie()} is valid.
 			 * @return true if the magic cookie is valid, or false
 			 */
-			public bool isMagicCookieValid() {
-				return Arrays.equals(STUNHeader.MAGIC_COOKIE, magicCookie());
+			public bool IsMagicCookieValid() {
+				FastBit.Uint c;
+				if (MagicCookie(out c)) {
+					return c.b0 == STUNHeader.MAGIC_COOKIE[0] &&
+						c.b1 == STUNHeader.MAGIC_COOKIE[1] &&
+						c.b2 == STUNHeader.MAGIC_COOKIE[2] &&
+						c.b3 == STUNHeader.MAGIC_COOKIE[3];
+				} else {
+					return false;
+				}
 			}
 
 			/**
@@ -136,14 +140,14 @@ namespace me.stojan.stun.message {
 			 * @throws IOException an IO exception from the stream
 			 * @throws InvalidSTUNMessageException if the message is invalid
 			 */
-			public TypeLengthValue next() throws IOException, InvalidSTUNMessageException {
-				final int length = length();
+			public TypeLengthValue Next(STUNMessageParser parser) {
+				if (parser == null) return null;
 
-				if (length <= 0) {
-					return null;
-				}
+				int length = Length();
+				if (length <= 0) return null;
 
-				return new TypeLengthValue(0, length);
+				TypeLengthValue tlv;
+				return TypeLengthValue.Create(ref parser.inputStream, 0, length, out tlv) ? tlv : null;
 			}
 		}
 
@@ -151,58 +155,73 @@ namespace me.stojan.stun.message {
 		 * A STUN Type-Length-Value.
 		 */
 		public class TypeLengthValue {
-			private final int position;
-			private final int max;
+			private int position;
+			private int max;
 
-			private final byte[] header = new byte[4];
-			private final byte[] value;
+			private ByteBuffer header;
+			private ByteBuffer value;
 
-			private TypeLengthValue(int position, int max) throws InvalidSTUNMessageException, IOException {
-				this.position = position;
-				this.max = max;
+			public static bool Create(ref ByteBuffer buffer, int position, int max, out TypeLengthValue tlv) {
+				tlv = new TypeLengthValue();
+				tlv.position = position;
+				tlv.max = max;
 
-				if (4 != inputStream.read(header, 0, 4)) {
-					throw new InvalidSTUNMessageException("Could not read 4 bytes from stream for TLV header");
+				if (buffer.remaining() >= 4) {
+					tlv.header = new ByteBuffer(buffer.Data, buffer.positionAbsolute, 4);
+					buffer.positionAbsolute += 4;
+				} else {
+					tlv = null;
+					Logger.Error("Could not read 4 bytes from stream for TLV header");
+					return false;
+				}
+				
+				int length = tlv.Length();
+
+				if (buffer.remaining() >= length) {
+					tlv.value = new ByteBuffer(buffer.Data, buffer.positionAbsolute, length);
+					buffer.positionAbsolute += length;
+				} else {
+					tlv = null;
+					Logger.Error("Could not read " + length + " bytes from stream for TLV value");
+					return false;
 				}
 
-				final int length = length();
-				value = new byte[length];
-
-				if (length != inputStream.read(value)) {
-					throw new InvalidSTUNMessageException(String.format((Locale) null, "Could not read %d bytes from stream for TLV value", length));
-				}
-
-				final int padding = padding();
+				int padding = tlv.Padding();
 
 				if (0 != padding) {
-					if (padding != inputStream.skip(padding)) {
-						throw new InvalidSTUNMessageException(String.format((Locale) null, "Could not skip %d bytes from stream for TLV padding", padding));
+					if (buffer.remaining() >= padding) {
+						buffer.positionAbsolute += padding;
+					} else {
+						tlv = null;
+						Logger.Error("Could not skip " + padding + " bytes from stream for TLV padding");
+						return false;
 					}
 				}
+				return true;
 			}
 
 			/**
 			 * Returns the STUN TLV "type."
 			 * @return the type
 			 */
-			public int type() {
-				return STUNHeader.int16(header, 0);
+			public int Type() {
+				return STUNHeader.Int16(header, 0);
 			}
 
 			/**
 			 * Returns the STUN TLV "length."
 			 * @return the length
 			 */
-			public int length() {
-				return STUNHeader.int16(header, 2);
+			public int Length() {
+				return STUNHeader.Int16(header, 2);
 			}
 
 			/**
 			 * Returns the STUN TLV "padding" size.
 			 * @return the padding size
 			 */
-			public int padding() {
-				final int length = length();
+			public int Padding() {
+				int length = Length();
 
 				if (0 == length % 4) {
 					return 0;
@@ -215,16 +234,16 @@ namespace me.stojan.stun.message {
 			 * Returns a copy of the TLV header bytes.
 			 * @return the header bytes
 			 */
-			public byte[] header() {
-				return Arrays.copyOf(header, header.length);
+			public ByteBuffer Header() {
+				return new ByteBuffer(header.Data, header.positionAbsolute, 4);
 			}
 
 			/**
 			 * Returns a copy of the TLV value bytes, without padding.
 			 * @return the value bytes, without padding
 			 */
-			public byte[] value() {
-				return Arrays.copyOf(value, value.length);
+			public ByteBuffer Value() {
+				return new ByteBuffer(value.Data, value.positionAbsolute, value.Length);
 			}
 
 			/**
@@ -233,14 +252,14 @@ namespace me.stojan.stun.message {
 			 * @throws IOException an IO exception from the stream
 			 * @throws InvalidSTUNMessageException if the next TLV is invalid
 			 */
-			public TypeLengthValue next() throws IOException, InvalidSTUNMessageException {
-				final int nextPosition = position + header.length + value.length + padding();
+			public TypeLengthValue Next(STUNMessageParser parser) {
+				if (parser == null) return null;
 
-				if (nextPosition >= max) {
-					return null;
-				}
-
-				return new TypeLengthValue(nextPosition, max);
+				int nextPosition = position + header.Length + value.Length + Padding();
+				if (nextPosition >= max) return null;
+				
+				TypeLengthValue tlv;
+				return Create(ref parser.inputStream, nextPosition, max, out tlv) ? tlv : null;
 			}
 		}
 
@@ -250,13 +269,15 @@ namespace me.stojan.stun.message {
 		 * @throws IOException an IO exception from the stream
 		 * @throws InvalidSTUNMessageException if could not read the 20-byte STUN header
 		 */
-		public Header start() throws IOException, InvalidSTUNMessageException {
-			final byte[] header = new byte[20];
-
-			if (header.length != inputStream.read(header)) {
-				throw new InvalidSTUNMessageException("Could not read 20 byte STUN header from stream");
+		public bool Start(out Header header) {
+			if (inputStream.remaining() >= 20) {
+				bool toReturn = Header.Create(ByteBuffer.wrap(inputStream.Data, inputStream.positionAbsolute, 20), out header);
+				inputStream.positionAbsolute += 20;
+				return toReturn;
 			} else {
-				return new Header(header);
+				header = null;
+				Logger.Error("Could not read 20 byte STUN header from stream");
+				return false;
 			}
 		}
 	}

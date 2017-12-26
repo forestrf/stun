@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
 using NUnit.Framework;
 
 namespace me.stojan.stun.message {
@@ -30,21 +31,21 @@ namespace me.stojan.stun.message {
 	public class STUNHeaderTest {
 		[Test]
 		public void groupExtracionFromMessageType() {
-			Assert.AreEqual(0b11, STUNHeader.Group(0b0000_0001_0001_0000));
-			Assert.AreEqual(0b01, STUNHeader.Group(0b0000_0000_0001_0000));
-			Assert.AreEqual(0b10, STUNHeader.Group(0b0000_0001_0000_0000));
+			Assert.AreEqual((STUNMessageType) 0b11, STUNHeader.Group(0b0000_0001_0001_0000));
+			Assert.AreEqual((STUNMessageType) 0b01, STUNHeader.Group(0b0000_0000_0001_0000));
+			Assert.AreEqual((STUNMessageType) 0b10, STUNHeader.Group(0b0000_0001_0000_0000));
 		}
 
 		[Test]
 		public void methodExtractionFromMessageType() {
-			Assert.AreEqual(0b111_111_111_111, STUNHeader.Method(0b1111_1111_1111_1111));
-			Assert.AreEqual(0b111_111_111_111, STUNHeader.Method(0b1111_1110_1110_1111));
-			Assert.AreEqual(0b101_010_101_010, STUNHeader.Method(0b1010_1011_0101_1010));
+			Assert.AreEqual((STUNMessageType) 0b111_111_111_111, STUNHeader.Method(0b1111_1111_1111_1111));
+			Assert.AreEqual((STUNMessageType) 0b111_111_111_111, STUNHeader.Method(0b1111_1110_1110_1111));
+			Assert.AreEqual((STUNMessageType) 0b101_010_101_010, STUNHeader.Method(0b1010_1011_0101_1010));
 		}
 
 		[Test]
 		public void int16FromBytes() {
-			Assert.AreEqual(257, STUNHeader.Int16(new byte[] { 1, 1 }, 0));
+			Assert.AreEqual(257, STUNHeader.Int16(new ByteBuffer(new byte[] { 1, 1 }), 0));
 		}
 	}
 }

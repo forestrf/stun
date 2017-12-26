@@ -139,7 +139,7 @@ namespace me.stojan.stun.message.attribute {
 			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, reason, out attribute));
 
 			string outReason;
-			Assert.AreEqual(reason, STUNAttributeErrorCode.Reason(attribute, out outReason));
+			Assert.IsTrue(STUNAttributeErrorCode.Reason(attribute, out outReason));
 			Assert.AreEqual(reason, outReason);
 		}
 

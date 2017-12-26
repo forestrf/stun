@@ -186,7 +186,7 @@ namespace me.stojan.stun.message.attribute {
 			Assert.IsTrue(STUNAttributeXORMappedAddress.Value(header, address, 0, out attribute));
 			byte[] o;
 			Assert.IsTrue(STUNAttributeXORMappedAddress.Address(header, attribute, out o));
-			CollectionAssert.AreEqual(header, o);
+			CollectionAssert.AreEqual(address, o);
 		}
 
 		[Test]

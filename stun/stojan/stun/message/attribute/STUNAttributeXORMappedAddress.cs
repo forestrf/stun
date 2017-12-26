@@ -48,7 +48,6 @@ namespace me.stojan.stun.message.attribute {
 		 */
 		public static bool Value(byte[] header, byte[] addr, int port, out byte[] attribute) {
 			if (STUNAttributeMappedAddress.Value(addr, port, out attribute)) {
-
 				attribute[2] = (byte) (attribute[2] ^ header[4]);
 				attribute[3] = (byte) (attribute[3] ^ header[5]);
 

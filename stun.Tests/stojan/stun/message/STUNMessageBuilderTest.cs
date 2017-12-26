@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
 using NUnit.Framework;
 using Org.BouncyCastle.Math;
 using System;
@@ -53,11 +54,11 @@ namespace me.stojan.stun.message {
 			// check length
 			Assert.AreEqual(0, (message.Length - 20) % 4);
 			// check length without header
-			Assert.AreEqual(message.Length - 20, STUNHeader.Int16(message, 2));
+			Assert.AreEqual(message.Length - 20, STUNHeader.Int16(new ByteBuffer(message), 2));
 			// check group
-			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(message, 0)));
+			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(new ByteBuffer(message), 0)));
 			// check method
-			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(message, 0)));
+			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(new ByteBuffer(message), 0)));
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
@@ -71,7 +72,7 @@ namespace me.stojan.stun.message {
 			// check second byte of tlv length
 			Assert.AreEqual(1, message[20 + 2 + 1]);
 			// check first byte of tlv value
-			Assert.AreEqual(-1, message[20 + 2 + 2]);
+			Assert.AreEqual(255, message[20 + 2 + 2]);
 			// check second byte of tlv value
 			Assert.AreEqual(0, message[20 + 2 + 2 + 1]);
 			// check third byte of tlv value
@@ -104,11 +105,11 @@ namespace me.stojan.stun.message {
 			Assert.AreEqual(20, header.Length);
 
 			// check group
-			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(header, 0)));
+			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(new ByteBuffer(header), 0)));
 			// check method
-			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(header, 0)));
+			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(new ByteBuffer(header), 0)));
 			// check tlv length
-			Assert.AreEqual(20 + 4, STUNHeader.Int16(header, 2));
+			Assert.AreEqual(20 + 4, STUNHeader.Int16(new ByteBuffer(header), 2));
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction

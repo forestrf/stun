@@ -40,14 +40,14 @@ namespace me.stojan.stun.message.attribute {
 		 */
 		public static bool Value(int code, string reason, out byte[] attribute) {
 			if (code < 300 || code >= 700) {
-				Logger.Error("Argument code must be within [300, 700)");
 				attribute = null;
+				Logger.Error("Argument code must be within [300, 700)");
 				return false;
 			}
 
 			if (null == reason) {
-				Logger.Error("Argument reason must not be null");
 				attribute = null;
+				Logger.Error("Argument reason must not be null");
 				return false;
 			}
 

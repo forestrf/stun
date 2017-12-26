@@ -121,6 +121,7 @@ namespace me.stojan.stun.message.attribute {
 			if (4 + addressLength != attribute.Length) {
 				address = null;
 				Logger.Error("Attribute has invalid length");
+				return false;
 			}
 
 			address = new byte[addressLength];
