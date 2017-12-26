@@ -22,7 +22,6 @@
 
 using Ashkatchap.Utils;
 using NUnit.Framework;
-using Org.BouncyCastle.Math;
 using System;
 
 namespace me.stojan.stun.message {
@@ -36,7 +35,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.One);
+			builder.Transaction(new ByteBuffer(new byte[] { 1 }));
 			builder.Value(0b111, new byte[] { 255 });
 			builder.Value(0b010, new byte[] { 0, 255, 0, 255 });
 
@@ -53,7 +52,9 @@ namespace me.stojan.stun.message {
 
 			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, header.Group());
 			Assert.AreEqual(STUNMessageType.METHOD_BINDING, header.Method());
-			Assert.AreEqual(BigInteger.One, new BigInteger(header.Transaction().ToArray()));
+			var transaction = header.Transaction();
+			Assert.AreEqual(1, transaction[0]);
+			for (int i = 1; i < transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
 			Assert.IsTrue(0 == header.Length() % 4);
 			Assert.IsTrue(header.IsMagicCookieValid());
 
@@ -126,7 +127,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.Ten);
+			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build();
@@ -143,7 +144,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.Ten);
+			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build();
@@ -160,7 +161,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.Ten);
+			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build();

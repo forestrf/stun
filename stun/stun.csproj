@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bc-csharp\crypto\src\math\BigInteger.cs" />
     <Compile Include="Buffer\ByteBuffer.cs" />
     <Compile Include="Buffer\FastBitConverter.cs" />
     <Compile Include="Logger\ILogger.cs" />

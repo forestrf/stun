@@ -22,7 +22,6 @@
 
 using Ashkatchap.Utils;
 using NUnit.Framework;
-using Org.BouncyCastle.Math;
 using System;
 
 namespace me.stojan.stun.message {
@@ -36,7 +35,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.One);
+			builder.Transaction(new ByteBuffer(new byte[] { 1 }));
 			builder.Value(0b111, new byte[] { 255 });
 
 			byte[] message = builder.Build();
@@ -45,7 +44,7 @@ namespace me.stojan.stun.message {
 
 			Array.Copy(message, 8, transaction, 0, 12);
 
-			BigInteger transactionInt = new BigInteger(transaction);
+			ByteBuffer transactionInt = new ByteBuffer(transaction);
 
 			byte[] magicCookie = new byte[4];
 
@@ -62,7 +61,10 @@ namespace me.stojan.stun.message {
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
-			Assert.AreEqual(transactionInt, BigInteger.One);
+			Assert.AreEqual(1, transactionInt[0]);
+			for (int i = 1; i < transactionInt.Length; i++) {
+				Assert.AreEqual(0, transactionInt[i]);
+			}
 			// check first byte of tlv
 			Assert.AreEqual(0, message[20]);
 			// check second byte of tlv
@@ -86,7 +88,7 @@ namespace me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder();
 
 			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
-			builder.Transaction(BigInteger.Ten);
+			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0xABABA, new byte[20]);
 
 			byte[] header = builder.GetHeaderCopy();
@@ -95,7 +97,7 @@ namespace me.stojan.stun.message {
 
 			Array.Copy(header, 8, transaction, 0, 12);
 
-			BigInteger transactionInt = new BigInteger(transaction);
+			ByteBuffer transactionInt = new ByteBuffer(transaction);
 
 			byte[] magicCookie = new byte[STUNHeader.MAGIC_COOKIE.Length];
 
@@ -113,7 +115,10 @@ namespace me.stojan.stun.message {
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
-			Assert.AreEqual(transactionInt, BigInteger.Ten);
+			Assert.AreEqual(10, transactionInt[0]);
+			for (int i = 1; i < transactionInt.Length; i++) {
+				Assert.AreEqual(0, transactionInt[i]);
+			}
 		}
 	}
 }

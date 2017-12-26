@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
+using Ashkatchap.Utils;
 using NUnit.Framework;
-using Org.BouncyCastle.Math;
 
 namespace me.stojan.stun.message {
 	/**
@@ -34,7 +34,7 @@ namespace me.stojan.stun.message {
 			byte[] val = new byte[] { 0x7F, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
 			Assert.AreEqual(12, val.Length);
-			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(BigInteger.One.ShiftLeft(95).Subtract(BigInteger.One)));
+			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(new ByteBuffer(new byte[] { 0x7f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff })).ToArray());
 		}
 
 		[Test]
@@ -42,7 +42,7 @@ namespace me.stojan.stun.message {
 			byte[] val = new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
 			Assert.AreEqual(12, val.Length);
-			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(BigInteger.One.ShiftLeft(96).Subtract(BigInteger.One)));
+			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(new ByteBuffer(new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff })).ToArray());
 		}
 
 		[Test]
@@ -50,7 +50,7 @@ namespace me.stojan.stun.message {
 			byte[] val = new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
 			Assert.AreEqual(12, val.Length);
-			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(BigInteger.One.ShiftLeft(97).Subtract(BigInteger.One)));
+			CollectionAssert.AreEqual(val, STUNTransaction.Transaction(new ByteBuffer(new byte[] { 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff })).ToArray());
 		}
 	}
 }

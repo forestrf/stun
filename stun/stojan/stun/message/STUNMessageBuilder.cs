@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-using Org.BouncyCastle.Math;
+using Ashkatchap.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -50,11 +50,11 @@ namespace me.stojan.stun.message {
 		 * @param transaction the transaction value, will be clamped to last 96 bits
 		 * @return this builder, never null
 		 */
-		public STUNMessageBuilder Transaction(BigInteger transaction) {
-			byte[] tx = STUNTransaction.Transaction(transaction);
+		public STUNMessageBuilder Transaction(ByteBuffer transaction) {
+			ByteBuffer tx = STUNTransaction.Transaction(transaction);
 
 			Array.Copy(STUNHeader.MAGIC_COOKIE, 0, header, 4, STUNHeader.MAGIC_COOKIE.Length);
-			Array.Copy(tx, 0, header, 4 + STUNHeader.MAGIC_COOKIE.Length, tx.Length);
+			Array.Copy(tx.Data, tx.positionAbsolute, header, 4 + STUNHeader.MAGIC_COOKIE.Length, tx.Length);
 
 			return this;
 		}

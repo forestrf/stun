@@ -20,8 +20,7 @@
  * SOFTWARE.
  */
 
-using Org.BouncyCastle.Math;
-using System;
+using Ashkatchap.Utils;
 
 namespace me.stojan.stun.message {
 	/**
@@ -29,25 +28,23 @@ namespace me.stojan.stun.message {
 	 */
 	public static class STUNTransaction {
 		/** Maximum value for a STUN transaction. */
-		public static BigInteger MAX = BigInteger.One.ShiftLeft(96).Subtract(BigInteger.One);
+		public static readonly byte[] MAX = new byte[12] {
+			0xff, 0xff, 0xff, 0xff,
+			0xff, 0xff, 0xff, 0xff,
+			0xff, 0xff, 0xff, 0xff
+		};
 
 		/**
 		 * Create the bytes for a transaction from a transaction ID.
 		 * @param transaction the transaction ID, must not be null
 		 * @return the transaction bytes, never null
 		 */
-		public static byte[] Transaction(BigInteger transaction) {
-			byte[] raw = new byte[12];
-
-			byte[] bytes = transaction.ToByteArray();
-
-			if (bytes.Length > 12) {
-				Array.Copy(bytes, 1, raw, 0, 12);
+		public static ByteBuffer Transaction(ByteBuffer transaction) {
+			if (transaction.Length > 12) {
+				return new ByteBuffer(transaction.Data, transaction.positionAbsolute + 1, 12);
 			} else {
-				Array.Copy(bytes, 0, raw, 12 - bytes.Length, bytes.Length);
+				return new ByteBuffer(transaction.Data, transaction.positionAbsolute, transaction.Length);
 			}
-
-			return raw;
 		}
 	}
 }
