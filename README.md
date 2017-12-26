@@ -1,6 +1,6 @@
 STUN
 ====
-[![Build Status](https://travis-ci.org/WebRTC-csharp/stun.svg?branch=master)](https://travis-ci.org/WebRTC-csharp/stun) [![codecov](https://codecov.io/gh/WebRTC-csharp/stun/branch/master/graph/badge.svg)](https://codecov.io/gh/WebRTC-csharp/stun)
+[![Build Status](https://travis-ci.org/WebRTC-csharp/stun.svg?branch=master)](https://travis-ci.org/WebRTC-csharp/stun)
 
 Ported from [hf/stun](https://github.com/hf/stun) from Java to CSharp
 
