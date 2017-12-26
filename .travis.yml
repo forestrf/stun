@@ -1,10 +1,10 @@
 language: csharp
 solution: stun.sln
 install:
-  - sudo apt-get install nunit-console
   - nuget restore stun.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release stun.sln
-  - nunit-console ./stun.Tests/bin/Release/stun.Tests.dll
+  - msbuild /p:Configuration=Release stun.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./stun.Tests/bin/Release/Travis.Tests.dll
 after_success:
   - bash <(curl -s https://codecov.io/bash)
