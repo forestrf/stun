@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-using Ashkatchap.Utils;
+using STUN.Utils;
 using System;
 using System.Collections.Generic;
 
-namespace me.stojan.stun.message {
+namespace STUN.me.stojan.stun.message {
 	/**
 	 * A message builder for well-formed STUN messages.
 	 */

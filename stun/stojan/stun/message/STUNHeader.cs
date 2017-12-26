@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-using Ashkatchap.Utils;
+using STUN.Utils;
 
-namespace me.stojan.stun.message {
+namespace STUN.me.stojan.stun.message {
 	/**
 	 * Utilities for forming STUN message headers.
 	 */

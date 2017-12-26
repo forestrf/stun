@@ -20,11 +20,10 @@
  * SOFTWARE.
  */
 
-using STUN;
 using System;
 using System.Text;
 
-namespace me.stojan.stun.message.attribute {
+namespace STUN.me.stojan.stun.message.attribute {
 	/**
 	 * Supports the creation of well-formed SOFTWARE STUN attributes.
 	 */

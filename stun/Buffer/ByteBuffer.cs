@@ -1,6 +1,6 @@
 using System;
 
-namespace Ashkatchap.Utils {
+namespace STUN.Utils {
 	public struct ByteBuffer {
 		private byte[] _data;
 

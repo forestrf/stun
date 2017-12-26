@@ -23,7 +23,7 @@
 using NUnit.Framework;
 using System;
 
-namespace me.stojan.stun.message.attribute {
+namespace STUN.me.stojan.stun.message.attribute {
 	/**
 	 * Created by vuk on 06/11/16.
 	 */

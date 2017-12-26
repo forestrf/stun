@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-namespace me.stojan.stun.message {
+namespace STUN.me.stojan.stun.message {
 	/**
 	 * Defines the STUN message types.
 	 */

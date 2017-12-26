@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Ashkatchap.Utils {
+namespace STUN.Utils {
 	public enum Endianness {
 		/// <summary>
 		/// Network Byte order

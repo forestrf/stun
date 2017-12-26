@@ -5,6 +5,6 @@ install:
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - msbuild /p:Configuration=Release stun.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./stun.Tests/bin/Release/Travis.Tests.dll
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./stun.Tests/bin/Release/stun.Tests.dll
 after_success:
   - bash <(curl -s https://codecov.io/bash)

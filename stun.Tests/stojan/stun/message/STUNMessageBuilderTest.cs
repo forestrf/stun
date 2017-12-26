@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-using Ashkatchap.Utils;
+using STUN.Utils;
 using NUnit.Framework;
 using System;
 
-namespace me.stojan.stun.message {
+namespace STUN.me.stojan.stun.message {
 	/**
 	 * Created by vuk on 24/10/16.
 	 */

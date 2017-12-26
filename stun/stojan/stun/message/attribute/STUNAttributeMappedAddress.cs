@@ -20,10 +20,9 @@
  * SOFTWARE.
  */
 
-using STUN;
 using System;
 
-namespace me.stojan.stun.message.attribute {
+namespace STUN.me.stojan.stun.message.attribute {
 	/**
 	 * Supports the creation of the STUN MAPPED-ADDRESS and XOR-MAPPED-ADDRESS attributes.
 	 */

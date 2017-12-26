@@ -20,9 +20,7 @@
  * SOFTWARE.
  */
 
-using STUN;
-
-namespace me.stojan.stun.message.attribute {
+namespace STUN.me.stojan.stun.message.attribute {
 	/**
 	 * Supports the creation of STUN's UNKNOWN-ATTRIBUTES attribute.
 	 */
