@@ -20,161 +20,168 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message.attribute;
+using NUnit.Framework;
+using System;
 
-import org.junit.Test;
+namespace me.stojan.stun.message.attribute {
+	/**
+	 * Created by vuk on 06/11/16.
+	 */
+	[TestFixture]
+	public class STUNAttributeMappedAddressTest {
+		[Test]
+		public void correctRFCType() {
+			Assert.AreEqual(0x0001, STUNAttributeMappedAddress.TYPE);
+		}
 
-import java.util.Arrays;
+		[Test]
+		public void lessThanIPv4Address() {
+			byte[] o;
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[3], -1, out o));
+		}
 
-import static org.junit.Assert.Assert.AreEqual;
-import static org.junit.Assert.Assert.IsTrue;
+		[Test]
+		public void lessThanIPv6Address() {
+			byte[] o;
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[8], -1, out o));
+		}
 
-/**
- * Created by vuk on 06/11/16.
- */
-public class STUNAttributeMappedAddressTest {
+		[Test]
+		public void overThanIPv6Address() {
+			byte[] o;
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[17], -1, out o));
+		}
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void noInstances() {
-        new STUNAttributeMappedAddress();
-    }
+		[Test]
+		public void ipv4Address() {
+			byte[] addr = new byte[] { 192, 168, 1, 123 };
 
-    [Test]
-    public void correctRFCType() {
-        Assert.AreEqual(0x0001, STUNAttributeMappedAddress.TYPE);
-    }
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, -1, out attribute));
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void lessThanIPv4Address() throws Exception {
-        STUNAttributeMappedAddress.value(new byte[3], -1);
-    }
+			Assert.AreEqual(8, attribute.Length);
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void lessThanIPv6Address() throws Exception {
-        STUNAttributeMappedAddress.value(new byte[8], -1);
-    }
+			// zero-padding
+			Assert.AreEqual(0, attribute[0]);
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void overThanIPv6Address() throws Exception {
-        STUNAttributeMappedAddress.value(new byte[17], -1);
-    }
+			// IPv4 address type
+			Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV4, attribute[1]);
 
-    [Test]
-    public void ipv4Address() throws Exception {
-        final byte[] addr = new byte[] { (byte) 192, (byte) 168, (byte) 1, (byte) 123 };
+			// port
+			Assert.AreEqual(255, attribute[2]);
+			Assert.AreEqual(255, attribute[3]);
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(addr, -1);
+			// ipv4 address
+			Assert.AreEqual(192, attribute[4]);
+			Assert.AreEqual(168, attribute[5]);
+			Assert.AreEqual(1, attribute[6]);
+			Assert.AreEqual(123, attribute[7]);
+		}
 
-        Assert.AreEqual(8, attribute.length);
+		[Test]
+		public void ipv6Address() {
+			byte[] addr = new byte[] { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x08, (byte) 0xd3, 0x13, 0x19, (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
 
-        // zero-padding
-        Assert.AreEqual((byte) 0, attribute[0]);
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, 123, out attribute));
 
-        // IPv4 address type
-        Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV4, attribute[1]);
+			Assert.AreEqual(20, attribute.Length);
 
-        // port
-        Assert.AreEqual((byte) 255, attribute[2]);
-        Assert.AreEqual((byte) 255, attribute[3]);
+			// 0 padding
+			Assert.AreEqual((byte) 0, attribute[0]);
 
-        // ipv4 address
-        Assert.AreEqual((byte) 192, attribute[4]);
-        Assert.AreEqual((byte) 168, attribute[5]);
-        Assert.AreEqual((byte) 1, attribute[6]);
-        Assert.AreEqual((byte) 123, attribute[7]);
-    }
+			// ipv6 address
+			Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV6, attribute[1]);
 
-    [Test]
-    public void ipv6Address() throws Exception {
-        final byte[] addr = new byte[] { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x08, (byte) 0xd3, 0x13, 0x19, (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
+			// port
+			Assert.AreEqual(0, attribute[2]);
+			Assert.AreEqual(123, attribute[3]);
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(addr, 123);
+			for (int i = 0; i < addr.Length; i++) {
+				Assert.AreEqual(addr[i], attribute[4 + i]);
+			}
+		}
 
-        Assert.AreEqual(20, attribute.length);
+		[Test]
+		public void nullAttribute() {
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(null));
+		}
 
-        // 0 padding
-        Assert.AreEqual((byte) 0, attribute[0]);
+		[Test]
+		public void shortAttribute() {
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[0]));
+		}
 
-        // ipv6 address
-        Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV6, attribute[1]);
+		[Test]
+		public void nonZeroFirstByte() {
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[] { 1, 0, 0, 0 }));
+		}
 
-        // port
-        Assert.AreEqual((byte) 0, attribute[2]);
-        Assert.AreEqual((byte) 123, attribute[3]);
+		[Test]
+		public void extractPort() {
+			int port = 0b1010_1010_1010_1010;
 
-        for (int i = 0; i < addr.length; i++) {
-            Assert.AreEqual(addr[i], attribute[4 + i]);
-        }
-    }
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(new byte[] { (byte) 192, (byte) 168, 0, 1 }, port, out attribute));
+			int portOut;
+			Assert.IsTrue(STUNAttributeMappedAddress.Port(attribute, out portOut));
+			Assert.AreEqual(port, portOut);
+		}
 
-    [Test](expected = IllegalArgumentException.class)
-    public void nullAttribute() throws Exception {
-        STUNAttributeMappedAddress.checkAttribute(null);
-    }
+		[Test]
+		public void extractIPV4Address() {
+			byte[] address = new byte[] { 192, 168, 7, 254};
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void shortAttribute() throws Exception {
-        STUNAttributeMappedAddress.checkAttribute(new byte[0]);
-    }
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
+			byte[] outAddress;
+			Assert.IsTrue(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+			CollectionAssert.AreEqual(address, outAddress);
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void nonZeroFirstByte() throws Exception {
-        STUNAttributeMappedAddress.checkAttribute(new byte[] { 1, 0, 0, 0 });
-    }
+		[Test]
+		public void extractIPV6Address() {
+			byte[] address = new byte[] { 0x20, 0x01, 0x0d, 0xb8, 0x85, 0xa3, 0x08, 0xd3, 0x13, 0x19, 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
 
-    [Test]
-    public void extractPort() throws Exception {
-        final int port = 0b1010_1010_1010_1010;
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(new byte[] { (byte) 192, (byte) 168, 0, 1 }, port);
+			byte[] outAddress;
+			Assert.IsTrue(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+			CollectionAssert.AreEqual(address, outAddress);
+		}
 
-        Assert.AreEqual(port, STUNAttributeMappedAddress.port(attribute));
-    }
+		[Test]
+		public void wrongAddressType() {
+			byte[] address = new byte[] { 192, 168, 3, 254 };
 
-    [Test]
-    public void extractIPV4Address() throws Exception {
-        final byte[] address = new byte[] { (byte) 192, (byte) 168, 7, (byte) 254};
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+			attribute[1] = 192;
 
-        Assert.IsTrue(Arrays.equals(address, STUNAttributeMappedAddress.address(attribute)));
-    }
+			byte[] outAddress;
+			Assert.IsFalse(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+		}
 
-    [Test]
-    public void extractIPV6Address() throws Exception {
-        final byte[] address = new byte[] { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x08, (byte) 0xd3, 0x13, 0x19, (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
+		[Test]
+		public void wrongAddressLength() {
+			byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
 
-        Assert.IsTrue(Arrays.equals(address, STUNAttributeMappedAddress.address(attribute)));
-    }
+			byte[] wrongAttribute = new byte[attribute.Length + 4];
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void wrongAddressType() throws Exception {
-        final byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
+			Array.Copy(attribute, 0, wrongAttribute, 0, attribute.Length);
 
-        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
+			byte[] outAddress;
+			Assert.IsFalse(STUNAttributeMappedAddress.Address(wrongAttribute, out outAddress));
+		}
 
-        attribute[1] = (byte) 192;
-
-        STUNAttributeMappedAddress.address(attribute);
-    }
-
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void wrongAddressLength() throws Exception {
-        final byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
-
-        final byte[] attribute = STUNAttributeMappedAddress.value(address, 0);
-
-        final byte[] wrongAttribute = new byte[attribute.length + 4];
-
-        System.arraycopy(attribute, 0, wrongAttribute, 0, attribute.length);
-
-        STUNAttributeMappedAddress.address(wrongAttribute);
-    }
-
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void lengthNotMultipleOf4() throws Exception {
-        STUNAttributeMappedAddress.checkAttribute(new byte[15]);
-    }
+		[Test]
+		public void lengthNotMultipleOf4() {
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[15]));
+		}
+	}
 }

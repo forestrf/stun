@@ -26,6 +26,7 @@ namespace me.stojan.stun.message {
 	/**
 	 * Created by vuk on 24/10/16.
 	 */
+	[TestFixture]
 	public class STUNHeaderTest {
 		[Test]
 		public void groupExtracionFromMessageType() {

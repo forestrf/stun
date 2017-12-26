@@ -27,6 +27,7 @@ namespace me.stojan.stun.message {
 	/**
 	 * Created by vuk on 24/10/16.
 	 */
+	[TestFixture]
 	public class STUNTransactionTest {
 		[Test]
 		public void upTo95Bits() {

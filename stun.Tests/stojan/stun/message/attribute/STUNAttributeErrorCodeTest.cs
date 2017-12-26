@@ -20,135 +20,145 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message.attribute;
+using NUnit.Framework;
+using System.Text;
 
-import org.junit.Test;
+namespace me.stojan.stun.message.attribute {
+	/**
+	 * Created by vuk on 20/11/16.
+	 */
+	[TestFixture]
+	public class STUNAttributeErrorCodeTest {
+		[Test]
+		public void TYPE() {
+			Assert.AreEqual(0x0009, STUNAttributeErrorCode.TYPE);
+		}
 
-import java.nio.charset.Charset;
+		[Test]
+		public void value_nullReason() {
+			byte[] b;
+			Assert.AreEqual(false, STUNAttributeErrorCode.Value(300, null, out b));
+		}
 
-import static org.junit.Assert.*;
+		[Test]
+		public void value_errorCodeLessThan300() {
+			byte[] b;
+			Assert.AreEqual(false, STUNAttributeErrorCode.Value(299, "", out b));
+		}
 
-/**
- * Created by vuk on 20/11/16.
- */
-public class STUNAttributeErrorCodeTest {
+		[Test]
+		public void value_errorCodeGreaterThan699() {
+			byte[] b;
+			Assert.AreEqual(false, STUNAttributeErrorCode.Value(700, "", out b));
+		}
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void noInstances() throws Exception {
-        new STUNAttributeErrorCode();
-    }
+		[Test]
+		public void value_generateLongReason() {
+			StringBuilder builder = new StringBuilder();
 
-    [Test]
-    public void TYPE() {
-        Assert.AreEqual(0x0009, STUNAttributeErrorCode.TYPE);
-    }
+			for (int i = 0; i < 250; i++) {
+				builder.Append('!');
+			}
 
-    [Test](expected = IllegalArgumentException.class)
-    public void value_nullReason() throws Exception {
-        STUNAttributeErrorCode.value(300, null);
-    }
+			string longReason = builder.ToString();
 
-    [Test](expected = IllegalArgumentException.class)
-    public void value_errorCodeLessThan300() throws Exception {
-        STUNAttributeErrorCode.value(299, "");
-    }
+			byte[] attribute;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Value(699, longReason, out attribute));
 
-    [Test](expected = IllegalArgumentException.class)
-    public void value_errorCodeGreaterThan699() throws Exception {
-        STUNAttributeErrorCode.value(700, "");
-    }
+			Assert.AreEqual(4 + 128, attribute.Length);
+			Assert.AreEqual(0, attribute[0]);
+			Assert.AreEqual(0, attribute[1]);
+			Assert.AreEqual(6, attribute[2]);
+			Assert.AreEqual(99, attribute[3]);
 
-    [Test]
-    public void value_generateLongReason() throws Exception {
-        final StringBuilder builder = new StringBuilder();
+			Assert.AreEqual(Encoding.UTF8.GetString(attribute, 4, attribute.Length - 4), longReason.Substring(0, 128));
+		}
 
-        for (int i = 0; i < 250; i++) {
-            builder.append('!');
-        }
+		[Test]
+		public void checkAttribute_nullValue() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(null));
+		}
 
-        final String longReason = builder.toString();
+		[Test]
+		public void checkAttribute_lengthLessThan4() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[3]));
+		}
 
-        final byte[] attribute = STUNAttributeErrorCode.value(699, longReason);
+		[Test]
+		public void checkAttribute_nonZeroFirstByte() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 1, 0, 3, 0 }));
+		}
 
-        Assert.AreEqual(4 + 128, attribute.length);
-        Assert.AreEqual(0, attribute[0]);
-        Assert.AreEqual(0, attribute[1]);
-        Assert.AreEqual(6, attribute[2]);
-        Assert.AreEqual(99, attribute[3]);
+		[Test]
+		public void checkAttribute_nonZeroSecondByte() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 1, 3, 0 }));
+		}
 
-        Assert.AreEqual(new String(attribute, 4, attribute.length - 4, Charset.forName("UTF-8")), longReason.substring(0, 128));
-    }
+		[Test]
+		public void checkAttribute_thirdByteLessThan3() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 2, 0 }));
+		}
 
-    [Test](expected = IllegalArgumentException.class)
-    public void checkAttribute_nullValue() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(null);
-    }
+		[Test]
+		public void checkAttribute_tirdByteGreaterThan6() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 7, 0 }));
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_lengthLessThan4() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[3]);
-    }
+		[Test]
+		public void checkAttribute_fourthByteGreaterThan99() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 3, 100 }));
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_nonZeroFirstByte() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 1, 0, 3, 0 });
-    }
+		[Test]
+		public void checkAttribute_fourthByteGreaterThan128() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 3, (byte) 129 }));
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_nonZeroSecondByte() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 0, 1, 3, 0 });
-    }
+		[Test]
+		public void checkAttribute_maxLength() {
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[4 + 764]));
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_thirdByteLessThan3() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 0, 0, 2, 0 });
-    }
+		[Test]
+		public void reason_extract() {
+			string reason = "Hello, World!";
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_tirdByteGreaterThan6() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 0, 0, 7, 0 });
-    }
+			byte[] attribute;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, reason, out attribute));
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_fourthByteGreaterThan99() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 0, 0, 3, 100 });
-    }
+			string outReason;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Reason(attribute, out outReason));
+			Assert.AreEqual(reason, outReason);
+		}
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_fourthByteGreaterThan128() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[] { 0, 0, 3, (byte) 129 });
-    }
+		[Test]
+		public void reason_emptyExtract() {
+			string reason = "";
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void checkAttribute_maxLength() throws Exception {
-        STUNAttributeErrorCode.checkAttribute(new byte[4 + 764]);
-    }
+			byte[] attribute;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, reason, out attribute));
 
-    [Test]
-    public void reason_extract() throws Exception {
-        final String reason = "Hello, World!";
+			string outReason;
+			Assert.AreEqual(reason, STUNAttributeErrorCode.Reason(attribute, out outReason));
+			Assert.AreEqual(reason, outReason);
+		}
 
-        final byte[] attribute = STUNAttributeErrorCode.value(300, reason);
+		[Test]
+		public void code_extract300() {
+			byte[] attribute;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, "", out attribute));
+			int code;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Code(attribute, out code));
+			Assert.AreEqual(300, code);
+		}
 
-        Assert.AreEqual(reason, STUNAttributeErrorCode.reason(attribute));
-    }
-
-    [Test]
-    public void reason_emptyExtract() throws Exception {
-        final String reason = "";
-
-        final byte[] attribute = STUNAttributeErrorCode.value(300, reason);
-
-        Assert.AreEqual(reason, STUNAttributeErrorCode.reason(attribute));
-    }
-
-    [Test]
-    public void code_extract300() throws Exception {
-        Assert.AreEqual(300, STUNAttributeErrorCode.code(STUNAttributeErrorCode.value(300, "")));
-    }
-
-    [Test]
-    public void code_extract699() throws Exception {
-        Assert.AreEqual(699, STUNAttributeErrorCode.code(STUNAttributeErrorCode.value(699, "")));
-    }
+		[Test]
+		public void code_extract699() {
+			byte[] attribute;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Value(699, "", out attribute));
+			int code;
+			Assert.AreEqual(true, STUNAttributeErrorCode.Code(attribute, out code));
+			Assert.AreEqual(699, code);
+		}
+	}
 }

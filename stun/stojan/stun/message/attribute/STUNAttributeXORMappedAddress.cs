@@ -111,7 +111,7 @@ namespace me.stojan.stun.message.attribute {
 		 * @param header the header
 		 * @throws IllegalArgumentException if header is null, not 20 bytes long or does not start with 00 bits
 		 */
-		static bool CheckHeader(byte[] header) {
+		public static bool CheckHeader(byte[] header) {
 			if (null == header) {
 				Logger.Error("Argument header must not be null");
 				return false;

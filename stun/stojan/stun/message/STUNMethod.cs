@@ -37,10 +37,9 @@ namespace me.stojan.stun.message {
 		 * @param method the method
 		 * @return the upper-5 bits
 		 */
-		public static int Upper5(int method) {
-			method = METHOD_MAX & method;
-
-			return (method >> 7) & BITS_5;
+		public static int Upper5(STUNMessageType method) {
+			int m = METHOD_MAX & (int) method;
+			return (m >> 7) & BITS_5;
 		}
 
 		/**
@@ -48,10 +47,9 @@ namespace me.stojan.stun.message {
 		 * @param method the method
 		 * @return the lower-4 bits
 		 */
-		public static int Lower4(int method) {
-			method = METHOD_MAX & method;
-
-			return (method & BITS_4);
+		public static int Lower4(STUNMessageType method) {
+			int m = METHOD_MAX & (int) method;
+			return (m & BITS_4);
 		}
 
 		/**
@@ -59,10 +57,9 @@ namespace me.stojan.stun.message {
 		 * @param method the method
 		 * @return the inner-3 bits
 		 */
-		public static int Inner3(int method) {
-			method = METHOD_MAX & method;
-
-			return (method >> 4) & BITS_3;
+		public static int Inner3(STUNMessageType method) {
+			int m = METHOD_MAX & (int) method;
+			return (m >> 4) & BITS_3;
 		}
 
 		/**
@@ -70,10 +67,9 @@ namespace me.stojan.stun.message {
 		 * @param group the class
 		 * @return the formatted class
 		 */
-		public static int Group(int group) {
-			group = GROUP_MAX & group;
-
-			return ((group & 0b10) << 7) | ((group & 1) << 4);
+		public static int Group(STUNMessageType group) {
+			int g = GROUP_MAX & (int) group;
+			return ((g & 0b10) << 7) | ((g & 1) << 4);
 		}
 
 		/**
@@ -82,7 +78,7 @@ namespace me.stojan.stun.message {
 		 * @param group the class
 		 * @return the joined value
 		 */
-		public static int Join(int method, int group) {
+		public static int Join(STUNMessageType method, STUNMessageType group) {
 			int joined = 0;
 
 			joined = joined | Group(group);

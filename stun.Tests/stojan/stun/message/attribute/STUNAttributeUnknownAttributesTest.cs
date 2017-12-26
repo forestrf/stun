@@ -20,78 +20,78 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message.attribute;
+using NUnit.Framework;
 
-import org.junit.Test;
+namespace me.stojan.stun.message.attribute {
+	/**
+	 * Created by vuk on 20/11/16.
+	 */
+	[TestFixture]
+	public class STUNAttributeUnknownAttributesTest {
+		[Test]
+		public void TYPE() {
+			Assert.AreEqual(0x000A, STUNAttributeUnknownAttributes.TYPE);
+		}
 
-import java.util.Arrays;
+		[Test]
+		public void value_nullAttribute() {
+			byte[] o;
+			Assert.IsFalse(STUNAttributeUnknownAttributes.Value(null, out o));
+		}
 
-import static org.junit.Assert.*;
+		[Test]
+		public void value_zeroAttributes() {
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeUnknownAttributes.Value(new int[0], out attribute));
 
-/**
- * Created by vuk on 20/11/16.
- */
-public class STUNAttributeUnknownAttributesTest {
+			Assert.AreEqual(0, attribute.Length);
+		}
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void noInstance() {
-        new STUNAttributeUnknownAttributes();
-    }
+		[Test]
+		public void value_multipleAttributes() {
+			int[] attributes = new int[] { 0x1ABCD, 0x2EFAB, 0x3CDEF };
 
-    [Test]
-    public void TYPE() {
-        Assert.AreEqual(0x000A, STUNAttributeUnknownAttributes.TYPE);
-    }
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeUnknownAttributes.Value(attributes, out attribute));
 
-    [Test](expected = IllegalArgumentException.class)
-    public void value_nullAttribute() throws Exception {
-        STUNAttributeUnknownAttributes.value(null);
-    }
+			Assert.AreEqual(attributes.Length * 2, attribute.Length);
 
-    [Test]
-    public void value_zeroAttributes() throws Exception {
-        final byte[] attribute = STUNAttributeUnknownAttributes.value(new int[0]);
+			Assert.AreEqual((byte) 0xAB, attribute[0]);
+			Assert.AreEqual((byte) 0xCD, attribute[1]);
+			Assert.AreEqual((byte) 0xEF, attribute[2]);
+			Assert.AreEqual((byte) 0xAB, attribute[3]);
+			Assert.AreEqual((byte) 0xCD, attribute[4]);
+			Assert.AreEqual((byte) 0xEF, attribute[5]);
+		}
 
-        Assert.AreEqual(0, attribute.length);
-    }
+		[Test]
+		public void attributes_nullAttribute() {
+			int[] attribute;
+			Assert.IsFalse(STUNAttributeUnknownAttributes.Attributes(null, out attribute));
+		}
 
-    [Test]
-    public void value_multipleAttributes() throws Exception {
-        final int[] attributes = new int[] { 0x1ABCD, 0x2EFAB, 0x3CDEF };
+		[Test]
+		public void attributes_emptyAttribute() {
+			int[] attributes;
+			Assert.IsTrue(STUNAttributeUnknownAttributes.Attributes(new byte[0], out attributes));
+			Assert.AreEqual(0, attributes.Length);
+		}
 
-        final byte[] attribute = STUNAttributeUnknownAttributes.value(attributes);
+		[Test]
+		public void attributes_oddAttributeLength() {
+			int[] attributes;
+			Assert.IsFalse(STUNAttributeUnknownAttributes.Attributes(new byte[1], out attributes));
+		}
 
-        Assert.AreEqual(attributes.length * 2, attribute.length);
+		[Test]
+		public void attributes_extractAttributes() {
+			int[] attributes = new int[] { 0xABCD, 0xEFAB, 0xCDEF, 0xABCD };
+			byte[] attribute;
+			Assert.IsTrue(STUNAttributeUnknownAttributes.Value(attributes, out attribute));
+			int[] extracted;
+			Assert.IsTrue(STUNAttributeUnknownAttributes.Attributes(attribute, out extracted));
 
-        Assert.AreEqual((byte) 0xAB, attribute[0]);
-        Assert.AreEqual((byte) 0xCD, attribute[1]);
-        Assert.AreEqual((byte) 0xEF, attribute[2]);
-        Assert.AreEqual((byte) 0xAB, attribute[3]);
-        Assert.AreEqual((byte) 0xCD, attribute[4]);
-        Assert.AreEqual((byte) 0xEF, attribute[5]);
-    }
-
-    [Test](expected = IllegalArgumentException.class)
-    public void attributes_nullAttribute() throws Exception {
-        STUNAttributeUnknownAttributes.attributes(null);
-    }
-
-    [Test]
-    public void attributes_emptyAttribute() throws Exception {
-        Assert.AreEqual(0, STUNAttributeUnknownAttributes.attributes(new byte[0]).length);
-    }
-
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void attributes_oddAttributeLength() throws Exception {
-        STUNAttributeUnknownAttributes.attributes(new byte[1]);
-    }
-
-    [Test]
-    public void attributes_extractAttributes() throws Exception {
-        final int[] attributes = new int[] { 0xABCD, 0xEFAB, 0xCDEF, 0xABCD };
-        final byte[] attribute = STUNAttributeUnknownAttributes.value(attributes);
-        final int[] extracted = STUNAttributeUnknownAttributes.attributes(attribute);
-
-        Assert.IsTrue(Arrays.equals(attributes, extracted));
-    }
+			CollectionAssert.AreEqual(attributes, extracted);
+		}
+	}
 }

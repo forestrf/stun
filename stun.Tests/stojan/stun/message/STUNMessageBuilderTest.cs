@@ -20,104 +20,99 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message;
+using NUnit.Framework;
+using Org.BouncyCastle.Math;
+using System;
 
-import org.junit.Test;
+namespace me.stojan.stun.message {
+	/**
+	 * Created by vuk on 24/10/16.
+	 */
+	[TestFixture]
+	public class STUNMessageBuilderTest {
+		[Test]
+		public void buildMessage() {
+			STUNMessageBuilder builder = new STUNMessageBuilder();
 
-import java.math.BigInteger;
-import java.util.Arrays;
+			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
+			builder.Transaction(BigInteger.One);
+			builder.Value(0b111, new byte[] { 255 });
 
-import static org.junit.Assert.Assert.AreEqual;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.Assert.IsTrue;
+			byte[] message = builder.Build();
 
-/**
- * Created by vuk on 24/10/16.
- */
-public class STUNMessageBuilderTest {
+			byte[] transaction = new byte[12];
 
-    [Test]
-    public void buildMessage() {
-        final STUNMessageBuilder builder = new STUNMessageBuilder();
+			Array.Copy(message, 8, transaction, 0, 12);
 
-        builder.messageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
-        builder.transaction(BigInteger.ONE);
-        builder.value(0b111, new byte[] { -1 });
+			BigInteger transactionInt = new BigInteger(transaction);
 
-        final byte[] message = builder.build();
+			byte[] magicCookie = new byte[4];
 
-        final byte[] transaction = new byte[12];
+			Array.Copy(message, 4, magicCookie, 0, 4);
 
-        System.arraycopy(message, 8, transaction, 0, 12);
+			// check length
+			Assert.AreEqual(0, (message.Length - 20) % 4);
+			// check length without header
+			Assert.AreEqual(message.Length - 20, STUNHeader.Int16(message, 2));
+			// check group
+			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(message, 0)));
+			// check method
+			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(message, 0)));
+			// check magic cookie
+			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
+			// check transaction
+			Assert.AreEqual(transactionInt, BigInteger.One);
+			// check first byte of tlv
+			Assert.AreEqual(0, message[20]);
+			// check second byte of tlv
+			Assert.AreEqual(0b111, message[20 + 1]);
+			// check first byte of tlv length
+			Assert.AreEqual(0, message[20 + 2]);
+			// check second byte of tlv length
+			Assert.AreEqual(1, message[20 + 2 + 1]);
+			// check first byte of tlv value
+			Assert.AreEqual(-1, message[20 + 2 + 2]);
+			// check second byte of tlv value
+			Assert.AreEqual(0, message[20 + 2 + 2 + 1]);
+			// check third byte of tlv value
+			Assert.AreEqual(0, message[20 + 2 + 2 + 2]);
+			// check fourth byte of tlv value
+			Assert.AreEqual(0, message[20 + 2 + 2 + 3]);
+		}
 
-        final BigInteger transactionInt = new BigInteger(transaction);
+		[Test]
+		public void header() {
+			STUNMessageBuilder builder = new STUNMessageBuilder();
 
-        final byte[] magicCookie = new byte[4];
+			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
+			builder.Transaction(BigInteger.Ten);
+			builder.Value(0xABABA, new byte[20]);
 
-        System.arraycopy(message, 4, magicCookie, 0, 4);
+			byte[] header = builder.GetHeaderCopy();
 
-        // check length
-        Assert.AreEqual(0, (message.length - 20) % 4);
-        // check length without header
-        Assert.AreEqual(message.length - 20, STUNHeader.int16(message, 2));
-        // check group
-        Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.group(STUNHeader.int16(message, 0)));
-        // check method
-        Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.method(STUNHeader.int16(message, 0)));
-        // check magic cookie
-        Assert.IsTrue(Arrays.equals(STUNHeader.MAGIC_COOKIE, magicCookie));
-        // check transaction
-        Assert.AreEqual(transactionInt, BigInteger.ONE);
-        // check first byte of tlv
-        Assert.AreEqual(0, message[20]);
-        // check second byte of tlv
-        Assert.AreEqual(0b111, message[20 + 1]);
-        // check first byte of tlv length
-        Assert.AreEqual(0, message[20 + 2]);
-        // check second byte of tlv length
-        Assert.AreEqual(1, message[20 + 2 + 1]);
-        // check first byte of tlv value
-        Assert.AreEqual(-1, message[20 + 2 + 2]);
-        // check second byte of tlv value
-        Assert.AreEqual(0, message[20 + 2 + 2 + 1]);
-        // check third byte of tlv value
-        Assert.AreEqual(0, message[20 + 2 + 2 + 2]);
-        // check fourth byte of tlv value
-        Assert.AreEqual(0, message[20 + 2 + 2 + 3]);
-    }
+			byte[] transaction = new byte[12];
 
-    [Test]
-    public void header() throws Exception {
-        final STUNMessageBuilder builder = new STUNMessageBuilder();
+			Array.Copy(header, 8, transaction, 0, 12);
 
-        builder.messageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
-        builder.transaction(BigInteger.TEN);
-        builder.value(0xABABA, new byte[20]);
+			BigInteger transactionInt = new BigInteger(transaction);
 
-        final byte[] header = builder.header();
+			byte[] magicCookie = new byte[STUNHeader.MAGIC_COOKIE.Length];
 
-        final byte[] transaction = new byte[12];
+			Array.Copy(header, 4, magicCookie, 0, 4);
 
-        System.arraycopy(header, 8, transaction, 0, 12);
+			Assert.IsNotNull(header);
+			Assert.AreEqual(20, header.Length);
 
-        final BigInteger transactionInt = new BigInteger(transaction);
-
-        final byte[] magicCookie = new byte[STUNHeader.MAGIC_COOKIE.length];
-
-        System.arraycopy(header, 4, magicCookie, 0, 4);
-
-        assertNotNull(header);
-        Assert.AreEqual(20, header.length);
-
-        // check group
-        Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.group(STUNHeader.int16(header, 0)));
-        // check method
-        Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.method(STUNHeader.int16(header, 0)));
-        // check tlv length
-        Assert.AreEqual(20 + 4, STUNHeader.int16(header, 2));
-        // check magic cookie
-        Assert.IsTrue(Arrays.equals(STUNHeader.MAGIC_COOKIE, magicCookie));
-        // check transaction
-        Assert.AreEqual(transactionInt, BigInteger.TEN);
-    }
+			// check group
+			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, STUNHeader.Group(STUNHeader.Int16(header, 0)));
+			// check method
+			Assert.AreEqual(STUNMessageType.METHOD_BINDING, STUNHeader.Method(STUNHeader.Int16(header, 0)));
+			// check tlv length
+			Assert.AreEqual(20 + 4, STUNHeader.Int16(header, 2));
+			// check magic cookie
+			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
+			// check transaction
+			Assert.AreEqual(transactionInt, BigInteger.Ten);
+		}
+	}
 }

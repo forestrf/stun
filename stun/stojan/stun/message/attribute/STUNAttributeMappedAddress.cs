@@ -136,7 +136,7 @@ namespace me.stojan.stun.message.attribute {
 		 * @throws IllegalArgumentException if attribute is null
 		 * @throws InvalidSTUNAttributeException if attribute is not valid per STUN spec
 		 */
-		static bool CheckAttribute(byte[] attribute) {
+		public static bool CheckAttribute(byte[] attribute) {
 			if (null == attribute) {
 				Logger.Error("Argument attribute must not be null");
 				return false;

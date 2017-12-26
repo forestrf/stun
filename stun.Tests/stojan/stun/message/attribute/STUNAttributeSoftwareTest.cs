@@ -20,86 +20,88 @@
  * SOFTWARE.
  */
 
-package me.stojan.stun.message.attribute;
+using NUnit.Framework;
+using System.Text;
 
-import org.junit.Test;
+namespace me.stojan.stun.message.attribute {
+	/**
+	 * Created by vuk on 03/12/16.
+	 */
+	[TestFixture]
+	public class STUNAttributeSoftwareTest {
+		[Test]
+		public void TYPE() {
+			Assert.AreEqual(0x8022, STUNAttributeSoftware.TYPE);
+		}
 
-import static org.junit.Assert.*;
+		[Test]
+		public void value_nullArgument() {
+			byte[] o;
+			Assert.IsFalse(STUNAttributeSoftware.Value(null, out o));
+		}
 
-/**
- * Created by vuk on 03/12/16.
- */
-public class STUNAttributeSoftwareTest {
+		[Test]
+		public void value_utf8ASCII() {
+			string software = "12345678";
 
-    [Test](expected = UnsupportedOperationException.class)
-    public void noInstances() {
-        new STUNAttributeSoftware();
-    }
+			byte[] value;
+			Assert.IsTrue(STUNAttributeSoftware.Value(software, out value));
 
-    [Test]
-    public void TYPE() {
-        Assert.AreEqual(0x8022, STUNAttributeSoftware.TYPE);
-    }
+			Assert.IsNotNull(value);
+			Assert.AreEqual(software.Length, value.Length);
+			Assert.AreEqual(software, Encoding.UTF8.GetString(value));
+		}
 
-    [Test](expected = IllegalArgumentException.class)
-    public void value_nullArgument() throws Exception {
-        STUNAttributeSoftware.value(null);
-    }
+		[Test]
+		public void value_software_max128Chars() {
+			StringBuilder builder = new StringBuilder(129);
 
-    [Test]
-    public void value_utf8ASCII() throws Exception {
-        final String software = "12345678";
+			for (int i = 0; i < 130; i++) {
+				builder.Append('!');
+			}
 
-        final byte[] value = STUNAttributeSoftware.value(software);
+			string software = builder.ToString();
 
-        assertNotNull(value);
-        Assert.AreEqual(software.length(), value.length);
-        Assert.AreEqual(software, new String(value, "UTF-8"));
-    }
+			Assert.IsTrue(software.Length > 128);
 
-    [Test]
-    public void value_software_max128Chars() throws Exception {
-        final StringBuilder builder = new StringBuilder(129);
+			byte[] value;
+			Assert.IsTrue(STUNAttributeSoftware.Value(software, out value));
 
-        for (int i = 0; i < 130; i++) {
-            builder.append('!');
-        }
+			Assert.IsNotNull(value);
 
-        final String software = builder.toString();
+			string softwareRet;
+			Assert.IsTrue(STUNAttributeSoftware.Software(value, out softwareRet));
 
-        Assert.IsTrue(software.length() > 128);
+			Assert.IsNotNull(softwareRet);
+			Assert.AreEqual(128, softwareRet.Length);
+			Assert.AreEqual(software.Substring(0, 128), softwareRet);
+		}
 
-        final byte[] value = STUNAttributeSoftware.value(software);
+		[Test]
+		public void software_nullValue() {
+			string softwareRet;
+			Assert.IsFalse(STUNAttributeSoftware.Software(null, out softwareRet));
+		}
 
-        assertNotNull(value);
+		[Test]
+		public void software_moreThan763Bytes() {
+			string softwareRet;
+			Assert.IsFalse(STUNAttributeSoftware.Software(new byte[764], out softwareRet));
+		}
 
-        final String softwareRet = STUNAttributeSoftware.software(value);
+		[Test]
+		public void software_correctValue() {
+			string software = "Hello, this is Cyrillic: Здраво!";
 
-        assertNotNull(softwareRet);
-        Assert.AreEqual(128, softwareRet.length());
-        Assert.AreEqual(software.substring(0, 128), softwareRet);
-    }
+			byte[] value;
+			Assert.IsTrue(STUNAttributeSoftware.Value(software, out value));
+			Assert.IsNotNull(value);
 
-    [Test](expected = IllegalArgumentException.class)
-    public void software_nullValue() throws Exception {
-        STUNAttributeSoftware.software(null);
-    }
+			string softwareRet;
+			Assert.IsTrue(STUNAttributeSoftware.Software(value, out softwareRet));
+			Assert.IsNotNull(softwareRet);
 
-    [Test](expected = InvalidSTUNAttributeException.class)
-    public void software_moreThan763Bytes() throws Exception {
-        STUNAttributeSoftware.software(new byte[764]);
-    }
-
-    [Test]
-    public void software_correctValue() throws Exception {
-        final String software = "Hello, this is Cyrillic: Здраво!";
-
-        final byte[] value = STUNAttributeSoftware.value(software);
-        assertNotNull(value);
-
-        final String softwareRet = STUNAttributeSoftware.software(value);
-        assertNotNull(softwareRet);
-
-        Assert.AreEqual(software, softwareRet);
-    }
+			Assert.AreEqual(software, softwareRet);
+		}
+	}
 }

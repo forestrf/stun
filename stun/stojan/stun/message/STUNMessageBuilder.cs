@@ -40,9 +40,8 @@ namespace me.stojan.stun.message {
 		 * @param method the STUN method
 		 * @return this builder, never null
 		 */
-		public STUNMessageBuilder MessageType(int group, int method) {
+		public STUNMessageBuilder MessageType(STUNMessageType group, STUNMessageType method) {
 			IntAs16Bit(STUNMethod.Join(method, group) & 0b0011_1111_1111_1111, header, 0);
-
 			return this;
 		}
 
@@ -83,7 +82,9 @@ namespace me.stojan.stun.message {
 		 * @return the header value, never null, will always have length of 20
 		 */
 		public byte[] GetHeaderCopy() {
-			return Arrays.copyOf(header, header.Length);
+			byte[] c = new byte[header.Length];
+			header.CopyTo(c, 0);
+			return c;
 		}
 
 		/**

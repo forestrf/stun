@@ -38,16 +38,16 @@ namespace me.stojan.stun.message.attribute {
 		 * @param reason the reason, must not be null and will be taken to be at most 128 chars long
 		 * @return the value, length may not be a multiple of 4
 		 */
-		public static bool Value(int code, string reason, out byte[] bytes) {
+		public static bool Value(int code, string reason, out byte[] attribute) {
 			if (code < 300 || code >= 700) {
 				Logger.Error("Argument code must be within [300, 700)");
-				bytes = null;
+				attribute = null;
 				return false;
 			}
 
 			if (null == reason) {
 				Logger.Error("Argument reason must not be null");
-				bytes = null;
+				attribute = null;
 				return false;
 			}
 
@@ -55,17 +55,17 @@ namespace me.stojan.stun.message.attribute {
 
 			byte[] reasonBytes = Encoding.UTF8.GetBytes(reason.Substring(0, maxReasonLength));
 
-			bytes = new byte[4 + reasonBytes.Length];
+			attribute = new byte[4 + reasonBytes.Length];
 
 			int errorClass = code / 100;
 			int errorNumber = code % 100;
 
-			bytes[0] = 0;
-			bytes[1] = 0;
-			bytes[2] = (byte) (errorClass & 0b111);
-			bytes[3] = (byte) (errorNumber & 0b0111_1111);
+			attribute[0] = 0;
+			attribute[1] = 0;
+			attribute[2] = (byte) (errorClass & 0b111);
+			attribute[3] = (byte) (errorNumber & 0b0111_1111);
 
-			Array.Copy(reasonBytes, 0, bytes, 4, reasonBytes.Length);
+			Array.Copy(reasonBytes, 0, attribute, 4, reasonBytes.Length);
 
 			return true;
 		}
@@ -108,7 +108,7 @@ namespace me.stojan.stun.message.attribute {
 		 * @throws IllegalArgumentException if attribute is null
 		 * @throws InvalidSTUNAttributeException if the attribute is not well formed
 		 */
-		static bool CheckAttribute(byte[] attribute) {
+		public static bool CheckAttribute(byte[] attribute) {
 			if (null == attribute) {
 				Logger.Error("Argument attribute must not be null");
 				return false;
