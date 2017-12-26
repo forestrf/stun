@@ -24,28 +24,31 @@ using System;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	/**
-	 * Supports the creation of STUN's ERROR-CODE attribute.
-	 */
+	/// <summary>
+	/// Supports the creation of STUN's ERROR-CODE attribute.
+	/// </summary>
 	public static class STUNAttributeErrorCode {
-		/** The STUN type of this attribute. */
+		/// <summary> 
+		/// The STUN type of this attribute.
+		/// </summary>
 		public const int TYPE = 0x0009;
 		
-		/**
-		 * Create a valid ERROR-CODE STUN attribute.
-		 * @param code the code, must be within [300, 700)
-		 * @param reason the reason, must not be null and will be taken to be at most 128 chars long
-		 * @return the value, length may not be a multiple of 4
-		 */
-		public static bool Value(int code, string reason, out byte[] attribute) {
+		/// <summary>
+		/// Create a valid ERROR-CODE STUN attribute.
+		/// </summary>
+		/// <param name="code">The code, must be within[300, 700)</param>
+		/// <param name="reason">The reason, must not be null and will be taken to be at most 128 chars long</param>
+		/// <param name="value">The value, length may not be a multiple of 4</param>
+		/// <returns>Successful</returns>
+		public static bool Value(int code, string reason, out byte[] value) {
 			if (code < 300 || code >= 700) {
-				attribute = null;
+				value = null;
 				Logger.Error("Argument code must be within [300, 700)");
 				return false;
 			}
 
 			if (null == reason) {
-				attribute = null;
+				value = null;
 				Logger.Error("Argument reason must not be null");
 				return false;
 			}
@@ -54,59 +57,58 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 			byte[] reasonBytes = Encoding.UTF8.GetBytes(reason.Substring(0, maxReasonLength));
 
-			attribute = new byte[4 + reasonBytes.Length];
+			value = new byte[4 + reasonBytes.Length];
 
 			int errorClass = code / 100;
 			int errorNumber = code % 100;
 
-			attribute[0] = 0;
-			attribute[1] = 0;
-			attribute[2] = (byte) (errorClass & 0b111);
-			attribute[3] = (byte) (errorNumber & 0b0111_1111);
+			value[0] = 0;
+			value[1] = 0;
+			value[2] = (byte) (errorClass & 0b111);
+			value[3] = (byte) (errorNumber & 0b0111_1111);
 
-			Array.Copy(reasonBytes, 0, attribute, 4, reasonBytes.Length);
+			Array.Copy(reasonBytes, 0, value, 4, reasonBytes.Length);
 
 			return true;
 		}
-
-		/**
-		 * Extract the reason from a well-formed ERROR-CODE STUN attribute.
-		 * @param attribute the attribute, must be well formed and not null
-		 * @return the reason, at most 128 chars long, never null, may be empty
-		 * @throws InvalidSTUNAttributeException if the attribute is not well formed
-		 */
-		public static bool Reason(byte[] attribute, out string output) {
+		
+		/// <summary>
+		/// Extract the reason from a well-formed ERROR-CODE STUN attribute.
+		/// </summary>
+		/// <param name="attribute">Attribute the attribute, must be well formed and not null</param>
+		/// <param name="reason">The reason, at most 128 chars long, never null, may be empty</param>
+		/// <returns>Successful</returns>
+		public static bool Reason(byte[] attribute, out string reason) {
 			if (CheckAttribute(attribute)) {
-				output = Encoding.UTF8.GetString(attribute, 4, attribute.Length - 4);
+				reason = Encoding.UTF8.GetString(attribute, 4, attribute.Length - 4);
 				return true;
 			} else {
-				output = "";
+				reason = "";
 				return false;
 			}
 		}
-
-		/**
-		 * Extract the error code from a well-formed ERROR-CODE STUN attribute.
-		 * @param attribute the attribute, must be well-formed and not null
-		 * @return the code, a value within [300, 700)
-		 * @throws InvalidSTUNAttributeException if the attribute is not well formed
-		 */
-		public static bool Code(byte[] attribute, out int output) {
+		
+		/// <summary>
+		/// Extract the error code from a well-formed ERROR-CODE STUN attribute.
+		/// </summary>
+		/// <param name="attribute">Attribute the attribute, must be well-formed and not null</param>
+		/// <param name="code">The code, a value within[300, 700)</param>
+		/// <returns>Successful</returns>
+		public static bool Code(byte[] attribute, out int code) {
 			if (CheckAttribute(attribute)) {
-				output = (attribute[2] & 0b111) * 100 + (attribute[3] & 0b0111_1111);
+				code = (attribute[2] & 0b111) * 100 + (attribute[3] & 0b0111_1111);
 				return true;
 			} else {
-				output = 0;
+				code = 0;
 				return false;
 			}
 		}
-
-		/**
-		 * Check that the attribute is well formed.
-		 * @param attribute the attribute
-		 * @throws IllegalArgumentException if attribute is null
-		 * @throws InvalidSTUNAttributeException if the attribute is not well formed
-		 */
+		
+		/// <summary>
+		/// Check that the attribute is well formed.
+		/// </summary>
+		/// <param name="attribute">Attribute the attribute</param>
+		/// <returns>Successful</returns>
 		public static bool CheckAttribute(byte[] attribute) {
 			if (null == attribute) {
 				Logger.Error("Argument attribute must not be null");

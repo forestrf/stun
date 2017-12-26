@@ -23,16 +23,16 @@
 using System;
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Defines a STUN Type-Length-Value.
-	 */
+	/// <summary>
+	/// Defines a STUN Type-Length-Value.
+	/// </summary>
 	public static class STUNTypeLengthValue {
-		/**
-		 * Create a value from the provided type and value.
-		 * @param type the type
-		 * @param value the value
-		 * @return the TLV bytes, never null
-		 */
+		/// <summary>
+		/// Create a value from the provided type and value.
+		/// </summary>
+		/// <param name="type">The type</param>
+		/// <param name="value">The value</param>
+		/// <returns>The TLV bytes, never null</returns>
 		public static byte[] Value(int type, byte[] value) {
 			int paddingLength;
 

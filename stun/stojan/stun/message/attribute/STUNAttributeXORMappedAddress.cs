@@ -21,29 +21,34 @@
  */
 
 namespace STUN.me.stojan.stun.message.attribute {
-	/**
-	 * Supports the creation of the STUN XOR-MAPPED-ADDRESS attribute.
-	 *
-	 * @see STUNAttributeMappedAddress
-	 */
+	/// <summary>
+	/// Supports the creation of the STUN XOR-MAPPED-ADDRESS attribute.
+	/// <see cref="STUNAttributeMappedAddress"/>
+	/// </summary>
 	public static class STUNAttributeXORMappedAddress {
-
-		/** STUN reserved type for this attribute. */
+		/// <summary>
+		/// STUN reserved type for this attribute.
+		/// </summary>
 		public const int TYPE = 0x0020;
 
-		/** STUN XOR-MAPPED-ADDRESS IPv4 address family. */
+		/// <summary>
+		/// STUN XOR-MAPPED-ADDRESS IPv4 address family.
+		/// </summary>
 		public const byte ADDRESS_IPV4 = STUNAttributeMappedAddress.ADDRESS_IPV4;
 
-		/** STUN XOR-MAPPED-ADDRESS IPv6 address family. */
+		/// <summary>
+		/// STUN XOR-MAPPED-ADDRESS IPv6 address family.
+		/// </summary>
 		public const byte ADDRESS_IPV6 = STUNAttributeMappedAddress.ADDRESS_IPV6;
 		
-		/**
-		 * Create the XOR-MAPPED-ADDRESS attribute.
-		 * @param header the STUN message header, must not be null and must be 20 bytes long
-		 * @param addr the address, must not be null and must be either 4 or 16 bytes long
-		 * @param port the port, will be treated as 16-bits
-		 * @return the XOR-MAPPED-ADDRESS value, never null
-		 */
+		/// <summary>
+		/// Create the XOR-MAPPED-ADDRESS attribute.
+		/// </summary>
+		/// <param name="header">The STUN message header, must not be null and must be 20 bytes long</param>
+		/// <param name="addr">The address, must not be null and must be either 4 or 16 bytes long</param>
+		/// <param name="port">The port, will be treated as 16-bits</param>
+		/// <param name="attribute">The XOR-MAPPED-ADDRESS value, never null</param>
+		/// <returns>Successful</returns>
 		public static bool Value(byte[] header, byte[] addr, int port, out byte[] attribute) {
 			if (STUNAttributeMappedAddress.Value(addr, port, out attribute)) {
 				attribute[2] = (byte) (attribute[2] ^ header[4]);
@@ -58,14 +63,13 @@ namespace STUN.me.stojan.stun.message.attribute {
 			}
 		}
 
-		/**
-		 * Get the port from an attribute and header.
-		 * @param header the header, must be a valid STUN header
-		 * @param attribute the attribute, msut be a valid attribute
-		 * @return the port
-		 * @throws IllegalArgumentException if arguments, and header are not valid
-		 * @throws InvalidSTUNAttributeException if attribute is not valid
-		 */
+		/// <summary>
+		/// Get the port from an attribute and header.
+		/// </summary>
+		/// <param name="header">The header, must be a valid STUN header</param>
+		/// <param name="attribute">The attribute, msut be a valid attribute</param>
+		/// <param name="portXored">The port</param>
+		/// <returns>Successful</returns>
 		public static bool Port(byte[] header, byte[] attribute, out int portXored) {
 			if (CheckHeader(header)) {
 				int port;
@@ -81,14 +85,13 @@ namespace STUN.me.stojan.stun.message.attribute {
 			return false;
 		}
 
-		/**
-		 * Get the address from an attribute and header.
-		 * @param header the header, must be a valid STUN header
-		 * @param attribute the attribute, must be a valid attribute
-		 * @return the address
-		 * @throws IllegalArgumentException if arguments, and header are not valid
-		 * @throws InvalidSTUNAttributeException if attribute is not valid
-		 */
+		/// <summary>
+		/// Get the address from an attribute and header.
+		/// </summary>
+		/// <param name="header">The header, must be a valid STUN header</param>
+		/// <param name="attribute">The attribute, must be a valid attribute</param>
+		/// <param name="address">The address</param>
+		/// <returns>Successful</returns>
 		public static bool Address(byte[] header, byte[] attribute, out byte[] address) {
 			if (CheckHeader(header)) {
 				if (STUNAttributeMappedAddress.Address(attribute, out address)) {
@@ -103,11 +106,11 @@ namespace STUN.me.stojan.stun.message.attribute {
 			return false;
 		}
 
-		/**
-		 * Checks that the provided header is valid as an argument and as STUN data.
-		 * @param header the header
-		 * @throws IllegalArgumentException if header is null, not 20 bytes long or does not start with 00 bits
-		 */
+		/// <summary>
+		/// Checks that the provided header is valid as an argument and as STUN data.
+		/// </summary>
+		/// <param name="header">The header</param>
+		/// <returns>Successful</returns>
 		public static bool CheckHeader(byte[] header) {
 			if (null == header) {
 				Logger.Error("Argument header must not be null");

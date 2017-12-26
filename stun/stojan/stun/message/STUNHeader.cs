@@ -23,11 +23,13 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Utilities for forming STUN message headers.
-	 */
+	/// <summary>
+	/// Utilities for forming STUN message headers.
+	/// </summary>
 	public static class STUNHeader {
-		/** The STUN "magic cookie." */
+		/// <summary>
+		/// The STUN "magic cookie".
+		/// </summary>
 		public static readonly byte[] MAGIC_COOKIE = { 0x21, 0x12, 0xA4, 0x42 };
 
 		private const int C1 = 0b0000_0001_0000_0000;
@@ -37,39 +39,39 @@ namespace STUN.me.stojan.stun.message {
 		private const int BITS_INNER_3 = 0b0000_0000_1110_0000;
 		private const int BITS_LOWER_4 = 0b0000_0000_0000_1111;
 
-		/**
-		 * Convert the two bytes (16 bits) from values starting at position into an integer.
-		 * @param values the values, must have length at least 2
-		 * @param position the position, must be at most {@code values.length - 2}
-		 * @return the integer
-		 */
+		/// <summary>
+		/// Convert the two bytes (16 bits) from values starting at position into an integer.
+		/// </summary>
+		/// <param name="values">The values, must have length at least 2</param>
+		/// <param name="position">The position, must be at most {@code values.length - 2}</param>
+		/// <returns>The integer</returns>
 		public static int Int16(ByteBuffer values, int position) {
 			return (values[position + 0] << 8) | values[position + 1];
 		}
 
-		/**
-		 * Returns the STUN class from the compound message type.
-		 * @param messageType the message type
-		 * @return the group
-		 */
+		/// <summary>
+		/// Returns the STUN class from the compound message type.
+		/// </summary>
+		/// <param name="messageType">The message type</param>
+		/// <returns>The group</returns>
 		public static STUNMessageType Group(int messageType) {
 			return (STUNMessageType) (((messageType & C1) >> 7) | ((messageType & C0) >> 4));
 		}
 
-		/**
-		 * Returns the STUN method from the compound message type.
-		 * @param messageType the message type
-		 * @return the method
-		 */
+		/// <summary>
+		/// Returns the STUN method from the compound message type.
+		/// </summary>
+		/// <param name="messageType">The message type</param>
+		/// <returns>The method</returns>
 		public static STUNMessageType Method(int messageType) {
 			return (STUNMessageType) ((((messageType & BITS_HIGH_5) >> 1) | (messageType & BITS_INNER_3)) >> 1 | (messageType & BITS_LOWER_4));
 		}
 
-		/**
-		 * Returns the two starting bits from the byte array.
-		 * @param header the header
-		 * @return the two starting bits
-		 */
+		/// <summary>
+		/// Returns the two starting bits from the byte array.
+		/// </summary>
+		/// <param name="header"> The header</param>
+		/// <returns>The two starting bits</returns>
 		public static int TwoStartingBits(ByteBuffer header) {
 			return header[0] >> 6;
 		}

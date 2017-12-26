@@ -21,23 +21,33 @@
  */
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Defines the STUN message types.
-	 */
+	/// <summary>
+	/// Defines the STUN message types.
+	/// </summary>
 	public enum STUNMessageType : int {
-		/** STUN class "request" */
+		/// <summary>
+		/// STUN class "request"
+		/// </summary>
 		GROUP_REQUEST = 0b00,
 
-		/** STUN class "indication" */
+		/// <summary>
+		/// STUN class "indication"
+		/// </summary>
 		GROUP_INDICATION = 0b01,
 
-		/** STUN class "response success" */
+		/// <summary>
+		/// STUN class "response success"
+		/// </summary>
 		GROUP_RESPONSE_SUCCESS = 0b10,
 
-		/** STUN class "response error" */
+		/// <summary>
+		/// STUN class "response error"
+		/// </summary>
 		GROUP_RESPONSE_ERROR = 0b11,
 
-		/** STUN method "binding" */
+		/// <summary>
+		/// STUN method "binding"
+		/// </summary>
 		METHOD_BINDING = 1,
 	}
 }

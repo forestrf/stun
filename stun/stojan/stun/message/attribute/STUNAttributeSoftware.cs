@@ -24,43 +24,41 @@ using System;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	/**
-	 * Supports the creation of well-formed SOFTWARE STUN attributes.
-	 */
+	/// <summary>
+	/// Supports the creation of well-formed SOFTWARE STUN attributes.
+	/// </summary>
 	public static class STUNAttributeSoftware {
-
-		/** STUN type of attribute. */
+		/// <summary>
+		/// STUN type of attribute.
+		/// </summary>
 		public const int TYPE = 0x8022;
 		
-		/**
-		 * Create a well-formed SOFTWARE STUN attribute.
-		 * @param software the value, must not be null and will be clamped to first 128 bytes
-		 * @return the well-formed attribute
-		 *
-		 * @throws IllegalArgumentException if {@code software} is null
-		 */
-		public static bool Value(string software, out byte[] value) {
+		/// <summary>
+		/// Create a well-formed SOFTWARE STUN attribute.
+		/// </summary>
+		/// <param name="software">The value, must not be null and will be clamped to first 128 bytes</param>
+		/// <param name="attribute">The well-formed attribute</param>
+		/// <returns>Successful</returns>
+		public static bool Value(string software, out byte[] attribute) {
 			if (null == software) {
-				value = null;
+				attribute = null;
 				Logger.Error("Argument software must not be null");
 				return false;
 			}
 			
 			string clamped = software.Substring(0, Math.Min(128, software.Length));
 
-			value = Encoding.UTF8.GetBytes(clamped);
+			attribute = Encoding.UTF8.GetBytes(clamped);
 
 			return true;
 		}
 
-		/**
-		 * Get the software string from a well-formed SOFTWARE STUN attribute bytes.
-		 * @param value the bytes, must not be null and must be at most 763 bytes long
-		 * @return the SOFTWARE value
-		 *
-		 * @throws IllegalArgumentException if {@code value} is null
-		 * @throws InvalidSTUNAttributeException if {@code value} is longer than 763 bytes
-		 */
+		/// <summary>
+		/// Get the software string from a well-formed SOFTWARE STUN attribute bytes.
+		/// </summary>
+		/// <param name="value">The bytes, must not be null and must be at most 763 bytes long</param>
+		/// <param name="output">The SOFTWARE value</param>
+		/// <returns>Successful</returns>
 		public static bool Software(byte[] value, out string output) {
 			if (null == value) {
 				output = "";

@@ -21,19 +21,21 @@
  */
 
 namespace STUN.me.stojan.stun.message.attribute {
-	/**
-	 * Supports the creation of STUN's UNKNOWN-ATTRIBUTES attribute.
-	 */
+	/// <summary>
+	/// Supports the creation of STUN's UNKNOWN-ATTRIBUTES attribute.
+	/// </summary>
 	public static class STUNAttributeUnknownAttributes {
-
-		/** The STUN type. */
+		/// <summary>
+		/// The STUN type.
+		/// </summary>
 		public const int TYPE = 0x000A;
 		
-		/**
-		 * Create a well-formed UNKNOWN-ATTRIBUTES attribute from the array of attribute types.
-		 * @param attributes the attribute types, must not be null
-		 * @return the bytes, will always have an even length
-		 */
+		/// <summary>
+		/// Create a well-formed UNKNOWN-ATTRIBUTES attribute from the array of attribute types.
+		/// </summary>
+		/// <param name="attributes">The attribute types, must not be null</param>
+		/// <param name="bytes">The bytes, will always have an even length</param>
+		/// <returns>Successful</returns>
 		public static bool Value(int[] attributes, out byte[] bytes) {
 			if (null == attributes) {
 				bytes = null;
@@ -51,12 +53,12 @@ namespace STUN.me.stojan.stun.message.attribute {
 			return true;
 		}
 
-		/**
-		 * Extract the attributes from a well-formed byte representation of STUN's UNKNOWN-ATTRIBUTES attribute.
-		 * @param attribute the well-formed attribute, must not be null
-		 * @return the array of attributes, will not be null, may be empty
-		 * @throws InvalidSTUNAttributeException if the attribute is not well-formed
-		 */
+		/// <summary>
+		/// Extract the attributes from a well-formed byte representation of STUN's UNKNOWN-ATTRIBUTES attribute.
+		/// </summary>
+		/// <param name="attribute">The well-formed attribute, must not be null</param>
+		/// <param name="attributes">The array of attributes, will not be null, may be empty</param>
+		/// <returns>Successful</returns>
 		public static bool Attributes(byte[] attribute, out int[] attributes) {
 			if (null == attribute) {
 				attributes = null;

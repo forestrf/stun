@@ -23,24 +23,26 @@
 using System;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	/**
-	 * Supports the creation of the STUN MAPPED-ADDRESS and XOR-MAPPED-ADDRESS attributes.
-	 */
+	/// <summary>
+	/// Supports the creation of the STUN MAPPED-ADDRESS and XOR-MAPPED-ADDRESS attributes.
+	/// </summary>
 	public static class STUNAttributeMappedAddress {
-
-		/** STUN reserved type for this attribute. */
+		/// <summary>
+		/// STUN reserved type for this attribute.
+		/// </summary>
 		public const int TYPE = 0x0001;
 
 		public const byte ADDRESS_IPV4 = 0x01;
 		public const byte ADDRESS_IPV6 = 0x02;
-		
-		/**
-		 * Create the MAPPED-ADDRESS attribute.
-		 * @param addr the address, must not be null and must be 4 (IPv4) or 16 bytes (IPv6) long
-		 * @param port the port, will be treated as 16-bit
-		 * @return the value, never null
-		 */
-		public static bool Value(byte[] addr, int port, out byte[] bytes) {
+
+		/// <summary>
+		/// Create the MAPPED-ADDRESS attribute.
+		/// </summary>
+		/// <param name="addr">The address, must not be null and must be 4 (IPv4) or 16 bytes (IPv6) long</param>
+		/// <param name="port">The port, will be treated as 16-bit</param>
+		/// <param name="value">The value</param>
+		/// <returns>Successful</returns>
+		public static bool Value(byte[] addr, int port, out byte[] value) {
 			byte type;
 
 			switch (addr.Length) {
@@ -53,47 +55,45 @@ namespace STUN.me.stojan.stun.message.attribute {
 					break;
 
 				default:
-					bytes = null;
+					value = null;
 					Logger.Error("Unsupported address of length " + addr.Length);
 					return false;
 			}
 
-			bytes = new byte[1 + 1 + 2 + addr.Length];
+			value = new byte[1 + 1 + 2 + addr.Length];
 
-			bytes[0] = 0;
-			bytes[1] = type;
-			bytes[2] = (byte) ((port >> 8) & 255);
-			bytes[3] = (byte) (port & 255);
+			value[0] = 0;
+			value[1] = type;
+			value[2] = (byte) ((port >> 8) & 255);
+			value[3] = (byte) (port & 255);
 
-			Array.Copy(addr, 0, bytes, 4, addr.Length);
+			Array.Copy(addr, 0, value, 4, addr.Length);
 
 			return true;
 		}
 
-		/**
-		 * Get the port from an attribute and header.
-		 * @param attribute the attribute, msut be a valid attribute
-		 * @return the port
-		 * @throws IllegalArgumentException if attribute is null
-		 * @throws InvalidSTUNAttributeException if attribute is not valid
-		 */
-		public static bool Port(byte[] attribute, out int value) {
+		/// <summary>
+		/// Get the port from an attribute and header.
+		/// </summary>
+		/// <param name="attribute">The attribute, must be a valid attribute</param>
+		/// <param name="value">The port</param>
+		/// <returns>Successful</returns>
+		public static bool Port(byte[] attribute, out int port) {
 			if (CheckAttribute(attribute)) {
-				value = ((attribute[2] & 255) << 8) | (attribute[3] & 255);
+				port = (attribute[2] << 8) | attribute[3];
 				return true;
 			} else {
-				value = 0;
+				port = 0;
 				return false;
 			}
 		}
 
-		/**
-		 * Get the address from an attribute and header.
-		 * @param attribute the attribute, must be a valid attribute
-		 * @return the address
-		 * @throws IllegalArgumentException if attribute is null
-		 * @throws InvalidSTUNAttributeException if attribute is not valid
-		 */
+		/// <summary>
+		/// Get the address from an attribute and header.
+		/// </summary>
+		/// <param name="attribute">The attribute, must be a valid attribute</param>
+		/// <param name="address">The address</param>
+		/// <returns>Successful</returns>
 		public static bool Address(byte[] attribute, out byte[] address) {
 			if (!CheckAttribute(attribute)) {
 				address = null;
@@ -130,12 +130,11 @@ namespace STUN.me.stojan.stun.message.attribute {
 			return true;
 		}
 
-		/**
-		 * Check that the attribute is valid.
-		 * @param attribute the attribute
-		 * @throws IllegalArgumentException if attribute is null
-		 * @throws InvalidSTUNAttributeException if attribute is not valid per STUN spec
-		 */
+		/// <summary>
+		/// Check that the attribute is valid.
+		/// </summary>
+		/// <param name="attribute">The attribute</param>
+		/// <returns>Successful</returns>
 		public static bool CheckAttribute(byte[] attribute) {
 			if (null == attribute) {
 				Logger.Error("Argument attribute must not be null");

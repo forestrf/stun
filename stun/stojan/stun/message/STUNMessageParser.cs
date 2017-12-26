@@ -23,24 +23,24 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Parses STUN messages.
-	 */
+	/// <summary>
+	/// Parses STUN messages.
+	/// </summary>
 	public class STUNMessageParser {
 
 		private ByteBuffer inputStream;
 
-		/**
-		 * Create a parser from the input stream.
-		 * @param inputStream the input stream, must not be null
-		 */
+		/// <summary>
+		/// Create a parser from the input stream.
+		/// </summary>
+		/// <param name="inputStream">The input stream, must not be null</param>
 		public STUNMessageParser(ByteBuffer inputStream) {
 			this.inputStream = inputStream;
 		}
 
-		/**
-		 * A STUN message header.
-		 */
+		/// <summary>
+		/// A STUN message header.
+		/// </summary>
 		public class Header {
 			public ByteBuffer header;
 
@@ -62,82 +62,82 @@ namespace STUN.me.stojan.stun.message {
 				return true;
 			}
 
-			/**
-			 * Returns the message type.
-			 * @return the message type
-			 */
+			/// <summary>
+			/// Returns the message type.
+			/// </summary>
+			/// <returns>The message type</returns>
 			public int MessageType() {
 				return STUNHeader.Int16(header, 0);
 			}
 
-			/**
-			 * Returns the length of the message.
-			 * @return the message length
-			 */
+			/// <summary>
+			/// Returns the length of the message.
+			/// </summary>
+			/// <returns>The message length</returns>
 			public int Length() {
 				return STUNHeader.Int16(header, 2);
 			}
 
-			/**
-			 * Returns a copy of the magic cookie.
-			 * @return the magic cookie
-			 */
-			public bool MagicCookie(out FastBit.Uint cookie) {
+			/// <summary>
+			/// Returns a copy of the magic cookie.
+			/// </summary>
+			/// <param name="cookie">The magic cookie</param>
+			/// <returns>Successful</returns>
+			public bool MagicCookie(out ByteBuffer cookie) {
 				if (header.Length >= 8) {
-					cookie = new FastBit.Uint(header[4], header[5], header[6], header[7]);
+					cookie = new ByteBuffer(header.Data, header.positionAbsolute + 4, 4);
 					return true;
 				} else {
-					cookie = new FastBit.Uint();
+					cookie = new ByteBuffer(null);
 					return false;
 				}
 			}
 
-			/**
-			 * Returns a copy of the transcation-ID bytes.
-			 * @return the transaction ID bytes
-			 */
+			/// <summary>
+			/// Returns a copy of the transcation-ID bytes.
+			/// </summary>
+			/// <returns>The transaction ID bytes</returns>
 			public ByteBuffer Transaction() {
 				return new ByteBuffer(header.Data, header.positionAbsolute + 8, 12);
 			}
 
-			/**
-			 * Returns the STUN "class" of the message.
-			 * @return the class
-			 */
+			/// <summary>
+			/// Returns the STUN "class" of the message.
+			/// </summary>
+			/// <returns>The class</returns>
 			public STUNMessageType Group() {
 				return STUNHeader.Group(MessageType());
 			}
 
-			/**
-			 * Returns the STUN "method" of the message.
-			 * @return the method
-			 */
+			/// <summary>
+			/// Returns the STUN "method" of the message.
+			/// </summary>
+			/// <returns>The method</returns>
 			public STUNMessageType Method() {
 				return STUNHeader.Method(MessageType());
 			}
 
-			/**
-			 * Checks if the {@link #magicCookie()} is valid.
-			 * @return true if the magic cookie is valid, or false
-			 */
+			/// <summary>
+			/// Checks if the {@link #magicCookie()} is valid.
+			/// </summary>
+			/// <returns>True if the magic cookie is valid, or false</returns>
 			public bool IsMagicCookieValid() {
-				FastBit.Uint c;
+				ByteBuffer c;
 				if (MagicCookie(out c)) {
-					return c.b0 == STUNHeader.MAGIC_COOKIE[0] &&
-						c.b1 == STUNHeader.MAGIC_COOKIE[1] &&
-						c.b2 == STUNHeader.MAGIC_COOKIE[2] &&
-						c.b3 == STUNHeader.MAGIC_COOKIE[3];
+					return c[0] == STUNHeader.MAGIC_COOKIE[0] &&
+						c[1] == STUNHeader.MAGIC_COOKIE[1] &&
+						c[2] == STUNHeader.MAGIC_COOKIE[2] &&
+						c[3] == STUNHeader.MAGIC_COOKIE[3];
 				} else {
 					return false;
 				}
 			}
 
-			/**
-			 * Get the first STUN "type-length-value" from the message.
-			 * @return the first TLV or null
-			 * @throws IOException an IO exception from the stream
-			 * @throws InvalidSTUNMessageException if the message is invalid
-			 */
+			/// <summary>
+			/// Get the first STUN "type-length-value" from the message.
+			/// </summary>
+			/// <param name="parser"></param>
+			/// <returns>The first TLV or null</returns>
 			public TypeLengthValue Next(STUNMessageParser parser) {
 				if (parser == null) return null;
 
@@ -149,9 +149,9 @@ namespace STUN.me.stojan.stun.message {
 			}
 		}
 
-		/**
-		 * A STUN Type-Length-Value.
-		 */
+		/// <summary>
+		/// A STUN Type-Length-Value.
+		/// </summary>
 		public class TypeLengthValue {
 			private int position;
 			private int max;
@@ -198,26 +198,26 @@ namespace STUN.me.stojan.stun.message {
 				return true;
 			}
 
-			/**
-			 * Returns the STUN TLV "type."
-			 * @return the type
-			 */
+			/// <summary>
+			/// Returns the STUN TLV "type".
+			/// </summary>
+			/// <returns> The type</returns>
 			public int Type() {
 				return STUNHeader.Int16(header, 0);
 			}
 
-			/**
-			 * Returns the STUN TLV "length."
-			 * @return the length
-			 */
+			/// <summary>
+			/// Returns the STUN TLV "length".
+			/// </summary>
+			/// <returns>The length</returns>
 			public int Length() {
 				return STUNHeader.Int16(header, 2);
 			}
 
-			/**
-			 * Returns the STUN TLV "padding" size.
-			 * @return the padding size
-			 */
+			/// <summary>
+			/// Returns the STUN TLV "padding" size.
+			/// </summary>
+			/// <returns>The padding size</returns>
 			public int Padding() {
 				int length = Length();
 
@@ -228,28 +228,27 @@ namespace STUN.me.stojan.stun.message {
 				return 4 - (length % 4);
 			}
 
-			/**
-			 * Returns a copy of the TLV header bytes.
-			 * @return the header bytes
-			 */
+			/// <summary>
+			/// Returns a copy of the TLV header bytes.
+			/// </summary>
+			/// <returns>The header bytes</returns>
 			public ByteBuffer Header() {
 				return new ByteBuffer(header.Data, header.positionAbsolute, 4);
 			}
 
-			/**
-			 * Returns a copy of the TLV value bytes, without padding.
-			 * @return the value bytes, without padding
-			 */
+			/// <summary>
+			/// Returns a copy of the TLV value bytes, without padding.
+			/// </summary>
+			/// <returns>The value bytes, without padding</returns>
 			public ByteBuffer Value() {
 				return new ByteBuffer(value.Data, value.positionAbsolute, value.Length);
 			}
 
-			/**
-			 * Get the next STUN TLV in the sequence, or null.
-			 * @return the next TLV or null if at the end
-			 * @throws IOException an IO exception from the stream
-			 * @throws InvalidSTUNMessageException if the next TLV is invalid
-			 */
+			/// <summary>
+			/// Get the next STUN TLV in the sequence, or null.
+			/// </summary>
+			/// <param name="parser">The next TLV or null if at the end</param>
+			/// <returns>Successful</returns>
 			public TypeLengthValue Next(STUNMessageParser parser) {
 				if (parser == null) return null;
 
@@ -261,12 +260,11 @@ namespace STUN.me.stojan.stun.message {
 			}
 		}
 
-		/**
-		 * Start parsing the STUN message.
-		 * @return the header of the STUN message
-		 * @throws IOException an IO exception from the stream
-		 * @throws InvalidSTUNMessageException if could not read the 20-byte STUN header
-		 */
+		/// <summary>
+		/// Start parsing the STUN message.
+		/// </summary>
+		/// <param name="header">The header of the STUN message</param>
+		/// <returns>Successful</returns>
 		public bool Start(out Header header) {
 			if (inputStream.remaining() >= 20) {
 				bool toReturn = Header.Create(ByteBuffer.wrap(inputStream.Data, inputStream.positionAbsolute, 20), out header);

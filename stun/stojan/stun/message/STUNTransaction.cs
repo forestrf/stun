@@ -23,22 +23,24 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Defines a STUN transaction.
-	 */
+	/// <summary>
+	/// Defines a STUN transaction.
+	/// </summary>
 	public static class STUNTransaction {
-		/** Maximum value for a STUN transaction. */
+		/// <summary>
+		/// Maximum value for a STUN transaction.
+		/// </summary>
 		public static readonly byte[] MAX = new byte[12] {
 			0xff, 0xff, 0xff, 0xff,
 			0xff, 0xff, 0xff, 0xff,
 			0xff, 0xff, 0xff, 0xff
 		};
 
-		/**
-		 * Create the bytes for a transaction from a transaction ID.
-		 * @param transaction the transaction ID, must not be null
-		 * @return the transaction bytes, never null
-		 */
+		/// <summary>
+		/// Create the bytes for a transaction from a transaction ID.
+		/// </summary>
+		/// <param name="transaction">The transaction ID, must not be null</param>
+		/// <returns>The transaction bytes, never null</returns>
 		public static ByteBuffer Transaction(ByteBuffer transaction) {
 			if (transaction.Length > 12) {
 				return new ByteBuffer(transaction.Data, transaction.positionAbsolute + 1, 12);

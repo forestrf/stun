@@ -21,9 +21,9 @@
  */
 
 namespace STUN.me.stojan.stun.message {
-	/**
-	 * Defines a STUN method.
-	 */
+	/// <summary>
+	/// Defines a STUN method.
+	/// </summary>
 	public static class STUNMethod {
 		private static int GROUP_MAX = 0b11;
 		private static int METHOD_MAX = 0xFFF;
@@ -32,52 +32,52 @@ namespace STUN.me.stojan.stun.message {
 		private static int BITS_4 = 0b1111;
 		private static int BITS_3 = 0b111;
 
-		/**
-		 * Get the upper-5 bits from the method.
-		 * @param method the method
-		 * @return the upper-5 bits
-		 */
+		/// <summary>
+		/// Get the upper-5 bits from the method.
+		/// </summary>
+		/// <param name="method">The method</param>
+		/// <returns>The upper-5 bits</returns>
 		public static int Upper5(STUNMessageType method) {
 			int m = METHOD_MAX & (int) method;
 			return (m >> 7) & BITS_5;
 		}
 
-		/**
-		 * Get the lower-4 bits from the method.
-		 * @param method the method
-		 * @return the lower-4 bits
-		 */
+		/// <summary>
+		/// Get the lower-4 bits from the method.
+		/// </summary>
+		/// <param name="method">The method</param>
+		/// <returns>The lower-4 bits</returns>
 		public static int Lower4(STUNMessageType method) {
 			int m = METHOD_MAX & (int) method;
 			return (m & BITS_4);
 		}
 
-		/**
-		 * Get the inner-3 bits from the method.
-		 * @param method the method
-		 * @return the inner-3 bits
-		 */
+		/// <summary>
+		/// Get the inner-3 bits from the method.
+		/// </summary>
+		/// <param name="method">The method</param>
+		/// <returns>The inner-3 bits</returns>
 		public static int Inner3(STUNMessageType method) {
 			int m = METHOD_MAX & (int) method;
 			return (m >> 4) & BITS_3;
 		}
 
-		/**
-		 * Format the STUN "class" as an integer.
-		 * @param group the class
-		 * @return the formatted class
-		 */
+		/// <summary>
+		/// Format the STUN "class" as an integer.
+		/// </summary>
+		/// <param name="group">The class</param>
+		/// <returns>The formatted class</returns>
 		public static int Group(STUNMessageType group) {
 			int g = GROUP_MAX & (int) group;
 			return ((g & 0b10) << 7) | ((g & 1) << 4);
 		}
 
-		/**
-		 * Join the STUN method and class as a single integer.
-		 * @param method the method
-		 * @param group the class
-		 * @return the joined value
-		 */
+		/// <summary>
+		/// Join the STUN method and class as a single integer.
+		/// </summary>
+		/// <param name="method">The method</param>
+		/// <param name="group">The class</param>
+		/// <returns>The joined value</returns>
 		public static int Join(STUNMessageType method, STUNMessageType group) {
 			int joined = 0;
 
