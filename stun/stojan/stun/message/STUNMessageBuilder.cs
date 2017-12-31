@@ -22,7 +22,6 @@
 
 using STUN.Utils;
 using System;
-using System.Collections.Generic;
 
 namespace STUN.me.stojan.stun.message {
 	/// <summary>
@@ -35,7 +34,6 @@ namespace STUN.me.stojan.stun.message {
 		private ByteBuffer header;
 
 		private int totalValues = 0;
-		private List<byte[]> values = new List<byte[]>();
 
 
 		private STUNMessageBuilder() { }
@@ -47,7 +45,7 @@ namespace STUN.me.stojan.stun.message {
 			const int headerLength = 20;
 			this.buffer = new ByteBuffer(buffer);
 			header = new ByteBuffer(buffer, 0, headerLength);
-			this.buffer.offset = headerLength;
+			this.buffer.positionAbsolute = headerLength;
 		}
 
 		/// <summary>
@@ -87,7 +85,7 @@ namespace STUN.me.stojan.stun.message {
 			byte[] raw = STUNTypeLengthValue.Value(type, value);
 
 			totalValues += raw.Length;
-			values.Add(raw);
+			buffer.Put(raw);
 
 			IntAs16Bit(totalValues & 0xFFFF, header, 2);
 
@@ -111,23 +109,11 @@ namespace STUN.me.stojan.stun.message {
 		}
 
 		public ByteBuffer BuildByteBuffer() {
-			byte[] built = new byte[header.Length + totalValues];
-
-			Array.Copy(header.Data, header.offset, built, 0, header.Length);
-
-			int position = header.Length;
-
-			foreach (byte[] tlv in values) {
-				Array.Copy(tlv, 0, built, position, tlv.Length);
-				position += tlv.Length;
-			}
-
-			return new ByteBuffer(built);
+			return buffer.GetCropToCurrentPosition();
 		}
 
 		private void IntAs16Bit(int value, ByteBuffer o, int position) {
-			o[position] = (byte) ((value >> 8) & 255);
-			o[position + 1] = (byte) (value & 255);
+			o.Put(position, (ushort) value);
 		}
 	}
 }

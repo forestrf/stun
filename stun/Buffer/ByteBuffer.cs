@@ -96,13 +96,20 @@ namespace STUN.Utils {
 			return this;
 		}
 
+		public ByteBuffer GetCropToCurrentPosition() {
+			ByteBuffer b = new ByteBuffer(_data);
+			b.offset = b.positionAbsolute = offset;
+			b.lengthAbsolute = positionAbsolute;
+			return b;
+		}
+
 		public void rewind() {
 			positionAbsolute = 0;
 		}
 
 		public byte[] ToArray() {
 			byte[] copy = new byte[Length];
-			Buffer.BlockCopy(_data, positionAbsolute, copy, 0, Length);
+			Buffer.BlockCopy(_data, offset, copy, 0, Length);
 			return copy;
 		}
 
@@ -124,11 +131,19 @@ namespace STUN.Utils {
 			positionAbsolute += 4;
 			UpdateDataSize(positionAbsolute);
 		}
+		public void Put(int relativeOffset, float value) {
+			new FastBit.Float(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 4);
+		}
 
 		public void Put(double value) {
 			new FastBit.Double(value).Write(_data, positionAbsolute, endianness);
 			positionAbsolute += 8;
 			UpdateDataSize(positionAbsolute);
+		}
+		public void Put(int relativeOffset, double value) {
+			new FastBit.Double(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 8);
 		}
 
 		public void Put(long value) {
@@ -136,11 +151,19 @@ namespace STUN.Utils {
 			positionAbsolute += 8;
 			UpdateDataSize(positionAbsolute);
 		}
+		public void Put(int relativeOffset, long value) {
+			new FastBit.Long(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 8);
+		}
 
 		public void Put(ulong value) {
 			new FastBit.Ulong(value).Write(_data, positionAbsolute, endianness);
 			positionAbsolute += 8;
 			UpdateDataSize(positionAbsolute);
+		}
+		public void Put(int relativeOffset, ulong value) {
+			new FastBit.Ulong(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 8);
 		}
 
 		public void Put(int value) {
@@ -148,11 +171,19 @@ namespace STUN.Utils {
 			positionAbsolute += 4;
 			UpdateDataSize(positionAbsolute);
 		}
+		public void Put(int relativeOffset, int value) {
+			new FastBit.Int(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 4);
+		}
 
 		public void Put(uint value) {
 			new FastBit.Uint(value).Write(_data, positionAbsolute, endianness);
 			positionAbsolute += 4;
 			UpdateDataSize(positionAbsolute);
+		}
+		public void Put(int relativeOffset, uint value) {
+			new FastBit.Uint(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 4);
 		}
 
 		public void Put(ushort value) {
@@ -160,30 +191,29 @@ namespace STUN.Utils {
 			positionAbsolute += 2;
 			UpdateDataSize(positionAbsolute);
 		}
-
 		public void Put(int relativeOffset, ushort value) {
 			new FastBit.Ushort(value).Write(_data, relativeOffset + offset, endianness);
 			UpdateDataSize(relativeOffset + offset + 2);
 		}
-		public void Put(int relativeOffset, int value) {
-			new FastBit.Int(value).Write(_data, relativeOffset + offset, endianness);
-			UpdateDataSize(relativeOffset + offset + 4);
-		}
-		public void Put(int relativeOffset, uint value) {
-			new FastBit.Uint(value).Write(_data, relativeOffset + offset, endianness);
-			UpdateDataSize(relativeOffset + offset + 4);
-		}
-
+		
 		public void Put(short value) {
 			new FastBit.Short(value).Write(_data, positionAbsolute, endianness);
 			positionAbsolute += 2;
 			UpdateDataSize(positionAbsolute);
 		}
-
+		public void Put(int relativeOffset, short value) {
+			new FastBit.Short(value).Write(_data, relativeOffset + offset, endianness);
+			UpdateDataSize(relativeOffset + offset + 2);
+		}
+		
 		public void Put(byte value) {
 			_data[positionAbsolute] = value;
 			positionAbsolute++;
 			UpdateDataSize(positionAbsolute);
+		}
+		public void Put(int relativeOffset, byte value) {
+			_data[relativeOffset] = value;
+			UpdateDataSize(relativeOffset + offset + 1);
 		}
 
 		public void Put(byte[] data, int offset, int length) {
@@ -191,17 +221,8 @@ namespace STUN.Utils {
 			positionAbsolute += length;
 			UpdateDataSize(positionAbsolute);
 		}
-
 		public void Put(byte[] data) {
-			Buffer.BlockCopy(data, 0, _data, positionAbsolute, data.Length);
-			positionAbsolute += data.Length;
-			UpdateDataSize(positionAbsolute);
-		}
-
-		public void Put(bool value) {
-			_data[positionAbsolute] = (byte) (value ? 1 : 0);
-			positionAbsolute++;
-			UpdateDataSize(positionAbsolute);
+			Put(data, 0, data.Length);
 		}
 		#endregion
 

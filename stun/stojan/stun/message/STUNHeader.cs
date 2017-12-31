@@ -32,13 +32,6 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		public static readonly byte[] MAGIC_COOKIE = { 0x21, 0x12, 0xA4, 0x42 };
 
-		private const int C1 = 0b0000_0001_0000_0000;
-		private const int C0 = 0b0000_0000_0001_0000;
-
-		private const int BITS_HIGH_5 = 0b0011_1110_0000_0000;
-		private const int BITS_INNER_3 = 0b0000_0000_1110_0000;
-		private const int BITS_LOWER_4 = 0b0000_0000_0000_1111;
-
 		/// <summary>
 		/// Convert the two bytes (16 bits) from values starting at position into an integer.
 		/// </summary>

@@ -56,7 +56,6 @@
     <Compile Include="stojan\stun\message\STUNMessageBuilder.cs" />
     <Compile Include="stojan\stun\message\STUNMessageParser.cs" />
     <Compile Include="stojan\stun\message\STUNMessageType.cs" />
-    <Compile Include="stojan\stun\message\STUNMethod.cs" />
     <Compile Include="stojan\stun\message\STUNTransaction.cs" />
     <Compile Include="stojan\stun\message\STUNTypeLengthValue.cs" />
   </ItemGroup>
