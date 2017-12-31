@@ -105,7 +105,7 @@ namespace STUN.me.stojan.stun.message {
 			/// Returns the STUN "class" of the message.
 			/// </summary>
 			/// <returns>The class</returns>
-			public STUNMessageType Group() {
+			public STUNClass Group() {
 				return STUNHeader.Group(MessageType());
 			}
 
@@ -113,7 +113,7 @@ namespace STUN.me.stojan.stun.message {
 			/// Returns the STUN "method" of the message.
 			/// </summary>
 			/// <returns>The method</returns>
-			public STUNMessageType Method() {
+			public STUNMethod Method() {
 				return STUNHeader.Method(MessageType());
 			}
 

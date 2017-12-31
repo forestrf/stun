@@ -73,7 +73,6 @@
     <Compile Include="stojan\stun\message\STUNHeaderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageBuilderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageParserTest.cs" />
-    <Compile Include="stojan\stun\message\STUNMethodTest.cs" />
     <Compile Include="stojan\stun\message\STUNTransactionTest.cs" />
     <Compile Include="stojan\stun\message\STUNTypeLengthValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

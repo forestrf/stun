@@ -29,10 +29,26 @@ namespace STUN.me.stojan.stun.message {
 	/// A message builder for well-formed STUN messages.
 	/// </summary>
 	public class STUNMessageBuilder {
-		private byte[] header = new byte[20];
+		private static readonly int MINIMUM_BUFFER_SIZE = 1024;
+
+		private ByteBuffer buffer;
+		private ByteBuffer header;
 
 		private int totalValues = 0;
 		private List<byte[]> values = new List<byte[]>();
+
+
+		private STUNMessageBuilder() { }
+		public STUNMessageBuilder(byte[] buffer) {
+			if (buffer == null || buffer.Length < MINIMUM_BUFFER_SIZE) {
+				buffer = new byte[MINIMUM_BUFFER_SIZE];
+				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
+			}
+			const int headerLength = 20;
+			this.buffer = new ByteBuffer(buffer);
+			header = new ByteBuffer(buffer, 0, headerLength);
+			this.buffer.offset = headerLength;
+		}
 
 		/// <summary>
 		/// Set the message type.
@@ -40,8 +56,10 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="group">The STUN class</param>
 		/// <param name="method">The STUN method</param>
 		/// <returns>This builder, never null</returns>
-		public STUNMessageBuilder MessageType(STUNMessageType group, STUNMessageType method) {
-			IntAs16Bit(STUNMethod.Join(method, group) & 0b0011_1111_1111_1111, header, 0);
+		public STUNMessageBuilder SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
+			ushort stunMessageType = (ushort) (0x3FFF & ((int) stunClass | (int) stunMethod));
+			header[0] = (byte) (stunMessageType >> 8);
+			header[1] = (byte) (stunMessageType & 0xff);
 			return this;
 		}
 
@@ -53,8 +71,8 @@ namespace STUN.me.stojan.stun.message {
 		public STUNMessageBuilder Transaction(ByteBuffer transaction) {
 			ByteBuffer tx = STUNTransaction.Transaction(transaction);
 
-			Array.Copy(STUNHeader.MAGIC_COOKIE, 0, header, 4, STUNHeader.MAGIC_COOKIE.Length);
-			Array.Copy(tx.Data, tx.positionAbsolute, header, 4 + STUNHeader.MAGIC_COOKIE.Length, tx.Length);
+			Array.Copy(STUNHeader.MAGIC_COOKIE, 0, header.Data, header.offset + 4, STUNHeader.MAGIC_COOKIE.Length);
+			Array.Copy(tx.Data, tx.positionAbsolute, header.Data, header.offset + 4 + STUNHeader.MAGIC_COOKIE.Length, tx.Length);
 
 			return this;
 		}
@@ -80,10 +98,8 @@ namespace STUN.me.stojan.stun.message {
 		/// Return a copy of the current header value. The STUN magic cookie will not be set if <see cref="Transaction(ByteBuffer)"/> has not been called.
 		/// </summary>
 		/// <returns>The header value, never null, will always have length of 20</returns>
-		public byte[] GetHeaderCopy() {
-			byte[] c = new byte[header.Length];
-			header.CopyTo(c, 0);
-			return c;
+		public ByteBuffer GetHeader() {
+			return header;
 		}
 
 		/// <summary>
@@ -91,9 +107,13 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <returns>The byte representation of the message, never null</returns>
 		public byte[] Build() {
+			return BuildByteBuffer().ToArray();
+		}
+
+		public ByteBuffer BuildByteBuffer() {
 			byte[] built = new byte[header.Length + totalValues];
 
-			Array.Copy(header, 0, built, 0, header.Length);
+			Array.Copy(header.Data, header.offset, built, 0, header.Length);
 
 			int position = header.Length;
 
@@ -102,10 +122,10 @@ namespace STUN.me.stojan.stun.message {
 				position += tlv.Length;
 			}
 
-			return built;
+			return new ByteBuffer(built);
 		}
 
-		private void IntAs16Bit(int value, byte[] o, int position) {
+		private void IntAs16Bit(int value, ByteBuffer o, int position) {
 			o[position] = (byte) ((value >> 8) & 255);
 			o[position + 1] = (byte) (value & 255);
 		}

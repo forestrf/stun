@@ -54,8 +54,8 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <param name="messageType">The message type</param>
 		/// <returns>The group</returns>
-		public static STUNMessageType Group(int messageType) {
-			return (STUNMessageType) (((messageType & C1) >> 7) | ((messageType & C0) >> 4));
+		public static STUNClass Group(int messageType) {
+			return (STUNClass) (messageType & 0x0110);
 		}
 
 		/// <summary>
@@ -63,8 +63,8 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <param name="messageType">The message type</param>
 		/// <returns>The method</returns>
-		public static STUNMessageType Method(int messageType) {
-			return (STUNMessageType) ((((messageType & BITS_HIGH_5) >> 1) | (messageType & BITS_INNER_3)) >> 1 | (messageType & BITS_LOWER_4));
+		public static STUNMethod Method(int messageType) {
+			return (STUNMethod) (messageType & 0xFEEF);
 		}
 
 		/// <summary>

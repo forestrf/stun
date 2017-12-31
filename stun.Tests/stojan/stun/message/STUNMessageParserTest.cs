@@ -32,9 +32,9 @@ namespace STUN.me.stojan.stun.message {
 	public class STUNMessageParserTest {
 		[Test]
 		public void parsing() {
-			STUNMessageBuilder builder = new STUNMessageBuilder();
+			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
-			builder.MessageType(STUNMessageType.GROUP_RESPONSE_ERROR, STUNMessageType.METHOD_BINDING);
+			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
 			builder.Transaction(new ByteBuffer(new byte[] { 1 }));
 			builder.Value(0b111, new byte[] { 255 });
 			builder.Value(0b010, new byte[] { 0, 255, 0, 255 });
@@ -50,8 +50,8 @@ namespace STUN.me.stojan.stun.message {
 			Buffer.BlockCopy(message, 0, copy, 0, 20);
 			CollectionAssert.AreEqual(copy, header.header.ToArray());
 
-			Assert.AreEqual(STUNMessageType.GROUP_RESPONSE_ERROR, header.Group());
-			Assert.AreEqual(STUNMessageType.METHOD_BINDING, header.Method());
+			Assert.AreEqual(STUNClass.Error, header.Group());
+			Assert.AreEqual(STUNMethod.Binding, header.Method());
 			var transaction = header.Transaction();
 			Assert.AreEqual(1, transaction[0]);
 			for (int i = 1; i < transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
@@ -124,9 +124,9 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void eosAtReadingFirstTLVHeader() {
-			STUNMessageBuilder builder = new STUNMessageBuilder();
+			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
-			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
+			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
@@ -141,9 +141,9 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void eosAtReadingFirstTLVValue() {
-			STUNMessageBuilder builder = new STUNMessageBuilder();
+			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
-			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
+			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
@@ -158,9 +158,9 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void eosAtReadingFirstTLVPadding() {
-			STUNMessageBuilder builder = new STUNMessageBuilder();
+			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
-			builder.MessageType(STUNMessageType.GROUP_REQUEST, STUNMessageType.METHOD_BINDING);
+			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
 			builder.Value(0b11, new byte[] { 255, 255 });
 

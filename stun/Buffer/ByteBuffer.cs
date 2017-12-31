@@ -106,6 +106,14 @@ namespace STUN.Utils {
 			return copy;
 		}
 
+		public bool BufferEquals(ByteBuffer other) {
+			if (Length != other.Length) return false;
+			for (int i = 0; i < Length; i++)
+				if (this[i] != other[i])
+					return false;
+			return true;
+		}
+
 		#region PutMethods
 		void UpdateDataSize(int position) {
 			if (position > Length) Length = position;
