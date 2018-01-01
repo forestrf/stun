@@ -30,21 +30,21 @@ namespace STUN.Crypto {
 		}
 
 		// Convert 4 bytes to big endian uint32
-		static uint big_endian_from_bytes(byte[] input, uint start) {
+		static uint big_endian_from_bytes(byte[] input, uint offset) {
 			uint r = 0;
-			r |= (((uint) input[start]) << 24);
-			r |= (((uint) input[start + 1]) << 16);
-			r |= (((uint) input[start + 2]) << 8);
-			r |= (((uint) input[start + 3]));
+			r |= (((uint) input[offset]) << 24);
+			r |= (((uint) input[offset + 1]) << 16);
+			r |= (((uint) input[offset + 2]) << 8);
+			r |= (((uint) input[offset + 3]));
 			return r;
 		}
 
 		// Convert big endian uint32 to bytes
-		static void bytes_from_big_endian(uint input, ref byte[] output, int start) {
-			output[start] = (byte) ((input & 0xFF000000) >> 24);
-			output[start + 1] = (byte) ((input & 0x00FF0000) >> 16);
-			output[start + 2] = (byte) ((input & 0x0000FF00) >> 8);
-			output[start + 3] = (byte) ((input & 0x000000FF));
+		static void bytes_from_big_endian(uint input, ref byte[] output, int offset) {
+			output[offset] = (byte) ((input & 0xFF000000) >> 24);
+			output[offset + 1] = (byte) ((input & 0x00FF0000) >> 16);
+			output[offset + 2] = (byte) ((input & 0x0000FF00) >> 8);
+			output[offset + 3] = (byte) ((input & 0x000000FF));
 		}
 
 		// SHA-224/SHA-256 choice function
@@ -57,16 +57,25 @@ namespace STUN.Crypto {
 			return ((x & y) ^ (x & z) ^ (y & z));
 		}
 
+
+		public static byte[] computeHMAC_SHA1(byte[] secret, byte[] value) {
+			byte[] bi = null;
+			byte[] bo = null;
+			byte[] processed = null;
+			uint[] wordblock = null;
+			return computeHMAC_SHA1(secret, value, ref bi, ref bo, ref processed, ref wordblock);
+		}
+
 		/// <summary>
 		/// Compute HMAC SHA-1
 		/// </summary>
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>20 byte HMAC_SHA1</returns>
-		public static byte[] computeHMAC_SHA1(byte[] secret, byte[] value) {
+		public static byte[] computeHMAC_SHA1(byte[] secret, byte[] value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			byte[] bi = new byte[64 + value.Length];
-			byte[] bo = new byte[64 + 20];
+			if (null == bi || bi.Length != 64 + value.Length) bi = new byte[64 + value.Length];
+			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 20];
 
 			// Copy secret to both arrays
 			Array.Copy(secret, bi, secret.Length);
@@ -84,47 +93,21 @@ namespace STUN.Crypto {
 			Array.Copy(value, 0, bi, 64, value.Length);
 
 			// Append SHA1(bi) to bo
-			byte[] sha_bi = computeSHA1(bi);
+			byte[] sha_bi = computeSHA1(bi, ref processed, ref wordblock);
 			Array.Copy(sha_bi, 0, bo, 64, 20);
 
 			// Return SHA1(bo)
-			return computeSHA1(bo);
+			return computeSHA1(bo, ref processed, ref wordblock);
 		}
 
-		/// <summary>
-		/// Compute HMAC SHA-224
-		/// </summary>
-		/// <param name="secret">Secret</param>
-		/// <param name="value">Password</param>
-		/// <returns>32 byte HMAC_SHA224</returns>
-		public static byte[] computeHMAC_SHA224(byte[] secret, byte[] value) {
-			// Create two arrays, bi and bo
-			byte[] bi = new byte[64 + value.Length];
-			byte[] bo = new byte[64 + 28];
 
-			// Copy secret to both arrays
-			Array.Copy(secret, bi, secret.Length);
-			Array.Copy(secret, bo, secret.Length);
-
-			for (int i = 0; i < 64; i++) {
-				// Xor bi with 0x36
-				bi[i] = (byte) (bi[i] ^ 0x36);
-
-				// Xor bo with 0x5c
-				bo[i] = (byte) (bo[i] ^ 0x5c);
-			}
-
-			// Append value to bi
-			Array.Copy(value, 0, bi, 64, value.Length);
-
-			// Append SHA224(bi) to bo
-			byte[] sha_bi = computeSHA224(bi);
-			Array.Copy(sha_bi, 0, bo, 64, 28);
-
-			// Return SHA224(bo)
-			return computeSHA224(bo);
+		public static byte[] computeHMAC_SHA256(byte[] secret, byte[] value) {
+			byte[] bi = null;
+			byte[] bo = null;
+			byte[] processed = null;
+			uint[] wordblock = null;
+			return computeHMAC_SHA256(secret, value, ref bi, ref bo, ref processed, ref wordblock);
 		}
-
 
 		/// <summary>
 		/// Compute HMAC SHA-256
@@ -132,10 +115,10 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>32 byte HMAC_SHA256</returns>
-		public static byte[] computeHMAC_SHA256(byte[] secret, byte[] value) {
+		public static byte[] computeHMAC_SHA256(byte[] secret, byte[] value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			byte[] bi = new byte[64 + value.Length];
-			byte[] bo = new byte[64 + 32];
+			if (null == bi || bi.Length != 64 + value.Length) bi = new byte[64 + value.Length];
+			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 32];
 
 			// Copy secret to both arrays
 			Array.Copy(secret, bi, secret.Length);
@@ -153,11 +136,11 @@ namespace STUN.Crypto {
 			Array.Copy(value, 0, bi, 64, value.Length);
 
 			// Append SHA256(bi) to bo
-			byte[] sha_bi = computeSHA256(bi);
+			byte[] sha_bi = computeSHA256(bi, ref processed, ref wordblock);
 			Array.Copy(sha_bi, 0, bo, 64, 32);
 
 			// Return SHA256(bo)
-			return computeSHA256(bo);
+			return computeSHA256(bo, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -165,7 +148,7 @@ namespace STUN.Crypto {
 		/// </summary>
 		/// <param name="input">Input byte array</param>
 		/// <returns>20 byte SHA1 of input</returns>
-		public static byte[] computeSHA1(byte[] input) {
+		public static byte[] computeSHA1(byte[] input, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, i, temp;
 			uint h0 = 0x67452301;
@@ -183,7 +166,11 @@ namespace STUN.Crypto {
 			}
 
 			// Create array for padded data
-			byte[] processed = new byte[newinputlength + 8];
+			int processedLength = newinputlength + 8;
+			if (null == processed || processed.Length < processedLength)
+				processed = new byte[processedLength];
+			else
+				Array.Clear(processed, input.Length, processedLength - input.Length);
 			Array.Copy(input, processed, input.Length);
 
 			// Pad data with an 1
@@ -191,13 +178,14 @@ namespace STUN.Crypto {
 
 			// Pad data with big endian 64bit length of message
 			// We do only 32 bits becouse input.length is 32 bit
-			bytes_from_big_endian((uint) input.Length * 8, ref processed, processed.Length - 4);
+			bytes_from_big_endian((uint) input.Length * 8, ref processed, processedLength - 4);
 
 			// Block of 32 bits values used in calculations
-			uint[] wordblock = new uint[80];
+			if (null == wordblock || wordblock.Length < 80)
+				wordblock = new uint[80];
 
 			// Now process each 512 bit block
-			while (blockstart < processed.Length) {
+			while (blockstart < processedLength) {
 				// break chunk into sixteen 32-bit big-endian words 
 				for (i = 0; i < 16; i++)
 					wordblock[i] = big_endian_from_bytes(processed, blockstart + (i * 4));
@@ -255,117 +243,12 @@ namespace STUN.Crypto {
 
 			return output;
 		}
-
-		/// <summary>
-		/// Compute SHA-224 digest
-		/// </summary>
-		/// <param name="input">Input array</param>
-		public static byte[] computeSHA224(byte[] input) {
-			// Initialize working parameters
-			uint a, b, c, d, e, f, g, h, i, s0, s1, t1, t2;
-			uint h0 = 0xc1059ed8;
-			uint h1 = 0x367cd507;
-			uint h2 = 0x3070dd17;
-			uint h3 = 0xf70e5939;
-			uint h4 = 0xffc00b31;
-			uint h5 = 0x68581511;
-			uint h6 = 0x64f98fa7;
-			uint h7 = 0xbefa4fa4;
-			uint blockstart = 0;
-
-			// Calculate how long the padded message should be
-			int newinputlength = input.Length + 1;
-			while ((newinputlength % 64) != 56) // length mod 512bits = 448bits
-			{
-				newinputlength++;
-			}
-
-			// Create array for padded data
-			byte[] processed = new byte[newinputlength + 8];
-			Array.Copy(input, processed, input.Length);
-
-			// Pad data with an 1
-			processed[input.Length] = 0x80;
-
-			// Pad data with big endian 64bit length of message
-			// We do only 32 bits becouse input.length is 32 bit
-			processed[processed.Length - 4] = (byte) (((input.Length * 8) & 0xFF000000) >> 24);
-			processed[processed.Length - 3] = (byte) (((input.Length * 8) & 0x00FF0000) >> 16);
-			processed[processed.Length - 2] = (byte) (((input.Length * 8) & 0x0000FF00) >> 8);
-			processed[processed.Length - 1] = (byte) (((input.Length * 8) & 0x000000FF));
-
-			// Block of 32 bits values used in calculations
-			uint[] wordblock = new uint[64];
-
-			// Now process each 512 bit block
-			while (blockstart < processed.Length) {
-				// break chunk into sixteen 32-bit big-endian words 
-				for (i = 0; i < 16; i++)
-					wordblock[i] = big_endian_from_bytes(processed, blockstart + (i * 4));
-
-				// Extend the sixteen 32-bit words into sixty-four 32-bit words:
-				for (i = 16; i < 64; i++) {
-					s0 = rotateright(wordblock[i - 15], 7) ^ rotateright(wordblock[i - 15], 18) ^ (wordblock[i - 15] >> 3);
-					s1 = rotateright(wordblock[i - 2], 17) ^ rotateright(wordblock[i - 2], 19) ^ (wordblock[i - 2] >> 10);
-					wordblock[i] = wordblock[i - 16] + s0 + wordblock[i - 7] + s1;
-				}
-
-				// Initialize hash value for this chunk:
-				a = h0;
-				b = h1;
-				c = h2;
-				d = h3;
-				e = h4;
-				f = h5;
-				g = h6;
-				h = h7;
-
-				// Main loop
-				for (i = 0; i < 64; i++) {
-					t1 = h + (rotateright(e, 6) ^ rotateright(e, 11) ^ rotateright(e, 25)) + choice(e, f, g) + sha256_k[i] + wordblock[i];
-					t2 = (rotateright(a, 2) ^ rotateright(a, 13) ^ rotateright(a, 22)) + majority(a, b, c);
-					h = g;
-					g = f;
-					f = e;
-					e = d + t1;
-					d = c;
-					c = b;
-					b = a;
-					a = t1 + t2;
-				}
-
-				// Add this chunk's hash to result so far
-				h0 += a;
-				h1 += b;
-				h2 += c;
-				h3 += d;
-				h4 += e;
-				h5 += f;
-				h6 += g;
-				h7 += h;
-
-				// Process next 512bit block
-				blockstart += 64;
-			}
-
-			// Prepare output
-			byte[] output = new byte[28];
-			bytes_from_big_endian(h0, ref output, 0);
-			bytes_from_big_endian(h1, ref output, 4);
-			bytes_from_big_endian(h2, ref output, 8);
-			bytes_from_big_endian(h3, ref output, 12);
-			bytes_from_big_endian(h4, ref output, 16);
-			bytes_from_big_endian(h5, ref output, 20);
-			bytes_from_big_endian(h6, ref output, 24);
-
-			return output;
-		}
-
+		
 		/// <summary>
 		/// Compute SHA-256 digest
 		/// </summary>
 		/// <param name="input">Input array</param>
-		public static byte[] computeSHA256(byte[] input) {
+		public static byte[] computeSHA256(byte[] input, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, f, g, h, i, s0, s1, t1, t2;
 			uint h0 = 0x6a09e667;
@@ -386,7 +269,11 @@ namespace STUN.Crypto {
 			}
 
 			// Create array for padded data
-			byte[] processed = new byte[newinputlength + 8];
+			int processedLength = newinputlength + 8;
+			if (null == processed || processed.Length < processedLength)
+				processed = new byte[processedLength];
+			else
+				Array.Clear(processed, input.Length, processedLength - input.Length);
 			Array.Copy(input, processed, input.Length);
 
 			// Pad data with an 1
@@ -394,16 +281,17 @@ namespace STUN.Crypto {
 
 			// Pad data with big endian 64bit length of message
 			// We do only 32 bits becouse input.length is 32 bit
-			processed[processed.Length - 4] = (byte) (((input.Length * 8) & 0xFF000000) >> 24);
-			processed[processed.Length - 3] = (byte) (((input.Length * 8) & 0x00FF0000) >> 16);
-			processed[processed.Length - 2] = (byte) (((input.Length * 8) & 0x0000FF00) >> 8);
-			processed[processed.Length - 1] = (byte) (((input.Length * 8) & 0x000000FF));
+			processed[processedLength - 4] = (byte) (((input.Length * 8) & 0xFF000000) >> 24);
+			processed[processedLength - 3] = (byte) (((input.Length * 8) & 0x00FF0000) >> 16);
+			processed[processedLength - 2] = (byte) (((input.Length * 8) & 0x0000FF00) >> 8);
+			processed[processedLength - 1] = (byte) (((input.Length * 8) & 0x000000FF));
 
 			// Block of 32 bits values used in calculations
-			uint[] wordblock = new uint[64];
+			if (null == wordblock || wordblock.Length < 64)
+				wordblock = new uint[64];
 
 			// Now process each 512 bit block
-			while (blockstart < processed.Length) {
+			while (blockstart < processedLength) {
 				// break chunk into sixteen 32-bit big-endian words 
 				for (i = 0; i < 16; i++)
 					wordblock[i] = big_endian_from_bytes(processed, blockstart + (i * 4));
