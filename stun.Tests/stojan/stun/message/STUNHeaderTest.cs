@@ -31,9 +31,9 @@ namespace STUN.me.stojan.stun.message {
 	public class STUNHeaderTest {
 		[Test]
 		public void groupExtracionFromMessageType() {
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(0b0000_0001_0001_0000));
-			Assert.AreEqual(STUNClass.Indication, STUNHeader.Group(0b0000_0000_0001_0000));
-			Assert.AreEqual(STUNClass.Success, STUNHeader.Group(0b0000_0001_0000_0000));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(0b0000_0001_0001_0000));
+			Assert.AreEqual(STUNClass.Indication, STUNHeader.Class(0b0000_0000_0001_0000));
+			Assert.AreEqual(STUNClass.Success, STUNHeader.Class(0b0000_0001_0000_0000));
 		}
 
 		[Test]

@@ -66,8 +66,8 @@ namespace STUN.me.stojan.stun.message {
 		public STUNMessageBuilder Transaction(ByteBuffer transaction) {
 			ByteBuffer tx = STUNTransaction.Transaction(transaction);
 
-			Array.Copy(STUNHeader.MAGIC_COOKIE, 0, header.Data, header.offset + 4, STUNHeader.MAGIC_COOKIE.Length);
-			Array.Copy(tx.Data, tx.positionAbsolute, header.Data, header.offset + 4 + STUNHeader.MAGIC_COOKIE.Length, tx.Length);
+			header.Put(header.offset + 4, STUNHeader.MAGIC_COOKIE);
+			Array.Copy(tx.Data, tx.positionAbsolute, header.Data, header.offset + 4 + 4, tx.Length);
 
 			return this;
 		}

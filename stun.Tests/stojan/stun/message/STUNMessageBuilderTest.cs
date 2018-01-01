@@ -46,20 +46,18 @@ namespace STUN.me.stojan.stun.message {
 
 			ByteBuffer transactionInt = new ByteBuffer(transaction);
 
-			byte[] magicCookie = new byte[4];
-
-			Array.Copy(message, 4, magicCookie, 0, 4);
+			uint magicCookie = new ByteBuffer(message).GetUInt(4);
 
 			// check length
 			Assert.AreEqual(0, (message.Length - 20) % 4);
 			// check length without header
 			Assert.AreEqual(message.Length - 20, new ByteBuffer(message).GetUShort(2));
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(new ByteBuffer(message).GetUShort(0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(new ByteBuffer(message).GetUShort(0)));
 			// check method
 			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(message).GetUShort(0)));
 			// check magic cookie
-			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
+			Assert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
 			Assert.AreEqual(1, transactionInt[0]);
 			for (int i = 1; i < transactionInt.Length; i++) {
@@ -99,21 +97,19 @@ namespace STUN.me.stojan.stun.message {
 
 			ByteBuffer transactionInt = new ByteBuffer(transaction);
 
-			byte[] magicCookie = new byte[STUNHeader.MAGIC_COOKIE.Length];
-
-			Array.Copy(header, 4, magicCookie, 0, 4);
+			uint magicCookie = new ByteBuffer(header).GetUInt(4);
 
 			Assert.IsNotNull(header);
 			Assert.AreEqual(20, header.Length);
 
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(new ByteBuffer(header).GetUShort(0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(new ByteBuffer(header).GetUShort(0)));
 			// check method
 			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(header).GetUShort(0)));
 			// check tlv length
 			Assert.AreEqual(20 + 4, new ByteBuffer(header).GetUShort(2));
 			// check magic cookie
-			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
+			Assert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
 			Assert.AreEqual(10, transactionInt[0]);
 			for (int i = 1; i < transactionInt.Length; i++) {

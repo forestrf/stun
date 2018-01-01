@@ -106,7 +106,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The class</returns>
 			public STUNClass Group() {
-				return STUNHeader.Group(MessageType());
+				return STUNHeader.Class(MessageType());
 			}
 
 			/// <summary>
@@ -124,10 +124,7 @@ namespace STUN.me.stojan.stun.message {
 			public bool IsMagicCookieValid() {
 				ByteBuffer c;
 				if (MagicCookie(out c)) {
-					return c[0] == STUNHeader.MAGIC_COOKIE[0] &&
-						c[1] == STUNHeader.MAGIC_COOKIE[1] &&
-						c[2] == STUNHeader.MAGIC_COOKIE[2] &&
-						c[3] == STUNHeader.MAGIC_COOKIE[3];
+					return c.GetUInt(0) == STUNHeader.MAGIC_COOKIE;
 				} else {
 					return false;
 				}

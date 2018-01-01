@@ -28,17 +28,18 @@ namespace STUN.me.stojan.stun.message {
 	/// </summary>
 	public static class STUNHeader {
 		/// <summary>
-		/// The STUN "magic cookie".
+		/// The STUN "magic cookie". Network Byte Order
 		/// </summary>
-		public static readonly byte[] MAGIC_COOKIE = { 0x21, 0x12, 0xA4, 0x42 };
-		
+		public static readonly uint MAGIC_COOKIE = 0x2112A442;
+		private const int ClassMask = 0x0110;
+
 		/// <summary>
 		/// Returns the STUN class from the compound message type.
 		/// </summary>
 		/// <param name="messageType">The message type</param>
 		/// <returns>The group</returns>
-		public static STUNClass Group(int messageType) {
-			return (STUNClass) (messageType & 0x0110);
+		public static STUNClass Class(int messageType) {
+			return (STUNClass) (messageType & ClassMask);
 		}
 
 		/// <summary>
@@ -47,7 +48,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="messageType">The message type</param>
 		/// <returns>The method</returns>
 		public static STUNMethod Method(int messageType) {
-			return (STUNMethod) (messageType & 0xFEEF);
+			return (STUNMethod) (messageType & ~ClassMask);
 		}
 
 		/// <summary>
