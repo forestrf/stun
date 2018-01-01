@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using STUN.Utils;
 using System;
 
 namespace STUN.me.stojan.stun.message {
@@ -33,25 +34,13 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="type">The type</param>
 		/// <param name="value">The value</param>
 		/// <returns>The TLV bytes, never null</returns>
-		public static byte[] Value(int type, byte[] value) {
-			int paddingLength;
-
-			if (0 == value.Length % 4) {
-				paddingLength = value.Length;
-			} else {
-				paddingLength = value.Length + (4 - (value.Length % 4));
-			}
-
-			byte[] raw = new byte[4 + paddingLength];
-
-			raw[0] = (byte) ((type >> 8) & 255);
-			raw[1] = (byte) (type & 255);
-			raw[2] = (byte) ((value.Length >> 8) & 255);
-			raw[3] = (byte) (value.Length & 255);
-
-			Array.Copy(value, 0, raw, 4, value.Length);
-
-			return raw;
+		public static void Value(int type, byte[] value, ref ByteBuffer buffer) {
+			buffer.Put((ushort) type);
+			buffer.Put((ushort) value.Length);
+			buffer.Put(value);
+			
+			int padding = (4 - value.Length % 4) % 4;
+			buffer.Position += padding;
 		}
 	}
 }

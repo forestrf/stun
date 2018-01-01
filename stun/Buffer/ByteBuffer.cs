@@ -69,8 +69,8 @@ namespace STUN.Utils {
 		}
 
 		public byte this[int index] {
-			get { return _data[positionAbsolute + index]; }
-			set { _data[positionAbsolute + index] = value; }
+			get { return _data[offset + index]; }
+			set { _data[offset + index] = value; }
 		}
 
 		public int AvailableBytes {

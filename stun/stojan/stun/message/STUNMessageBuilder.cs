@@ -33,8 +33,6 @@ namespace STUN.me.stojan.stun.message {
 		private ByteBuffer buffer;
 		private ByteBuffer header;
 
-		private int totalValues = 0;
-
 
 		private STUNMessageBuilder() { }
 		public STUNMessageBuilder(byte[] buffer) {
@@ -56,8 +54,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
 			ushort stunMessageType = (ushort) (0x3FFF & ((int) stunClass | (int) stunMethod));
-			header[0] = (byte) (stunMessageType >> 8);
-			header[1] = (byte) (stunMessageType & 0xff);
+			header.Put(0, stunMessageType);
 			return this;
 		}
 
@@ -82,12 +79,9 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="value">The message value</param>
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder Value(int type, byte[] value) {
-			byte[] raw = STUNTypeLengthValue.Value(type, value);
+			STUNTypeLengthValue.Value(type, value, ref buffer);
 
-			totalValues += raw.Length;
-			buffer.Put(raw);
-
-			IntAs16Bit(totalValues & 0xFFFF, header, 2);
+			IntAs16Bit((buffer.Position - header.Length) & 0xFFFF, header, 2);
 
 			return this;
 		}

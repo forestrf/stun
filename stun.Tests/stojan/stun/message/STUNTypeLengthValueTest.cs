@@ -21,6 +21,7 @@
  */
 
 using NUnit.Framework;
+using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message {
 	/**
@@ -30,7 +31,8 @@ namespace STUN.me.stojan.stun.message {
 	public class STUNTypeLengthValueTest {
 		[Test]
 		public void typePosition() {
-			byte[] result = STUNTypeLengthValue.Value(257, new byte[] { });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(257, new byte[] { }, ref result);
 			
 			Assert.AreEqual(1, result[0]);
 			Assert.AreEqual(1, result[1]);
@@ -40,7 +42,8 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void lengthPosition() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[257]);
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[257], ref result);
 
 			Assert.AreEqual(0, result[0]);
 			Assert.AreEqual(0, result[1]);
@@ -50,16 +53,18 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void resultingSizeZeroLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[0]);
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[0], ref result);
 
-			Assert.AreEqual(4, result.Length);
+			Assert.AreEqual(4, result.Position);
 		}
 
 		[Test]
 		public void resultingSizeOneLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[] { 0xff });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[] { 0xff }, ref result);
 
-			Assert.AreEqual(8, result.Length);
+			Assert.AreEqual(8, result.Position);
 			Assert.AreEqual(0xff, result[4]);
 			Assert.AreEqual(0, result[5]);
 			Assert.AreEqual(0, result[6]);
@@ -68,9 +73,10 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void resultingSizeTwoLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff }, ref result);
 
-			Assert.AreEqual(8, result.Length);
+			Assert.AreEqual(8, result.Position);
 			Assert.AreEqual(0xff, result[4]);
 			Assert.AreEqual(0xff, result[5]);
 			Assert.AreEqual(0, result[6]);
@@ -79,9 +85,10 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void resultingSizeThreeLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff }, ref result);
 
-			Assert.AreEqual(8, result.Length);
+			Assert.AreEqual(8, result.Position);
 			Assert.AreEqual(0xff, result[4]);
 			Assert.AreEqual(0xff, result[5]);
 			Assert.AreEqual(0xff, result[6]);
@@ -90,9 +97,10 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void resultingSizeFourLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff, 0xff });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff, 0xff }, ref result);
 
-			Assert.AreEqual(8, result.Length);
+			Assert.AreEqual(8, result.Position);
 			Assert.AreEqual(0xff, result[4]);
 			Assert.AreEqual(0xff, result[5]);
 			Assert.AreEqual(0xff, result[6]);
@@ -101,9 +109,10 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void resultingSizeFiveLValue() {
-			byte[] result = STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff });
+			ByteBuffer result = new ByteBuffer(new byte[1024]);
+			STUNTypeLengthValue.Value(0, new byte[] { 0xff, 0xff, 0xff, 0xff, 0xff }, ref result);
 
-			Assert.AreEqual(12, result.Length);
+			Assert.AreEqual(12, result.Position);
 			Assert.AreEqual(0xff, result[4]);
 			Assert.AreEqual(0xff, result[5]);
 			Assert.AreEqual(0xff, result[6]);
