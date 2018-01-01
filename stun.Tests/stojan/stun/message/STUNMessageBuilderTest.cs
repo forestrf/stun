@@ -53,11 +53,11 @@ namespace STUN.me.stojan.stun.message {
 			// check length
 			Assert.AreEqual(0, (message.Length - 20) % 4);
 			// check length without header
-			Assert.AreEqual(message.Length - 20, STUNHeader.Int16(new ByteBuffer(message), 2));
+			Assert.AreEqual(message.Length - 20, new ByteBuffer(message).GetUShort(2));
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(STUNHeader.Int16(new ByteBuffer(message), 0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(new ByteBuffer(message).GetUShort(0)));
 			// check method
-			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(STUNHeader.Int16(new ByteBuffer(message), 0)));
+			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(message).GetUShort(0)));
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
@@ -107,11 +107,11 @@ namespace STUN.me.stojan.stun.message {
 			Assert.AreEqual(20, header.Length);
 
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(STUNHeader.Int16(new ByteBuffer(header), 0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.Group(new ByteBuffer(header).GetUShort(0)));
 			// check method
-			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(STUNHeader.Int16(new ByteBuffer(header), 0)));
+			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(header).GetUShort(0)));
 			// check tlv length
-			Assert.AreEqual(20 + 4, STUNHeader.Int16(new ByteBuffer(header), 2));
+			Assert.AreEqual(20 + 4, new ByteBuffer(header).GetUShort(2));
 			// check magic cookie
 			CollectionAssert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction

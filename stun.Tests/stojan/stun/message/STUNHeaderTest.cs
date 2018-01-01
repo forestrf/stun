@@ -45,7 +45,7 @@ namespace STUN.me.stojan.stun.message {
 
 		[Test]
 		public void int16FromBytes() {
-			Assert.AreEqual(257, STUNHeader.Int16(new ByteBuffer(new byte[] { 1, 1 }), 0));
+			Assert.AreEqual(257, new ByteBuffer(new byte[] { 1, 1 }).GetUShort(0));
 		}
 	}
 }

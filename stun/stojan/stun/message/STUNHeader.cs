@@ -31,17 +31,7 @@ namespace STUN.me.stojan.stun.message {
 		/// The STUN "magic cookie".
 		/// </summary>
 		public static readonly byte[] MAGIC_COOKIE = { 0x21, 0x12, 0xA4, 0x42 };
-
-		/// <summary>
-		/// Convert the two bytes (16 bits) from values starting at position into an integer.
-		/// </summary>
-		/// <param name="values">The values, must have length at least 2</param>
-		/// <param name="position">The position, must be at most {@code values.length - 2}</param>
-		/// <returns>The integer</returns>
-		public static int Int16(ByteBuffer values, int position) {
-			return (values[position + 0] << 8) | values[position + 1];
-		}
-
+		
 		/// <summary>
 		/// Returns the STUN class from the compound message type.
 		/// </summary>

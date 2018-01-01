@@ -233,62 +233,72 @@ namespace STUN.Utils {
 			return res;
 		}
 
-		public bool GetBool() {
-			bool res = _data[positionAbsolute] > 0;
-			positionAbsolute += 1;
-			return res;
+		public ushort GetUShort(int offset) {
+			return new FastBit.Ushort().Read(_data, this.offset + offset, endianness);
 		}
-
 		public ushort GetUShort() {
 			ushort v = new FastBit.Ushort().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 2;
 			return v;
 		}
 
+		public short GetShort(int offset) {
+			return new FastBit.Short().Read(_data, this.offset + offset, endianness);
+		}
 		public short GetShort() {
 			short result = new FastBit.Short().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 2;
 			return result;
 		}
 
+		public long GetLong(int offset) {
+			return new FastBit.Long().Read(_data, this.offset + offset, endianness);
+		}
 		public long GetLong() {
 			long result = new FastBit.Long().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 8;
 			return result;
 		}
 
+		public ulong GetULong(int offset) {
+			return new FastBit.Ulong().Read(_data, this.offset + offset, endianness);
+		}
 		public ulong GetULong() {
 			ulong result = new FastBit.Ulong().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 8;
 			return result;
 		}
 
+		public int GetInt(int offset) {
+			return new FastBit.Int().Read(_data, this.offset + offset, endianness);
+		}
 		public int GetInt() {
 			int result = new FastBit.Int().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 4;
 			return result;
 		}
-		public int GetInt(int relativeOffset) {
-			int result = new FastBit.Int().Read(_data, offset + relativeOffset, endianness);
-			return result;
-		}
 
+		public uint GetUInt(int offset) {
+			return new FastBit.Uint().Read(_data, this.offset + offset, endianness);
+		}
 		public uint GetUInt() {
 			uint result = new FastBit.Uint().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 4;
 			return result;
 		}
-		public uint GetUInt(int relativeOffset) {
-			uint result = new FastBit.Uint().Read(_data, offset + relativeOffset, endianness);
-			return result;
-		}
 
+		public float GetFloat(int offset) {
+			return new FastBit.Float().Read(_data, this.offset + offset, endianness);
+		}
 		public float GetFloat() {
 			float result = new FastBit.Float().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 4;
 			return result;
 		}
 
+		public double GetDouble(int offset) {
+			return new FastBit.Double().Read(_data, this.offset + offset, endianness);
+		}
 		public double GetDouble() {
 			double result = new FastBit.Double().Read(_data, positionAbsolute, endianness);
 			positionAbsolute += 8;

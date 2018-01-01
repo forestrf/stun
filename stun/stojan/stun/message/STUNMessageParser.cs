@@ -67,7 +67,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The message type</returns>
 			public int MessageType() {
-				return STUNHeader.Int16(header, 0);
+				return header.GetUShort(0);
 			}
 
 			/// <summary>
@@ -75,7 +75,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The message length</returns>
 			public int Length() {
-				return STUNHeader.Int16(header, 2);
+				return header.GetUShort(2);
 			}
 
 			/// <summary>
@@ -203,7 +203,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns> The type</returns>
 			public int Type() {
-				return STUNHeader.Int16(header, 0);
+				return header.GetUShort(0);
 			}
 
 			/// <summary>
@@ -211,7 +211,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The length</returns>
 			public int Length() {
-				return STUNHeader.Int16(header, 2);
+				return header.GetUShort(2);
 			}
 
 			/// <summary>
