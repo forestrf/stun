@@ -38,8 +38,16 @@ namespace STUN.me.stojan.stun.message {
 			buffer.Put((ushort) type);
 			buffer.Put((ushort) value.Length);
 			buffer.Put(value);
-			
-			int padding = (4 - value.Length % 4) % 4;
+
+			WritePadding(ref buffer);
+		}
+
+		public static void WriteTypeLength(ushort type, ushort length, ref ByteBuffer buffer) {
+			buffer.Put(type);
+			buffer.Put(length);
+		}
+		public static void WritePadding(ref ByteBuffer buffer) {
+			int padding = (4 - (buffer.Position & 0x3)) & 0x3;
 			buffer.Position += padding;
 		}
 	}

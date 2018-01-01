@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using STUN.Utils;
 using System;
 using System.Text;
 
@@ -72,15 +73,18 @@ namespace STUN.me.stojan.stun.message.attribute {
 			return true;
 		}
 		
+		public static bool Reason(ByteBuffer attribute, out string reason) {
+			return Reason(ref attribute, out reason);
+		}
 		/// <summary>
 		/// Extract the reason from a well-formed ERROR-CODE STUN attribute.
 		/// </summary>
 		/// <param name="attribute">Attribute the attribute, must be well formed and not null</param>
 		/// <param name="reason">The reason, at most 128 chars long, never null, may be empty</param>
 		/// <returns>Successful</returns>
-		public static bool Reason(byte[] attribute, out string reason) {
-			if (CheckAttribute(attribute)) {
-				reason = Encoding.UTF8.GetString(attribute, 4, attribute.Length - 4);
+		public static bool Reason(ref ByteBuffer attribute, out string reason) {
+			if (CheckAttribute(ref attribute)) {
+				reason = Encoding.UTF8.GetString(attribute.data, 4, attribute.Length - 4);
 				return true;
 			} else {
 				reason = "";
@@ -88,14 +92,17 @@ namespace STUN.me.stojan.stun.message.attribute {
 			}
 		}
 		
+		public static bool Code(ByteBuffer attribute, out int code) {
+			return Code(ref attribute, out code);
+		}
 		/// <summary>
 		/// Extract the error code from a well-formed ERROR-CODE STUN attribute.
 		/// </summary>
 		/// <param name="attribute">Attribute the attribute, must be well-formed and not null</param>
 		/// <param name="code">The code, a value within[300, 700)</param>
 		/// <returns>Successful</returns>
-		public static bool Code(byte[] attribute, out int code) {
-			if (CheckAttribute(attribute)) {
+		public static bool Code(ref ByteBuffer attribute, out int code) {
+			if (CheckAttribute(ref attribute)) {
 				code = (attribute[2] & 0b111) * 100 + (attribute[3] & 0b0111_1111);
 				return true;
 			} else {
@@ -104,13 +111,16 @@ namespace STUN.me.stojan.stun.message.attribute {
 			}
 		}
 		
+		public static bool CheckAttribute(ByteBuffer attribute) {
+			return CheckAttribute(ref attribute);
+		}
 		/// <summary>
 		/// Check that the attribute is well formed.
 		/// </summary>
 		/// <param name="attribute">Attribute the attribute</param>
 		/// <returns>Successful</returns>
-		public static bool CheckAttribute(byte[] attribute) {
-			if (null == attribute) {
+		public static bool CheckAttribute(ref ByteBuffer attribute) {
+			if (null == attribute.data) {
 				Logger.Error("Argument attribute must not be null");
 				return false;
 			}

@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+using STUN.Utils;
+
 namespace STUN.me.stojan.stun.message.attribute {
 	/// <summary>
 	/// Supports the creation of the STUN XOR-MAPPED-ADDRESS attribute.
@@ -49,16 +51,19 @@ namespace STUN.me.stojan.stun.message.attribute {
 		/// <param name="port">The port, will be treated as 16-bits</param>
 		/// <param name="attribute">The XOR-MAPPED-ADDRESS value, never null</param>
 		/// <returns>Successful</returns>
-		public static bool Value(byte[] header, byte[] addr, int port, out byte[] attribute) {
-			if (STUNAttributeMappedAddress.Value(addr, port, out attribute)) {
+		public static bool Value(byte[] header, byte[] addr, int port, out byte[] attributeOut) {
+			var attribute = new ByteBuffer(new byte[20]);
+			if (STUNAttributeMappedAddress.Value(addr, port, ref attribute)) {
 				attribute[2] = (byte) (attribute[2] ^ header[4]);
 				attribute[3] = (byte) (attribute[3] ^ header[5]);
 
 				for (int i = 4; i < attribute.Length; i++) {
 					attribute[i] = (byte) (attribute[i] ^ header[i]);
 				}
+				attributeOut = attribute.GetCropToCurrentPosition().ToArray();
 				return true;
 			} else {
+				attributeOut = null;
 				return false;
 			}
 		}
@@ -73,7 +78,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 		public static bool Port(byte[] header, byte[] attribute, out int portXored) {
 			if (CheckHeader(header)) {
 				int port;
-				if (STUNAttributeMappedAddress.Port(attribute, out port)) {
+				if (STUNAttributeMappedAddress.Port(new ByteBuffer(attribute), out port)) {
 					int xor = ((header[4] & 255) << 8) | (header[5] & 255);
 
 					portXored = xor ^ port;
@@ -94,7 +99,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 		/// <returns>Successful</returns>
 		public static bool Address(byte[] header, byte[] attribute, out byte[] address) {
 			if (CheckHeader(header)) {
-				if (STUNAttributeMappedAddress.Address(attribute, out address)) {
+				if (STUNAttributeMappedAddress.Address(new ByteBuffer(attribute), out address)) {
 					for (int i = 0; i < address.Length; i++) {
 						address[i] = (byte) (attribute[4 + i] ^ header[4 + i]);
 					}

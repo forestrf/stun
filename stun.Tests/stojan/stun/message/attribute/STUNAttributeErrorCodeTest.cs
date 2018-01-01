@@ -21,6 +21,7 @@
  */
 
 using NUnit.Framework;
+using STUN.Utils;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
@@ -76,47 +77,47 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 		[Test]
 		public void checkAttribute_nullValue() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(null));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer()));
 		}
 
 		[Test]
 		public void checkAttribute_lengthLessThan4() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[3]));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[3])));
 		}
 
 		[Test]
 		public void checkAttribute_nonZeroFirstByte() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 1, 0, 3, 0 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 1, 0, 3, 0 })));
 		}
 
 		[Test]
 		public void checkAttribute_nonZeroSecondByte() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 1, 3, 0 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 0, 1, 3, 0 })));
 		}
 
 		[Test]
 		public void checkAttribute_thirdByteLessThan3() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 2, 0 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 0, 0, 2, 0 })));
 		}
 
 		[Test]
 		public void checkAttribute_tirdByteGreaterThan6() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 7, 0 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 0, 0, 7, 0 })));
 		}
 
 		[Test]
 		public void checkAttribute_fourthByteGreaterThan99() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 3, 100 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 0, 0, 3, 100 })));
 		}
 
 		[Test]
 		public void checkAttribute_fourthByteGreaterThan128() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[] { 0, 0, 3, (byte) 129 }));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[] { 0, 0, 3, 129 })));
 		}
 
 		[Test]
 		public void checkAttribute_maxLength() {
-			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new byte[4 + 764]));
+			Assert.AreEqual(false, STUNAttributeErrorCode.CheckAttribute(new ByteBuffer(new byte[4 + 764])));
 		}
 
 		[Test]
@@ -127,7 +128,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, reason, out attribute));
 
 			string outReason;
-			Assert.AreEqual(true, STUNAttributeErrorCode.Reason(attribute, out outReason));
+			Assert.AreEqual(true, STUNAttributeErrorCode.Reason(new ByteBuffer(attribute), out outReason));
 			Assert.AreEqual(reason, outReason);
 		}
 
@@ -139,7 +140,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, reason, out attribute));
 
 			string outReason;
-			Assert.IsTrue(STUNAttributeErrorCode.Reason(attribute, out outReason));
+			Assert.IsTrue(STUNAttributeErrorCode.Reason(new ByteBuffer(attribute), out outReason));
 			Assert.AreEqual(reason, outReason);
 		}
 
@@ -148,7 +149,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			byte[] attribute;
 			Assert.AreEqual(true, STUNAttributeErrorCode.Value(300, "", out attribute));
 			int code;
-			Assert.AreEqual(true, STUNAttributeErrorCode.Code(attribute, out code));
+			Assert.AreEqual(true, STUNAttributeErrorCode.Code(new ByteBuffer(attribute), out code));
 			Assert.AreEqual(300, code);
 		}
 
@@ -157,7 +158,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			byte[] attribute;
 			Assert.AreEqual(true, STUNAttributeErrorCode.Value(699, "", out attribute));
 			int code;
-			Assert.AreEqual(true, STUNAttributeErrorCode.Code(attribute, out code));
+			Assert.AreEqual(true, STUNAttributeErrorCode.Code(new ByteBuffer(attribute), out code));
 			Assert.AreEqual(699, code);
 		}
 	}

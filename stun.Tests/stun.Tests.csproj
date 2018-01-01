@@ -65,6 +65,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crypto\SHA1.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeErrorCodeTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeMappedAddressTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftwareTest.cs" />
@@ -73,7 +74,6 @@
     <Compile Include="stojan\stun\message\STUNHeaderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageBuilderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageParserTest.cs" />
-    <Compile Include="stojan\stun\message\STUNTransactionTest.cs" />
     <Compile Include="stojan\stun\message\STUNTypeLengthValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

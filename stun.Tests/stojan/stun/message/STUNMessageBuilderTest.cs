@@ -35,7 +35,7 @@ namespace STUN.me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
 			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
-			builder.Transaction(new ByteBuffer(new byte[] { 1 }));
+			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
 			builder.Value(0b111, new byte[] { 255 });
 
 			byte[] message = builder.Build();
@@ -86,7 +86,7 @@ namespace STUN.me.stojan.stun.message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null);
 
 			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
-			builder.Transaction(new ByteBuffer(new byte[] { 10 }));
+			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.Value(0xABABA, new byte[20]);
 
 			byte[] header = builder.GetHeader().ToArray();

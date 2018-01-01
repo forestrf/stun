@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using STUN.Utils;
 using System;
 
 namespace STUN.me.stojan.stun.message.attribute {
@@ -42,7 +43,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 		/// <param name="port">The port, will be treated as 16-bit</param>
 		/// <param name="value">The value</param>
 		/// <returns>Successful</returns>
-		public static bool Value(byte[] addr, int port, out byte[] value) {
+		public static bool Value(byte[] addr, int port, ref ByteBuffer value) {
 			byte type;
 
 			switch (addr.Length) {
@@ -55,32 +56,30 @@ namespace STUN.me.stojan.stun.message.attribute {
 					break;
 
 				default:
-					value = null;
 					Logger.Error("Unsupported address of length " + addr.Length);
 					return false;
 			}
-
-			value = new byte[1 + 1 + 2 + addr.Length];
-
-			value[0] = 0;
-			value[1] = type;
-			value[2] = (byte) ((port >> 8) & 255);
-			value[3] = (byte) (port & 255);
-
-			Array.Copy(addr, 0, value, 4, addr.Length);
+			
+			value.Put((byte) 0);
+			value.Put((byte) type);
+			value.Put((ushort) port);
+			value.Put(addr);
 
 			return true;
 		}
 
+		public static bool Port(ByteBuffer attribute, out int port) {
+			return Port(ref attribute, out port);
+		}
 		/// <summary>
 		/// Get the port from an attribute and header.
 		/// </summary>
 		/// <param name="attribute">The attribute, must be a valid attribute</param>
 		/// <param name="value">The port</param>
 		/// <returns>Successful</returns>
-		public static bool Port(byte[] attribute, out int port) {
-			if (CheckAttribute(attribute)) {
-				port = (attribute[2] << 8) | attribute[3];
+		public static bool Port(ref ByteBuffer attribute, out int port) {
+			if (CheckAttribute(ref attribute)) {
+				port = attribute.GetUShort(2);
 				return true;
 			} else {
 				port = 0;
@@ -88,14 +87,17 @@ namespace STUN.me.stojan.stun.message.attribute {
 			}
 		}
 
+		public static bool Address(ByteBuffer attribute, out byte[] address) {
+			return Address(ref attribute, out address);
+		}
 		/// <summary>
 		/// Get the address from an attribute and header.
 		/// </summary>
 		/// <param name="attribute">The attribute, must be a valid attribute</param>
 		/// <param name="address">The address</param>
 		/// <returns>Successful</returns>
-		public static bool Address(byte[] attribute, out byte[] address) {
-			if (!CheckAttribute(attribute)) {
+		public static bool Address(ref ByteBuffer attribute, out byte[] address) {
+			if (!CheckAttribute(ref attribute)) {
 				address = null;
 				return false;
 			}
@@ -125,18 +127,21 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 			address = new byte[addressLength];
 
-			Array.Copy(attribute, 4, address, 0, address.Length);
+			attribute.GetBytes(4, address, 0, address.Length);
 
 			return true;
 		}
 
+		public static bool CheckAttribute(ByteBuffer attribute) {
+			return CheckAttribute(ref attribute);
+		}
 		/// <summary>
 		/// Check that the attribute is valid.
 		/// </summary>
 		/// <param name="attribute">The attribute</param>
 		/// <returns>Successful</returns>
-		public static bool CheckAttribute(byte[] attribute) {
-			if (null == attribute) {
+		public static bool CheckAttribute(ref ByteBuffer attribute) {
+			if (null == attribute.data) {
 				Logger.Error("Argument attribute must not be null");
 				return false;
 			}

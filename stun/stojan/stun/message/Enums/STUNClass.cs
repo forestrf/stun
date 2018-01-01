@@ -6,8 +6,4 @@ namespace STUN.me.stojan.stun.message {
 		Success = 0x0100,
 		Error = 0x0110
 	}
-
-	public enum STUNMethod : int {
-		Binding = 0x0001
-	}
 }

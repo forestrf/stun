@@ -43,19 +43,28 @@
   <ItemGroup>
     <Compile Include="Buffer\ByteBuffer.cs" />
     <Compile Include="Buffer\FastBitConverter.cs" />
+    <Compile Include="Crypto\HMACSHA1.cs" />
+    <Compile Include="Crypto\SHA1.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\InternalLogger.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="stojan\stun\message\attribute\ISTUNAttribute.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeErrorCode.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeMappedAddress.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftware.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributes.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeXORMappedAddress.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_UseCandidate.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_Priority.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_MessageIntegrity.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_Username.cs" />
+    <Compile Include="stojan\stun\message\Enums\STUNAttribute.cs" />
+    <Compile Include="stojan\stun\message\Enums\STUNClass.cs" />
     <Compile Include="stojan\stun\message\STUNHeader.cs" />
     <Compile Include="stojan\stun\message\STUNMessageBuilder.cs" />
     <Compile Include="stojan\stun\message\STUNMessageParser.cs" />
-    <Compile Include="stojan\stun\message\STUNMessageType.cs" />
+    <Compile Include="stojan\stun\message\Enums\STUNMethod.cs" />
     <Compile Include="stojan\stun\message\STUNTransaction.cs" />
     <Compile Include="stojan\stun\message\STUNTypeLengthValue.cs" />
   </ItemGroup>

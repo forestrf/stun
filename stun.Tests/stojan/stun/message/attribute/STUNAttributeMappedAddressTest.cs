@@ -21,6 +21,7 @@
  */
 
 using NUnit.Framework;
+using STUN.Utils;
 using System;
 
 namespace STUN.me.stojan.stun.message.attribute {
@@ -36,30 +37,30 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 		[Test]
 		public void lessThanIPv4Address() {
-			byte[] o;
-			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[3], -1, out o));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[3], -1, ref attribute));
 		}
 
 		[Test]
 		public void lessThanIPv6Address() {
-			byte[] o;
-			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[8], -1, out o));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[8], -1, ref attribute));
 		}
 
 		[Test]
 		public void overThanIPv6Address() {
-			byte[] o;
-			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[17], -1, out o));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsFalse(STUNAttributeMappedAddress.Value(new byte[17], -1, ref attribute));
 		}
 
 		[Test]
 		public void ipv4Address() {
 			byte[] addr = new byte[] { 192, 168, 1, 123 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, -1, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, -1, ref attribute));
 
-			Assert.AreEqual(8, attribute.Length);
+			Assert.AreEqual(8, attribute.Position);
 
 			// zero-padding
 			Assert.AreEqual(0, attribute[0]);
@@ -82,8 +83,8 @@ namespace STUN.me.stojan.stun.message.attribute {
 		public void ipv6Address() {
 			byte[] addr = new byte[] { 0x20, 0x01, 0x0d, (byte) 0xb8, (byte) 0x85, (byte) 0xa3, 0x08, (byte) 0xd3, 0x13, 0x19, (byte) 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, 123, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(addr, 123, ref attribute));
 
 			Assert.AreEqual(20, attribute.Length);
 
@@ -104,38 +105,39 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 		[Test]
 		public void nullAttribute() {
-			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(null));
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new ByteBuffer(null)));
 		}
 
 		[Test]
 		public void shortAttribute() {
-			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[0]));
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new ByteBuffer(new byte[0])));
 		}
 
 		[Test]
 		public void nonZeroFirstByte() {
-			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[] { 1, 0, 0, 0 }));
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new ByteBuffer(new byte[] { 1, 0, 0, 0 })));
 		}
 
 		[Test]
 		public void extractPort() {
 			int port = 0b1010_1010_1010_1010;
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(new byte[] { (byte) 192, (byte) 168, 0, 1 }, port, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(new byte[] { (byte) 192, (byte) 168, 0, 1 }, port, ref attribute));
 			int portOut;
-			Assert.IsTrue(STUNAttributeMappedAddress.Port(attribute, out portOut));
+			Assert.IsTrue(STUNAttributeMappedAddress.Port(ref attribute, out portOut));
 			Assert.AreEqual(port, portOut);
 		}
 
 		[Test]
 		public void extractIPV4Address() {
-			byte[] address = new byte[] { 192, 168, 7, 254};
+			byte[] address = new byte[] { 192, 168, 7, 254 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, ref attribute));
 			byte[] outAddress;
-			Assert.IsTrue(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+			attribute = attribute.GetCropToCurrentPosition();
+			Assert.IsTrue(STUNAttributeMappedAddress.Address(ref attribute, out outAddress));
 			CollectionAssert.AreEqual(address, outAddress);
 		}
 
@@ -143,11 +145,11 @@ namespace STUN.me.stojan.stun.message.attribute {
 		public void extractIPV6Address() {
 			byte[] address = new byte[] { 0x20, 0x01, 0x0d, 0xb8, 0x85, 0xa3, 0x08, 0xd3, 0x13, 0x19, 0x8a, 0x2e, 0x03, 0x70, 0x73, 0x48 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, ref attribute));
 
 			byte[] outAddress;
-			Assert.IsTrue(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+			Assert.IsTrue(STUNAttributeMappedAddress.Address(ref attribute, out outAddress));
 			CollectionAssert.AreEqual(address, outAddress);
 		}
 
@@ -155,33 +157,33 @@ namespace STUN.me.stojan.stun.message.attribute {
 		public void wrongAddressType() {
 			byte[] address = new byte[] { 192, 168, 3, 254 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, ref attribute));
 
 			attribute[1] = 192;
 
 			byte[] outAddress;
-			Assert.IsFalse(STUNAttributeMappedAddress.Address(attribute, out outAddress));
+			Assert.IsFalse(STUNAttributeMappedAddress.Address(ref attribute, out outAddress));
 		}
 
 		[Test]
 		public void wrongAddressLength() {
-			byte[] address = new byte[] { (byte) 192, (byte) 168, (byte) 3, (byte) 254 };
+			byte[] address = new byte[] { 192, 168, 3, 254 };
 
-			byte[] attribute;
-			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, out attribute));
+			ByteBuffer attribute = new ByteBuffer(new byte[20]);
+			Assert.IsTrue(STUNAttributeMappedAddress.Value(address, 0, ref attribute));
 
 			byte[] wrongAttribute = new byte[attribute.Length + 4];
 
-			Array.Copy(attribute, 0, wrongAttribute, 0, attribute.Length);
+			Array.Copy(attribute.data, attribute.absOffset, wrongAttribute, 0, attribute.Length);
 
 			byte[] outAddress;
-			Assert.IsFalse(STUNAttributeMappedAddress.Address(wrongAttribute, out outAddress));
+			Assert.IsFalse(STUNAttributeMappedAddress.Address(new ByteBuffer(wrongAttribute), out outAddress));
 		}
 
 		[Test]
 		public void lengthNotMultipleOf4() {
-			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new byte[15]));
+			Assert.IsFalse(STUNAttributeMappedAddress.CheckAttribute(new ByteBuffer(new byte[15])));
 		}
 	}
 }

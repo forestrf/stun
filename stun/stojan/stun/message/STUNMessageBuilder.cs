@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using STUN.me.stojan.stun.message.attribute;
 using STUN.Utils;
 using System;
 
@@ -61,15 +62,25 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <param name="transaction">The transaction value, will be clamped to last 96 bits</param>
 		/// <returns>This builder, never null</returns>
-		public STUNMessageBuilder Transaction(ByteBuffer transaction) {
-			ByteBuffer tx = STUNTransaction.Transaction(transaction);
-
+		public STUNMessageBuilder SetTransaction(Transaction transaction) {
 			buffer.Put(buffer.absOffset + 4, STUNHeader.MAGIC_COOKIE);
-			Array.Copy(tx.data, tx.absPosition, buffer.data, buffer.absOffset + 4 + 4, tx.Length);
+
+			buffer.Put(buffer.absOffset + 4 + 4, transaction.b11);
+			buffer.Put(buffer.absOffset + 4 + 4 + 1, transaction.b10);
+			buffer.Put(buffer.absOffset + 4 + 4 + 2, transaction.b9);
+			buffer.Put(buffer.absOffset + 4 + 4 + 3, transaction.b8);
+			buffer.Put(buffer.absOffset + 4 + 4 + 4, transaction.b7);
+			buffer.Put(buffer.absOffset + 4 + 4 + 5, transaction.b6);
+			buffer.Put(buffer.absOffset + 4 + 4 + 6, transaction.b5);
+			buffer.Put(buffer.absOffset + 4 + 4 + 7, transaction.b4);
+			buffer.Put(buffer.absOffset + 4 + 4 + 8, transaction.b3);
+			buffer.Put(buffer.absOffset + 4 + 4 + 9, transaction.b2);
+			buffer.Put(buffer.absOffset + 4 + 4 + 10, transaction.b1);
+			buffer.Put(buffer.absOffset + 4 + 4 + 11, transaction.b0);
 
 			return this;
 		}
-
+		
 		/// <summary>
 		/// Add a value to the STUN message.
 		/// </summary>
@@ -78,9 +89,19 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder Value(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
+			UpdateHeaderLength();
+			return this;
+		}
+		
+		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, ISTUNAttribute {
+			attribute.WriteToBuffer(ref buffer);
+			UpdateHeaderLength();
+			return this;
+		} 
+
+		private void UpdateHeaderLength() {
 			ushort length = (ushort) ((buffer.Position - headerLength) & 0xFFFF);
 			buffer.Put(2, length);
-			return this;
 		}
 
 		/// <summary>

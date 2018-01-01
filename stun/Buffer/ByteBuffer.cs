@@ -22,7 +22,7 @@ namespace STUN.Utils {
 
 
 
-		public ByteBuffer(byte[] buffer) : this(buffer, 0, buffer.Length) { }
+		public ByteBuffer(byte[] buffer) : this(buffer, 0, null != buffer ? buffer.Length : 0) { }
 		public ByteBuffer(byte[] buffer, int offset, int length) {
 			data = buffer;
 			absPosition = offset;
@@ -90,6 +90,10 @@ namespace STUN.Utils {
 				if (this[i] != other[i])
 					return false;
 			return true;
+		}
+
+		public bool HasData() {
+			return null != data;
 		}
 
 		#region PutMethods
@@ -192,7 +196,15 @@ namespace STUN.Utils {
 			absPosition += length;
 			UpdateDataSize(absPosition);
 		}
+		public void Put(ByteBuffer data, int offset, int length) {
+			Buffer.BlockCopy(data.data, data.absOffset + offset, this.data, absPosition, length);
+			absPosition += length;
+			UpdateDataSize(absPosition);
+		}
 		public void Put(byte[] data) {
+			Put(data, 0, data.Length);
+		}
+		public void Put(ByteBuffer data) {
 			Put(data, 0, data.Length);
 		}
 		#endregion
@@ -276,14 +288,21 @@ namespace STUN.Utils {
 			return result;
 		}
 
+		public void GetBytes(int srcOffset, byte[] destination) {
+			GetBytes(srcOffset, destination, destination.Length);
+		}
+		public void GetBytes(int srcOffset, byte[] destination, int lenght) {
+			GetBytes(srcOffset, destination, 0, lenght);
+		}
+		public void GetBytes(int srcOffset, byte[] destination, int dstOffset, int lenght) {
+			Buffer.BlockCopy(data, absOffset + srcOffset, destination, dstOffset, lenght);
+		}
 		public void GetBytes(byte[] destination) {
 			GetBytes(destination, destination.Length);
 		}
-
 		public void GetBytes(byte[] destination, int lenght) {
 			GetBytes(destination, 0, lenght);
 		}
-
 		public void GetBytes(byte[] destination, int offset, int lenght) {
 			Buffer.BlockCopy(data, absPosition, destination, offset, lenght);
 			absPosition += lenght;
