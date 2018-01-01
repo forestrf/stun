@@ -1,4 +1,9 @@
-﻿using System;
+﻿// https://code.google.com/archive/p/wit-incontrol/
+// MIT License
+// Bobby Cafazzo, Michael Muesch, Jason Torosian, Cory Zinkiewicz
+
+using System;
+
 namespace STUN.Crypto {
 	public class SHA1 {
 		// Number used in SHA256 hash function
@@ -13,14 +18,6 @@ namespace STUN.Crypto {
 			0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
 			0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 		};
-
-		public static String byteToString(byte[] data) {
-			String output = "";
-			for (int i = 0; i < data.Length; i++)
-				if ((char) data[i] != '\n' && (char) data[i] != '\r')
-					output += (char) data[i];
-			return output;
-		}
 
 		// Rotate bits left
 		static uint rotateleft(uint x, int n) {
