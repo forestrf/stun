@@ -48,7 +48,7 @@ namespace STUN.me.stojan.stun.message {
 				header = new Header();
 				header.header = buffer;
 
-				if (0 != STUNHeader.TwoStartingBits(buffer)) {
+				if (0 != STUNHeader.TwoStartingBits(ref buffer)) {
 					Logger.Error("STUN header does not start with 0b00, first byte is [0x" + buffer[0].ToString("X") + "]");
 					return false;
 				}
@@ -85,7 +85,7 @@ namespace STUN.me.stojan.stun.message {
 			/// <returns>Successful</returns>
 			public bool MagicCookie(out ByteBuffer cookie) {
 				if (header.Length >= 8) {
-					cookie = new ByteBuffer(header.Data, header.positionAbsolute + 4, 4);
+					cookie = new ByteBuffer(header.data, header.absPosition + 4, 4);
 					return true;
 				} else {
 					cookie = new ByteBuffer(null);
@@ -98,7 +98,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The transaction ID bytes</returns>
 			public ByteBuffer Transaction() {
-				return new ByteBuffer(header.Data, header.positionAbsolute + 8, 12);
+				return new ByteBuffer(header.data, header.absPosition + 8, 12);
 			}
 
 			/// <summary>
@@ -161,9 +161,9 @@ namespace STUN.me.stojan.stun.message {
 				tlv.position = position;
 				tlv.max = max;
 
-				if (buffer.remaining() >= 4) {
-					tlv.header = new ByteBuffer(buffer.Data, buffer.positionAbsolute, 4);
-					buffer.positionAbsolute += 4;
+				if (buffer.Remaining() >= 4) {
+					tlv.header = new ByteBuffer(buffer.data, buffer.absPosition, 4);
+					buffer.absPosition += 4;
 				} else {
 					tlv = null;
 					Logger.Error("Could not read 4 bytes from stream for TLV header");
@@ -172,9 +172,9 @@ namespace STUN.me.stojan.stun.message {
 				
 				int length = tlv.Length();
 
-				if (buffer.remaining() >= length) {
-					tlv.value = new ByteBuffer(buffer.Data, buffer.positionAbsolute, length);
-					buffer.positionAbsolute += length;
+				if (buffer.Remaining() >= length) {
+					tlv.value = new ByteBuffer(buffer.data, buffer.absPosition, length);
+					buffer.absPosition += length;
 				} else {
 					tlv = null;
 					Logger.Error("Could not read " + length + " bytes from stream for TLV value");
@@ -184,8 +184,8 @@ namespace STUN.me.stojan.stun.message {
 				int padding = tlv.Padding();
 
 				if (0 != padding) {
-					if (buffer.remaining() >= padding) {
-						buffer.positionAbsolute += padding;
+					if (buffer.Remaining() >= padding) {
+						buffer.absPosition += padding;
 					} else {
 						tlv = null;
 						Logger.Error("Could not skip " + padding + " bytes from stream for TLV padding");
@@ -230,7 +230,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The header bytes</returns>
 			public ByteBuffer Header() {
-				return new ByteBuffer(header.Data, header.positionAbsolute, 4);
+				return new ByteBuffer(header.data, header.absPosition, 4);
 			}
 
 			/// <summary>
@@ -238,7 +238,7 @@ namespace STUN.me.stojan.stun.message {
 			/// </summary>
 			/// <returns>The value bytes, without padding</returns>
 			public ByteBuffer Value() {
-				return new ByteBuffer(value.Data, value.positionAbsolute, value.Length);
+				return new ByteBuffer(value.data, value.absPosition, value.Length);
 			}
 
 			/// <summary>
@@ -263,9 +263,9 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="header">The header of the STUN message</param>
 		/// <returns>Successful</returns>
 		public bool Start(out Header header) {
-			if (inputStream.remaining() >= 20) {
-				bool toReturn = Header.Create(ByteBuffer.wrap(inputStream.Data, inputStream.positionAbsolute, 20), out header);
-				inputStream.positionAbsolute += 20;
+			if (inputStream.Remaining() >= 20) {
+				bool toReturn = Header.Create(new ByteBuffer(inputStream.data, inputStream.absPosition, 20), out header);
+				inputStream.absPosition += 20;
 				return toReturn;
 			} else {
 				header = null;

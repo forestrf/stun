@@ -43,9 +43,9 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>The transaction bytes, never null</returns>
 		public static ByteBuffer Transaction(ByteBuffer transaction) {
 			if (transaction.Length > 12) {
-				return new ByteBuffer(transaction.Data, transaction.positionAbsolute + 1, 12);
+				return new ByteBuffer(transaction.data, transaction.absPosition + 1, 12);
 			} else {
-				return new ByteBuffer(transaction.Data, transaction.positionAbsolute, transaction.Length);
+				return new ByteBuffer(transaction.data, transaction.absPosition, transaction.Length);
 			}
 		}
 	}

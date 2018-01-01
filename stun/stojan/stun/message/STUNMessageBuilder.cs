@@ -29,9 +29,9 @@ namespace STUN.me.stojan.stun.message {
 	/// </summary>
 	public class STUNMessageBuilder {
 		private static readonly int MINIMUM_BUFFER_SIZE = 1024;
+		private const int headerLength = 20;
 
 		private ByteBuffer buffer;
-		private ByteBuffer header;
 
 
 		private STUNMessageBuilder() { }
@@ -40,10 +40,8 @@ namespace STUN.me.stojan.stun.message {
 				buffer = new byte[MINIMUM_BUFFER_SIZE];
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
 			}
-			const int headerLength = 20;
 			this.buffer = new ByteBuffer(buffer);
-			header = new ByteBuffer(buffer, 0, headerLength);
-			this.buffer.positionAbsolute = headerLength;
+			this.buffer.absPosition = headerLength;
 		}
 
 		/// <summary>
@@ -54,7 +52,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
 			ushort stunMessageType = (ushort) (0x3FFF & ((int) stunClass | (int) stunMethod));
-			header.Put(0, stunMessageType);
+			buffer.Put(0, stunMessageType);
 			return this;
 		}
 
@@ -66,8 +64,8 @@ namespace STUN.me.stojan.stun.message {
 		public STUNMessageBuilder Transaction(ByteBuffer transaction) {
 			ByteBuffer tx = STUNTransaction.Transaction(transaction);
 
-			header.Put(header.offset + 4, STUNHeader.MAGIC_COOKIE);
-			Array.Copy(tx.Data, tx.positionAbsolute, header.Data, header.offset + 4 + 4, tx.Length);
+			buffer.Put(buffer.absOffset + 4, STUNHeader.MAGIC_COOKIE);
+			Array.Copy(tx.data, tx.absPosition, buffer.data, buffer.absOffset + 4 + 4, tx.Length);
 
 			return this;
 		}
@@ -80,9 +78,8 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder Value(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
-
-			IntAs16Bit((buffer.Position - header.Length) & 0xFFFF, header, 2);
-
+			ushort length = (ushort) ((buffer.Position - headerLength) & 0xFFFF);
+			buffer.Put(2, length);
 			return this;
 		}
 
@@ -91,7 +88,7 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <returns>The header value, never null, will always have length of 20</returns>
 		public ByteBuffer GetHeader() {
-			return header;
+			return new ByteBuffer(buffer.data, 0, headerLength);
 		}
 
 		/// <summary>
@@ -104,10 +101,6 @@ namespace STUN.me.stojan.stun.message {
 
 		public ByteBuffer BuildByteBuffer() {
 			return buffer.GetCropToCurrentPosition();
-		}
-
-		private void IntAs16Bit(int value, ByteBuffer o, int position) {
-			o.Put(position, (ushort) value);
 		}
 	}
 }

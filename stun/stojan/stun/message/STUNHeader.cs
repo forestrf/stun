@@ -32,6 +32,7 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		public static readonly uint MAGIC_COOKIE = 0x2112A442;
 		private const int ClassMask = 0x0110;
+		private const int MethodMask = ~ClassMask;
 
 		/// <summary>
 		/// Returns the STUN class from the compound message type.
@@ -48,7 +49,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <param name="messageType">The message type</param>
 		/// <returns>The method</returns>
 		public static STUNMethod Method(int messageType) {
-			return (STUNMethod) (messageType & ~ClassMask);
+			return (STUNMethod) (messageType & MethodMask);
 		}
 
 		/// <summary>
@@ -56,7 +57,7 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <param name="header"> The header</param>
 		/// <returns>The two starting bits</returns>
-		public static int TwoStartingBits(ByteBuffer header) {
+		public static int TwoStartingBits(ref ByteBuffer header) {
 			return header[0] >> 6;
 		}
 	}
