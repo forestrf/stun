@@ -2,6 +2,7 @@
 // MIT License
 // Bobby Cafazzo, Michael Muesch, Jason Torosian, Cory Zinkiewicz
 
+using STUN.Utils;
 using System;
 
 namespace STUN.Crypto {
@@ -58,7 +59,7 @@ namespace STUN.Crypto {
 		}
 
 
-		public static byte[] computeHMAC_SHA1(byte[] secret, byte[] value) {
+		public static byte[] computeHMAC_SHA1(byte[] secret, ByteBuffer value) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
@@ -72,7 +73,7 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>20 byte HMAC_SHA1</returns>
-		public static byte[] computeHMAC_SHA1(byte[] secret, byte[] value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static byte[] computeHMAC_SHA1(byte[] secret, ByteBuffer value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
 			if (null == bi || bi.Length != 64 + value.Length) bi = new byte[64 + value.Length];
 			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 20];
@@ -90,7 +91,7 @@ namespace STUN.Crypto {
 			}
 
 			// Append value to bi
-			Array.Copy(value, 0, bi, 64, value.Length);
+			Array.Copy(value.data, value.absOffset, bi, 64, value.Length);
 
 			// Append SHA1(bi) to bo
 			byte[] sha_bi = computeSHA1(bi, ref processed, ref wordblock);

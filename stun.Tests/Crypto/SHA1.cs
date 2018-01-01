@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using STUN.Utils;
 using System.Security.Cryptography;
 
 namespace STUN.me.stojan.stun.message {
@@ -46,6 +47,8 @@ namespace STUN.me.stojan.stun.message {
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes64), hMACSHA1_2.ComputeHash(bytes64, 0, bytes64.Length));
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes256), hMACSHA1_2.ComputeHash(bytes256, 0, bytes256.Length));
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes512), hMACSHA1_2.ComputeHash(bytes512, 0, bytes512.Length));
+			
+			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes512, 40, 200), hMACSHA1_2.ComputeHash(bytes512, 40, 200));
 		}
 	}
 }

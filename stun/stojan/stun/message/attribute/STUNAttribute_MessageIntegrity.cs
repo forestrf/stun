@@ -12,7 +12,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			if (hmacsha1Instance == null) {
 				hmacsha1Instance = new HMACSHA1(Encoding.UTF8.GetBytes(key));
 			}
-			hmac = hmacsha1Instance.ComputeHash(buffer.data, 0, buffer.Position);
+			hmac = hmacsha1Instance.ComputeHash(buffer.data, buffer.absOffset, buffer.Position);
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
