@@ -38,7 +38,7 @@ namespace STUN.me.stojan.stun.message {
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
 			builder.Value(0b111, new byte[] { 255 });
 
-			byte[] message = builder.Build();
+			byte[] message = builder.Build().ToArray();
 
 			byte[] transaction = new byte[12];
 

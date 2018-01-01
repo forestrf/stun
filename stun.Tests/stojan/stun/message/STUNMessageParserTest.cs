@@ -39,7 +39,7 @@ namespace STUN.me.stojan.stun.message {
 			builder.Value(0b111, new byte[] { 255 });
 			builder.Value(0b010, new byte[] { 0, 255, 0, 255 });
 
-			byte[] message = builder.Build();
+			byte[] message = builder.Build().ToArray();
 
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message));
 
@@ -130,7 +130,7 @@ namespace STUN.me.stojan.stun.message {
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.Build();
+			byte[] message = builder.Build().ToArray();
 
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1));
 
@@ -147,7 +147,7 @@ namespace STUN.me.stojan.stun.message {
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.Build();
+			byte[] message = builder.Build().ToArray();
 
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1));
 
@@ -164,7 +164,7 @@ namespace STUN.me.stojan.stun.message {
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.Value(0b11, new byte[] { 255, 255 });
 
-			byte[] message = builder.Build();
+			byte[] message = builder.Build().ToArray();
 
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1));
 

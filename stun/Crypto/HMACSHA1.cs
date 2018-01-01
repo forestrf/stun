@@ -1,9 +1,9 @@
 ﻿using STUN.Utils;
 
 namespace STUN.Crypto {
-	public class HMACSHA1 {
+	public class HMAC_SHA1 {
 		byte[] key;
-		public HMACSHA1(byte[] key) {
+		public HMAC_SHA1(byte[] key) {
 			this.key = (byte[]) key.Clone();
 		}
 

@@ -42,7 +42,7 @@ namespace STUN.me.stojan.stun.message {
 			random.NextBytes(key);
 
 			HMACSHA1 hMACSHA1_1 = new HMACSHA1(key);
-			Crypto.HMACSHA1 hMACSHA1_2 = new Crypto.HMACSHA1(key);
+			Crypto.HMAC_SHA1 hMACSHA1_2 = new Crypto.HMAC_SHA1(key);
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes16), hMACSHA1_2.ComputeHash(bytes16, 0, bytes16.Length));
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes64), hMACSHA1_2.ComputeHash(bytes64, 0, bytes64.Length));
 			Assert.AreEqual(hMACSHA1_1.ComputeHash(bytes256), hMACSHA1_2.ComputeHash(bytes256, 0, bytes256.Length));

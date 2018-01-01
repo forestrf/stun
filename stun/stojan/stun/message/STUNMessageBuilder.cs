@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+using STUN.Crypto;
 using STUN.me.stojan.stun.message.attribute;
 using STUN.Utils;
 using System;
@@ -115,12 +116,16 @@ namespace STUN.me.stojan.stun.message {
 		/// <summary>
 		/// Build a byte representation of the message.
 		/// </summary>
-		/// <returns>The byte representation of the message, never null</returns>
-		public byte[] Build() {
-			return BuildByteBuffer().ToArray();
+		public ByteBuffer Build() {
+			return buffer.GetCropToCurrentPosition();
 		}
-
-		public ByteBuffer BuildByteBuffer() {
+		/// <summary>
+		/// Build a byte representation of the message.
+		/// </summary>
+		public ByteBuffer Build(string key, bool addFingerprint, ref HMAC_SHA1 hmacGenerator) {
+			WriteAttribute(new STUNAttribute_MessageIntegrity(key, ref hmacGenerator));
+			if (addFingerprint)
+				WriteAttribute(new STUNAttribute_Fingerprint());
 			return buffer.GetCropToCurrentPosition();
 		}
 	}
