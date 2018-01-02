@@ -20,9 +20,8 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 
 			HMAC_SHA1 hmacGenerator = null;
-
-			byte[] bufferFromPool = new byte[1024];
-			var msg = new STUNMessageBuilder(bufferFromPool);
+			
+			var msg = new STUNMessageBuilder(new byte[1024]);
 			msg.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			var tr = new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10);
 			msg.SetTransaction(tr);

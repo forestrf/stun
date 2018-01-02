@@ -36,12 +36,16 @@ namespace STUN.me.stojan.stun.message {
 
 
 		private STUNMessageBuilder() { }
-		public STUNMessageBuilder(byte[] buffer) {
-			if (buffer == null || buffer.Length < MINIMUM_BUFFER_SIZE) {
-				buffer = new byte[MINIMUM_BUFFER_SIZE];
+		public STUNMessageBuilder(byte[] buffer) : this(new ByteBuffer(buffer)) {
+
+		}
+		public STUNMessageBuilder(ByteBuffer buffer) {
+			if (!buffer.HasData() || buffer.Length < MINIMUM_BUFFER_SIZE) {
+				this.buffer = new ByteBuffer(new byte[MINIMUM_BUFFER_SIZE]);
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
+			} else {
+				this.buffer = buffer;
 			}
-			this.buffer = new ByteBuffer(buffer);
 			this.buffer.absPosition = HEADER_LENGTH;
 		}
 

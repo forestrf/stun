@@ -21,6 +21,7 @@
  */
 
 using STUN.Utils;
+using System;
 using System.Runtime.InteropServices;
 
 namespace STUN.me.stojan.stun.message {
@@ -54,6 +55,27 @@ namespace STUN.me.stojan.stun.message {
 			this.b9 = b9;
 			this.b10 = b10;
 			this.b11 = b11;
+		}
+
+		public Transaction(Random random) : this() {
+			int r1 = random.Next();
+			int r2 = random.Next();
+			int r3 = random.Next();
+
+			b0 = (byte) (r1 >> 24);
+			b1 = (byte) (r1 >> 16);
+			b2 = (byte) (r1 >> 8);
+			b3 = (byte) (r1);
+
+			b4 = (byte) (r2 >> 24);
+			b5 = (byte) (r2 >> 16);
+			b6 = (byte) (r2 >> 8);
+			b7 = (byte) (r2);
+
+			b8 = (byte) (r3 >> 24);
+			b9 = (byte) (r3 >> 16);
+			b10 = (byte) (r3 >> 8);
+			b11 = (byte) (r3);
 		}
 
 		public void Write(ByteBuffer buffer, int offset) {
