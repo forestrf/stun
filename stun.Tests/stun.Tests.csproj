@@ -68,6 +68,8 @@
     <Compile Include="Crypto\SHA1.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeErrorCodeTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeMappedAddressTest.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_Fingerprint.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_MessageIntegrity.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftwareTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributesTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeXORMappedAddressTest.cs" />

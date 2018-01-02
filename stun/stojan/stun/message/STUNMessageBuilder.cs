@@ -23,7 +23,6 @@
 using STUN.Crypto;
 using STUN.me.stojan.stun.message.attribute;
 using STUN.Utils;
-using System;
 
 namespace STUN.me.stojan.stun.message {
 	/// <summary>
@@ -31,7 +30,7 @@ namespace STUN.me.stojan.stun.message {
 	/// </summary>
 	public class STUNMessageBuilder {
 		private static readonly int MINIMUM_BUFFER_SIZE = 1024;
-		private const int headerLength = 20;
+		internal const int HEADER_LENGTH = 20;
 
 		private ByteBuffer buffer;
 
@@ -43,7 +42,7 @@ namespace STUN.me.stojan.stun.message {
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
 			}
 			this.buffer = new ByteBuffer(buffer);
-			this.buffer.absPosition = headerLength;
+			this.buffer.absPosition = HEADER_LENGTH;
 		}
 
 		/// <summary>
@@ -90,18 +89,18 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder Value(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
-			UpdateHeaderLength();
+			UpdateAttributesLength(ref buffer, buffer.Position - HEADER_LENGTH);
 			return this;
 		}
 		
 		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, ISTUNAttribute {
 			attribute.WriteToBuffer(ref buffer);
-			UpdateHeaderLength();
+			UpdateAttributesLength(ref buffer, buffer.Position);
 			return this;
 		} 
 
-		private void UpdateHeaderLength() {
-			ushort length = (ushort) ((buffer.Position - headerLength) & 0xFFFF);
+		public static void UpdateAttributesLength(ref ByteBuffer buffer, int attributesLength) {
+			ushort length = (ushort) ((attributesLength - HEADER_LENGTH) & 0xFFFF);
 			buffer.Put(2, length);
 		}
 
@@ -110,7 +109,7 @@ namespace STUN.me.stojan.stun.message {
 		/// </summary>
 		/// <returns>The header value, never null, will always have length of 20</returns>
 		public ByteBuffer GetHeader() {
-			return new ByteBuffer(buffer.data, 0, headerLength);
+			return new ByteBuffer(buffer.data, 0, HEADER_LENGTH);
 		}
 
 		/// <summary>
