@@ -59,23 +59,23 @@ namespace STUN.Crypto {
 		}
 
 
-		public static byte[] computeHMAC_SHA1(byte[] secret, ByteBuffer value) {
+		public static void computeHMAC_SHA1(byte[] secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
 			uint[] wordblock = null;
-			return computeHMAC_SHA1(secret, value, ref bi, ref bo, ref processed, ref wordblock);
+			computeHMAC_SHA1(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
 		}
 
 		/// <summary>
 		/// Compute HMAC SHA-1
 		/// </summary>
 		/// <param name="secret">Secret</param>
-		/// <param name="value">Password</param>
+		/// <param name="data">Password</param>
 		/// <returns>20 byte HMAC_SHA1</returns>
-		public static byte[] computeHMAC_SHA1(byte[] secret, ByteBuffer value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeHMAC_SHA1(byte[] secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			if (null == bi || bi.Length != 64 + value.Length) bi = new byte[64 + value.Length];
+			if (null == bi || bi.Length != 64 + data.Length) bi = new byte[64 + data.Length];
 			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 20];
 
 			// Copy secret to both arrays
@@ -91,14 +91,14 @@ namespace STUN.Crypto {
 			}
 
 			// Append value to bi
-			Array.Copy(value.data, value.absOffset, bi, 64, value.Length);
+			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA1(bi) to bo
-			byte[] sha_bi = computeSHA1(bi, ref processed, ref wordblock);
-			Array.Copy(sha_bi, 0, bo, 64, 20);
+			computeSHA1(bi, output.data, output.absOffset, ref processed, ref wordblock);
+			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA1(bo)
-			return computeSHA1(bo, ref processed, ref wordblock);
+			computeSHA1(bo, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 
@@ -149,7 +149,7 @@ namespace STUN.Crypto {
 		/// </summary>
 		/// <param name="input">Input byte array</param>
 		/// <returns>20 byte SHA1 of input</returns>
-		public static byte[] computeSHA1(byte[] input, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeSHA1(byte[] input, byte[] output, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, i, temp;
 			uint h0 = 0x67452301;
@@ -235,14 +235,11 @@ namespace STUN.Crypto {
 			}
 
 			// Prepare output
-			byte[] output = new byte[20];
-			bytes_from_big_endian(h0, ref output, 0);
-			bytes_from_big_endian(h1, ref output, 4);
-			bytes_from_big_endian(h2, ref output, 8);
-			bytes_from_big_endian(h3, ref output, 12);
-			bytes_from_big_endian(h4, ref output, 16);
-
-			return output;
+			bytes_from_big_endian(h0, ref output, outputOffset + 0);
+			bytes_from_big_endian(h1, ref output, outputOffset + 4);
+			bytes_from_big_endian(h2, ref output, outputOffset + 8);
+			bytes_from_big_endian(h3, ref output, outputOffset + 12);
+			bytes_from_big_endian(h4, ref output, outputOffset + 16);
 		}
 		
 		/// <summary>

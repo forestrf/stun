@@ -89,7 +89,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder Value(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
-			UpdateAttributesLength(ref buffer, buffer.Position - HEADER_LENGTH);
+			UpdateAttributesLength(ref buffer, buffer.Position);
 			return this;
 		}
 		

@@ -19,8 +19,8 @@ namespace STUN.me.stojan.stun.message.attribute {
 			int count = buffer.Position;
 			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, HMAC_LENGTH, ref buffer);
 			STUNMessageBuilder.UpdateAttributesLength(ref buffer, buffer.Position + HMAC_LENGTH);
-			byte[] hmac = hmacsha1Instance.ComputeHash(buffer.data, buffer.absOffset, count);
-			buffer.Put(hmac);
+			hmacsha1Instance.ComputeHash(buffer.data, buffer.absOffset, count, buffer.data, buffer.absPosition);
+			buffer.Position += HMAC_LENGTH;
 			STUNTypeLengthValue.WritePadding(ref buffer);
 		}
 	}
