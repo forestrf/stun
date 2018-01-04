@@ -1,10 +1,9 @@
 using NUnit.Framework;
-using STUN.Utils;
 using System.Security.Cryptography;
 
 namespace STUN.me.stojan.stun.message {
 	[TestFixture]
-	public class SHA1Test {
+	public class SHATest {
 		[Test]
 		public void Test_SHA1_SHA256() {
 			var random = new System.Random(123);
@@ -26,34 +25,43 @@ namespace STUN.me.stojan.stun.message {
 			uint[] tmp2 = null;
 
 			for (int i = 0; i < 3; i++) {
-				Crypto.SHA1.computeSHA1(bytes16, output, 0, ref tmp1, ref tmp2);
+				Crypto.SHA.computeSHA1(bytes16, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes16), output);
 
-				Crypto.SHA1.computeSHA1(bytes64, output, 0, ref tmp1, ref tmp2);
+				Crypto.SHA.computeSHA1(bytes64, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes64), output);
 
-				Crypto.SHA1.computeSHA1(bytes256, output, 0, ref tmp1, ref tmp2);
+				Crypto.SHA.computeSHA1(bytes256, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes256), output);
 
-				Crypto.SHA1.computeSHA1(bytes512, output, 0, ref tmp1, ref tmp2);
+				Crypto.SHA.computeSHA1(bytes512, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes512), output);
 			}
 			
+			output = new byte[32];
+
 			var sha256managed = new SHA256Managed();
-			Assert.AreEqual(sha256managed.ComputeHash(bytes16), Crypto.SHA1.computeSHA256(bytes16, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes64), Crypto.SHA1.computeSHA256(bytes64, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes256), Crypto.SHA1.computeSHA256(bytes256, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes512), Crypto.SHA1.computeSHA256(bytes512, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes16), Crypto.SHA1.computeSHA256(bytes16, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes64), Crypto.SHA1.computeSHA256(bytes64, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes256), Crypto.SHA1.computeSHA256(bytes256, ref tmp1, ref tmp2));
-			Assert.AreEqual(sha256managed.ComputeHash(bytes512), Crypto.SHA1.computeSHA256(bytes512, ref tmp1, ref tmp2));
+			for (int i = 0; i < 3; i++) {
+				Crypto.SHA.computeSHA256(bytes16, output, 0, ref tmp1, ref tmp2);
+				Assert.AreEqual(sha256managed.ComputeHash(bytes16), output);
+
+				Crypto.SHA.computeSHA256(bytes64, output, 0, ref tmp1, ref tmp2);
+				Assert.AreEqual(sha256managed.ComputeHash(bytes64), output);
+
+				Crypto.SHA.computeSHA256(bytes256, output, 0, ref tmp1, ref tmp2);
+				Assert.AreEqual(sha256managed.ComputeHash(bytes256), output);
+
+				Crypto.SHA.computeSHA256(bytes512, output, 0, ref tmp1, ref tmp2);
+				Assert.AreEqual(sha256managed.ComputeHash(bytes512), output);
+			}
 
 			var key = new byte[64];
 			random.NextBytes(key);
 			
 			HMACSHA1 hMACSHA1_1 = new HMACSHA1(key);
 			Crypto.HMAC_SHA1 hMACSHA1_2 = new Crypto.HMAC_SHA1(key);
+
+			output = new byte[20];
 
 			for (int i = 0; i < 3; i++) {
 				hMACSHA1_2.ComputeHash(bytes16, 0, bytes16.Length, output, 0);
