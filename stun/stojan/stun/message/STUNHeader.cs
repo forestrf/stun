@@ -30,7 +30,7 @@ namespace STUN.me.stojan.stun.message {
 		/// <summary>
 		/// The STUN "magic cookie". Network Byte Order
 		/// </summary>
-		public static readonly uint MAGIC_COOKIE = 0x2112A442;
+		internal const uint MAGIC_COOKIE = 0x2112A442;
 		private const int ClassMask = 0x0110;
 		private const int MethodMask = ~ClassMask;
 

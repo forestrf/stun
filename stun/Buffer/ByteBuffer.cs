@@ -22,7 +22,8 @@ namespace STUN.Utils {
 
 
 
-		public ByteBuffer(byte[] buffer) : this(buffer, 0, null != buffer ? buffer.Length : 0) { }
+		public ByteBuffer(byte[] buffer) : this(buffer, 0) { }
+		public ByteBuffer(byte[] buffer, int offset) : this(buffer, offset, null != buffer ? buffer.Length - offset : 0) { }
 		public ByteBuffer(byte[] buffer, int offset, int length) {
 			data = buffer;
 			absPosition = offset;

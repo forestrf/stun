@@ -72,7 +72,7 @@
     <Compile Include="stojan\stun\message\attribute\STUNAttribute_MessageIntegrity.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftwareTest.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributesTest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttributeXORMappedAddressTest.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_XORMappedAddressTest.cs" />
     <Compile Include="stojan\stun\message\STUNHeaderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageBuilderTest.cs" />
     <Compile Include="stojan\stun\message\STUNMessageParserTest.cs" />

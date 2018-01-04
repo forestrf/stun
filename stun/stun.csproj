@@ -49,7 +49,7 @@
     <Compile Include="stojan\stun\message\attribute\STUNAttributeMappedAddress.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeSoftware.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributes.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttributeXORMappedAddress.cs" />
+    <Compile Include="stojan\stun\message\attribute\STUNAttribute_XORMappedAddress.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttribute_Fingerprint.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttribute_UseCandidate.cs" />
     <Compile Include="stojan\stun\message\attribute\STUNAttribute_Priority.cs" />

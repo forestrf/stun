@@ -66,7 +66,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			Assert.AreEqual(0, attribute[0]);
 
 			// IPv4 address type
-			Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV4, attribute[1]);
+			Assert.AreEqual(STUNAttributeMappedAddress.ADDRESS_IPV4, attribute[1]);
 
 			// port
 			Assert.AreEqual(255, attribute[2]);
@@ -92,7 +92,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			Assert.AreEqual((byte) 0, attribute[0]);
 
 			// ipv6 address
-			Assert.AreEqual(STUNAttributeXORMappedAddress.ADDRESS_IPV6, attribute[1]);
+			Assert.AreEqual(STUNAttributeMappedAddress.ADDRESS_IPV6, attribute[1]);
 
 			// port
 			Assert.AreEqual(0, attribute[2]);

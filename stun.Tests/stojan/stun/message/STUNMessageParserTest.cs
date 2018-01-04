@@ -36,8 +36,8 @@ namespace STUN.me.stojan.stun.message {
 
 			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
-			builder.Value(0b111, new byte[] { 255 });
-			builder.Value(0b010, new byte[] { 0, 255, 0, 255 });
+			builder.WriteAttribute(0b111, new byte[] { 255 });
+			builder.WriteAttribute(0b010, new byte[] { 0, 255, 0, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
@@ -128,7 +128,7 @@ namespace STUN.me.stojan.stun.message {
 
 			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.Value(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
@@ -145,7 +145,7 @@ namespace STUN.me.stojan.stun.message {
 
 			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.Value(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
@@ -162,7 +162,7 @@ namespace STUN.me.stojan.stun.message {
 
 			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.Value(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
