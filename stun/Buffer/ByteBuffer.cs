@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace STUN.Utils {
 	public struct ByteBuffer {
@@ -106,9 +107,9 @@ namespace STUN.Utils {
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, float value) {
-			new FastBit.Float(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 4);
+		public void Put(int offset, float value) {
+			new FastBit.Float(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(double value) {
@@ -116,9 +117,9 @@ namespace STUN.Utils {
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, double value) {
-			new FastBit.Double(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 8);
+		public void Put(int offset, double value) {
+			new FastBit.Double(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(long value) {
@@ -126,9 +127,9 @@ namespace STUN.Utils {
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, long value) {
-			new FastBit.Long(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 8);
+		public void Put(int offset, long value) {
+			new FastBit.Long(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(ulong value) {
@@ -136,9 +137,9 @@ namespace STUN.Utils {
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, ulong value) {
-			new FastBit.Ulong(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 8);
+		public void Put(int offset, ulong value) {
+			new FastBit.Ulong(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(int value) {
@@ -146,9 +147,9 @@ namespace STUN.Utils {
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, int value) {
-			new FastBit.Int(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 4);
+		public void Put(int offset, int value) {
+			new FastBit.Int(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(uint value) {
@@ -156,9 +157,9 @@ namespace STUN.Utils {
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, uint value) {
-			new FastBit.Uint(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 4);
+		public void Put(int offset, uint value) {
+			new FastBit.Uint(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(ushort value) {
@@ -166,9 +167,9 @@ namespace STUN.Utils {
 			absPosition += 2;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, ushort value) {
-			new FastBit.Ushort(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 2);
+		public void Put(int offset, ushort value) {
+			new FastBit.Ushort(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 2);
 		}
 		
 		public void Put(short value) {
@@ -176,9 +177,9 @@ namespace STUN.Utils {
 			absPosition += 2;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, short value) {
-			new FastBit.Short(value).Write(data, relativeOffset + absOffset, Endianness.Big);
-			UpdateDataSize(relativeOffset + absOffset + 2);
+		public void Put(int offset, short value) {
+			new FastBit.Short(value).Write(data, offset + absOffset, Endianness.Big);
+			UpdateDataSize(offset + absOffset + 2);
 		}
 		
 		public void Put(byte value) {
@@ -186,9 +187,9 @@ namespace STUN.Utils {
 			absPosition++;
 			UpdateDataSize(absPosition);
 		}
-		public void Put(int relativeOffset, byte value) {
-			data[relativeOffset] = value;
-			UpdateDataSize(relativeOffset + absOffset + 1);
+		public void Put(int offset, byte value) {
+			data[offset] = value;
+			UpdateDataSize(offset + absOffset + 1);
 		}
 
 		public void Put(byte[] data, int offset, int length) {
