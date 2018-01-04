@@ -39,7 +39,7 @@
     <Compile Include="Buffer\FastBitConverter.cs" />
     <Compile Include="Crypto\Crc32c.cs" />
     <Compile Include="Crypto\HMACSHA1.cs" />
-    <Compile Include="Crypto\SHA1.cs" />
+    <Compile Include="Crypto\SHA.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\InternalLogger.cs" />
     <Compile Include="Logger\Logger.cs" />

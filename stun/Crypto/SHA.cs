@@ -6,7 +6,7 @@ using STUN.Utils;
 using System;
 
 namespace STUN.Crypto {
-	public class SHA1 {
+	public class SHA {
 		// Number used in SHA256 hash function
 		static readonly uint[] sha256_k = new uint[]
 		{
@@ -102,12 +102,12 @@ namespace STUN.Crypto {
 		}
 
 
-		public static byte[] computeHMAC_SHA256(byte[] secret, byte[] value) {
+		public static void computeHMAC_SHA256(byte[] secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
 			uint[] wordblock = null;
-			return computeHMAC_SHA256(secret, value, ref bi, ref bo, ref processed, ref wordblock);
+			computeHMAC_SHA256(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -116,9 +116,9 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>32 byte HMAC_SHA256</returns>
-		public static byte[] computeHMAC_SHA256(byte[] secret, byte[] value, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeHMAC_SHA256(byte[] secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			if (null == bi || bi.Length != 64 + value.Length) bi = new byte[64 + value.Length];
+			if (null == bi || bi.Length != 64 + data.Length) bi = new byte[64 + data.Length];
 			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 32];
 
 			// Copy secret to both arrays
@@ -134,14 +134,14 @@ namespace STUN.Crypto {
 			}
 
 			// Append value to bi
-			Array.Copy(value, 0, bi, 64, value.Length);
+			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA256(bi) to bo
-			byte[] sha_bi = computeSHA256(bi, ref processed, ref wordblock);
-			Array.Copy(sha_bi, 0, bo, 64, 32);
+			computeSHA256(bi, output.data, output.absOffset, ref processed, ref wordblock);
+			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA256(bo)
-			return computeSHA256(bo, ref processed, ref wordblock);
+			computeSHA256(bo, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -149,7 +149,7 @@ namespace STUN.Crypto {
 		/// </summary>
 		/// <param name="input">Input byte array</param>
 		/// <returns>20 byte SHA1 of input</returns>
-		public static void computeSHA1(byte[] input, byte[] output, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeSHA1(byte[] input, byte[] output20, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, i, temp;
 			uint h0 = 0x67452301;
@@ -235,18 +235,18 @@ namespace STUN.Crypto {
 			}
 
 			// Prepare output
-			bytes_from_big_endian(h0, ref output, outputOffset + 0);
-			bytes_from_big_endian(h1, ref output, outputOffset + 4);
-			bytes_from_big_endian(h2, ref output, outputOffset + 8);
-			bytes_from_big_endian(h3, ref output, outputOffset + 12);
-			bytes_from_big_endian(h4, ref output, outputOffset + 16);
+			bytes_from_big_endian(h0, ref output20, outputOffset + 0);
+			bytes_from_big_endian(h1, ref output20, outputOffset + 4);
+			bytes_from_big_endian(h2, ref output20, outputOffset + 8);
+			bytes_from_big_endian(h3, ref output20, outputOffset + 12);
+			bytes_from_big_endian(h4, ref output20, outputOffset + 16);
 		}
 		
 		/// <summary>
 		/// Compute SHA-256 digest
 		/// </summary>
 		/// <param name="input">Input array</param>
-		public static byte[] computeSHA256(byte[] input, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeSHA256(byte[] input, byte[] output32, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, f, g, h, i, s0, s1, t1, t2;
 			uint h0 = 0x6a09e667;
@@ -340,17 +340,14 @@ namespace STUN.Crypto {
 			}
 
 			// Prepare output
-			byte[] output = new byte[32];
-			bytes_from_big_endian(h0, ref output, 0);
-			bytes_from_big_endian(h1, ref output, 4);
-			bytes_from_big_endian(h2, ref output, 8);
-			bytes_from_big_endian(h3, ref output, 12);
-			bytes_from_big_endian(h4, ref output, 16);
-			bytes_from_big_endian(h5, ref output, 20);
-			bytes_from_big_endian(h6, ref output, 24);
-			bytes_from_big_endian(h7, ref output, 28);
-
-			return output;
+			bytes_from_big_endian(h0, ref output32, outputOffset + 0);
+			bytes_from_big_endian(h1, ref output32, outputOffset + 4);
+			bytes_from_big_endian(h2, ref output32, outputOffset + 8);
+			bytes_from_big_endian(h3, ref output32, outputOffset + 12);
+			bytes_from_big_endian(h4, ref output32, outputOffset + 16);
+			bytes_from_big_endian(h5, ref output32, outputOffset + 20);
+			bytes_from_big_endian(h6, ref output32, outputOffset + 24);
+			bytes_from_big_endian(h7, ref output32, outputOffset + 28);
 		}
 	}
 }

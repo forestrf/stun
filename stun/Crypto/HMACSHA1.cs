@@ -10,7 +10,7 @@ namespace STUN.Crypto {
 		byte[] tmp1, tmp2, tmp3;
 		uint[] tmp4;
 		public void ComputeHash(byte[] data, int offset, int count, byte[] dst, int dstOffset) {
-			SHA1.computeHMAC_SHA1(key, new ByteBuffer(data, offset, count), new ByteBuffer(dst, dstOffset, 20), ref tmp1, ref tmp2, ref tmp3, ref tmp4);
+			SHA.computeHMAC_SHA1(key, new ByteBuffer(data, offset, count), new ByteBuffer(dst, dstOffset, 20), ref tmp1, ref tmp2, ref tmp3, ref tmp4);
 		}
 	}
 }
