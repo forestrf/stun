@@ -38,6 +38,10 @@ namespace STUN.me.stojan.stun.message.attribute {
 				case System.Net.Sockets.AddressFamily.InterNetwork:
 					family = Family.ADDRESS_IPV4;
 					ipv4 = (uint) address.Address; // Obsolete, but avoids generating Garbage
+					if (BitConverter.IsLittleEndian) {
+						// Reverse byte order
+						ipv4 = ipv4 << 24 | (ipv4 & 0xff00) << 8 | (ipv4 & 0xff0000) >> 8 | ipv4 >> 24;
+					}
 					ipv6 = new IPv6();
 					break;
 				case System.Net.Sockets.AddressFamily.InterNetworkV6:
