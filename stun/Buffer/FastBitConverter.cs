@@ -18,10 +18,10 @@ namespace STUN.Utils {
 	/// Includes methods to write and read from a buffer
 	/// </summary>
 	public static class FastBit {
-		private static int optSum = BitConverter.IsLittleEndian ? 0 : 1;
+		private static int isBigEndian = BitConverter.IsLittleEndian ? 0 : 1;
 
-		private static bool Option(Endianness endianness) {
-			return ((optSum + (int) endianness) % 2) == 0;
+		private static bool WantReversedEndian(Endianness endianness) {
+			return (isBigEndian ^ (int) endianness) != 1;
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
@@ -44,8 +44,7 @@ namespace STUN.Utils {
 			[FieldOffset(14)] public byte b14;
 			[FieldOffset(15)] public byte b15;
 
-			public Decimal(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7, byte b8, byte b9, byte b10, byte b11, byte b12, byte b13, byte b14, byte b15) {
-				Adecimal = 0;
+			public Decimal(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7, byte b8, byte b9, byte b10, byte b11, byte b12, byte b13, byte b14, byte b15) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
@@ -63,8 +62,7 @@ namespace STUN.Utils {
 				this.b14 = b14;
 				this.b15 = b15;
 			}
-			public Decimal(decimal Adecimal) {
-				b0 = b1 = b2 = b3 = b4 = b5 = b6 = b7 = b8 = b9 = b10 = b11 = b12 = b13 = b14 = b15 = 0;
+			public Decimal(decimal Adecimal) : this() {
 				this.Adecimal = Adecimal;
 			}
 
@@ -73,7 +71,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 15] = b0;
 					buffer[offset + 14] = b1;
 					buffer[offset + 13] = b2;
@@ -110,7 +108,7 @@ namespace STUN.Utils {
 				}
 			}
 			public decimal Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 15];
 					b1 = buffer[offset + 14];
 					b2 = buffer[offset + 13];
@@ -161,8 +159,7 @@ namespace STUN.Utils {
 			[FieldOffset(6)] public byte b6;
 			[FieldOffset(7)] public byte b7;
 
-			public Double(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-				Adouble = 0;
+			public Double(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
@@ -172,8 +169,7 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Double(double Adouble) {
-				b0 = b1 = b2 = b3 = b4 = b5 = b6 = b7 = 0;
+			public Double(double Adouble) : this() {
 				this.Adouble = Adouble;
 			}
 
@@ -182,7 +178,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 7] = b0;
 					buffer[offset + 6] = b1;
 					buffer[offset + 5] = b2;
@@ -203,7 +199,7 @@ namespace STUN.Utils {
 				}
 			}
 			public double Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 7];
 					b1 = buffer[offset + 6];
 					b2 = buffer[offset + 5];
@@ -237,8 +233,7 @@ namespace STUN.Utils {
 			[FieldOffset(6)] public byte b6;
 			[FieldOffset(7)] public byte b7;
 
-			public Long(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-				Along = 0;
+			public Long(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
@@ -248,8 +243,7 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Long(long Along) {
-				b0 = b1 = b2 = b3 = b4 = b5 = b6 = b7 = 0;
+			public Long(long Along) : this() {
 				this.Along = Along;
 			}
 
@@ -258,7 +252,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 7] = b0;
 					buffer[offset + 6] = b1;
 					buffer[offset + 5] = b2;
@@ -279,7 +273,7 @@ namespace STUN.Utils {
 				}
 			}
 			public long Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 7];
 					b1 = buffer[offset + 6];
 					b2 = buffer[offset + 5];
@@ -313,8 +307,7 @@ namespace STUN.Utils {
 			[FieldOffset(6)] public byte b6;
 			[FieldOffset(7)] public byte b7;
 
-			public Ulong(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-				Aulong = 0;
+			public Ulong(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
@@ -324,8 +317,7 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Ulong(ulong Aulong) {
-				b0 = b1 = b2 = b3 = b4 = b5 = b6 = b7 = 0;
+			public Ulong(ulong Aulong) : this() {
 				this.Aulong = Aulong;
 			}
 
@@ -334,7 +326,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 7] = b0;
 					buffer[offset + 6] = b1;
 					buffer[offset + 5] = b2;
@@ -355,7 +347,7 @@ namespace STUN.Utils {
 				}
 			}
 			public ulong Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 7];
 					b1 = buffer[offset + 6];
 					b2 = buffer[offset + 5];
@@ -386,15 +378,13 @@ namespace STUN.Utils {
 			[FieldOffset(2)] public byte b2;
 			[FieldOffset(3)] public byte b3;
 
-			public Float(byte b0, byte b1, byte b2, byte b3) {
-				Afloat = 0;
+			public Float(byte b0, byte b1, byte b2, byte b3) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Float(float Afloat) {
-				b0 = b1 = b2 = b3 = 0;
+			public Float(float Afloat) : this() {
 				this.Afloat = Afloat;
 			}
 
@@ -403,7 +393,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 3] = b0;
 					buffer[offset + 2] = b1;
 					buffer[offset + 1] = b2;
@@ -416,7 +406,7 @@ namespace STUN.Utils {
 				}
 			}
 			public float Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 3];
 					b1 = buffer[offset + 2];
 					b2 = buffer[offset + 1];
@@ -438,15 +428,13 @@ namespace STUN.Utils {
 			[FieldOffset(2)] public byte b2;
 			[FieldOffset(3)] public byte b3;
 
-			public Int(byte b0, byte b1, byte b2, byte b3) {
-				Aint = 0;
+			public Int(byte b0, byte b1, byte b2, byte b3) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Int(int Aint) {
-				b0 = b1 = b2 = b3 = 0;
+			public Int(int Aint) : this() {
 				this.Aint = Aint;
 			}
 
@@ -454,8 +442,9 @@ namespace STUN.Utils {
 				return new Int(b3, b2, b1, b0).Aint;
 			}
 
+			private static readonly bool isBigEndian = !BitConverter.IsLittleEndian;
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 3] = b0;
 					buffer[offset + 2] = b1;
 					buffer[offset + 1] = b2;
@@ -468,7 +457,7 @@ namespace STUN.Utils {
 				}
 			}
 			public int Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 3];
 					b1 = buffer[offset + 2];
 					b2 = buffer[offset + 1];
@@ -490,15 +479,13 @@ namespace STUN.Utils {
 			[FieldOffset(2)] public byte b2;
 			[FieldOffset(3)] public byte b3;
 
-			public Uint(byte b0, byte b1, byte b2, byte b3) {
-				Auint = 0;
+			public Uint(byte b0, byte b1, byte b2, byte b3) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Uint(uint Auint) {
-				b0 = b1 = b2 = b3 = 0;
+			public Uint(uint Auint) : this() {
 				this.Auint = Auint;
 			}
 
@@ -507,7 +494,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 3] = b0;
 					buffer[offset + 2] = b1;
 					buffer[offset + 1] = b2;
@@ -520,7 +507,7 @@ namespace STUN.Utils {
 				}
 			}
 			public uint Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 3];
 					b1 = buffer[offset + 2];
 					b2 = buffer[offset + 1];
@@ -541,13 +528,11 @@ namespace STUN.Utils {
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
-			public Char(byte b0, byte b1) {
-				Achar = '0';
+			public Char(byte b0, byte b1) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Char(char Achar) {
-				b0 = b1 = 0;
+			public Char(char Achar) : this() {
 				this.Achar = Achar;
 			}
 
@@ -556,7 +541,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 1] = b0;
 					buffer[offset] = b1;
 				} else {
@@ -565,7 +550,7 @@ namespace STUN.Utils {
 				}
 			}
 			public char Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 1];
 					b1 = buffer[offset];
 				} else {
@@ -581,13 +566,11 @@ namespace STUN.Utils {
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
-			public Short(byte b0, byte b1) {
-				Ashort = 0;
+			public Short(byte b0, byte b1) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Short(short Ashort) {
-				b0 = b1 = 0;
+			public Short(short Ashort) : this() {
 				this.Ashort = Ashort;
 			}
 
@@ -596,7 +579,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 1] = b0;
 					buffer[offset] = b1;
 				} else {
@@ -605,7 +588,7 @@ namespace STUN.Utils {
 				}
 			}
 			public short Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 1];
 					b1 = buffer[offset];
 				} else {
@@ -621,13 +604,11 @@ namespace STUN.Utils {
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
-			public Ushort(byte b0, byte b1) {
-				Aushort = 0;
+			public Ushort(byte b0, byte b1) : this() {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Ushort(ushort Aushort) {
-				b0 = b1 = 0;
+			public Ushort(ushort Aushort) : this() {
 				this.Aushort = Aushort;
 			}
 
@@ -636,7 +617,7 @@ namespace STUN.Utils {
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					buffer[offset + 1] = b0;
 					buffer[offset] = b1;
 				} else {
@@ -645,7 +626,7 @@ namespace STUN.Utils {
 				}
 			}
 			public ushort Read(byte[] buffer, int offset, Endianness endianness) {
-				if (Option(endianness)) {
+				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 1];
 					b1 = buffer[offset];
 				} else {
