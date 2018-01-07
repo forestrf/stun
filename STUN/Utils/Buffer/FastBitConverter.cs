@@ -26,7 +26,7 @@ namespace STUN.Utils {
 
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Decimal {
-			[FieldOffset(0)] public decimal Adecimal;
+			[FieldOffset(0)] public decimal value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -62,12 +62,12 @@ namespace STUN.Utils {
 				this.b14 = b14;
 				this.b15 = b15;
 			}
-			public Decimal(decimal Adecimal) : this() {
-				this.Adecimal = Adecimal;
+			public Decimal(decimal value) : this() {
+				this.value = value;
 			}
 
 			public decimal GetReversed() {
-				return new Decimal(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0).Adecimal;
+				return new Decimal(b15, b14, b13, b12, b11, b10, b9, b8, b7, b6, b5, b4, b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -143,13 +143,13 @@ namespace STUN.Utils {
 					b14 = buffer[offset + 14];
 					b15 = buffer[offset + 15];
 				}
-				return Adecimal;
+				return value;
 			}
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Double {
-			[FieldOffset(0)] public double Adouble;
+			[FieldOffset(0)] public double value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -169,12 +169,12 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Double(double Adouble) : this() {
-				this.Adouble = Adouble;
+			public Double(double value) : this() {
+				this.value = value;
 			}
 
 			public double GetReversed() {
-				return new Double(b7, b6, b5, b4, b3, b2, b1, b0).Adouble;
+				return new Double(b7, b6, b5, b4, b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -218,12 +218,12 @@ namespace STUN.Utils {
 					b6 = buffer[offset + 6];
 					b7 = buffer[offset + 7];
 				}
-				return Adouble;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Long {
-			[FieldOffset(0)] public long Along;
+			[FieldOffset(0)] public long value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -243,12 +243,12 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Long(long Along) : this() {
-				this.Along = Along;
+			public Long(long value) : this() {
+				this.value = value;
 			}
 
 			public long GetReversed() {
-				return new Long(b7, b6, b5, b4, b3, b2, b1, b0).Along;
+				return new Long(b7, b6, b5, b4, b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -292,12 +292,12 @@ namespace STUN.Utils {
 					b6 = buffer[offset + 6];
 					b7 = buffer[offset + 7];
 				}
-				return Along;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Ulong {
-			[FieldOffset(0)] public ulong Aulong;
+			[FieldOffset(0)] public ulong value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -317,12 +317,12 @@ namespace STUN.Utils {
 				this.b6 = b6;
 				this.b7 = b7;
 			}
-			public Ulong(ulong Aulong) : this() {
-				this.Aulong = Aulong;
+			public Ulong(ulong value) : this() {
+				this.value = value;
 			}
 
 			public ulong GetReversed() {
-				return new Ulong(b7, b6, b5, b4, b3, b2, b1, b0).Aulong;
+				return new Ulong(b7, b6, b5, b4, b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -366,13 +366,13 @@ namespace STUN.Utils {
 					b6 = buffer[offset + 6];
 					b7 = buffer[offset + 7];
 				}
-				return Aulong;
+				return value;
 			}
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Float {
-			[FieldOffset(0)] public float Afloat;
+			[FieldOffset(0)] public float value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -384,12 +384,12 @@ namespace STUN.Utils {
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Float(float Afloat) : this() {
-				this.Afloat = Afloat;
+			public Float(float value) : this() {
+				this.value = value;
 			}
 
 			public float GetReversed() {
-				return new Float(b3, b2, b1, b0).Afloat;
+				return new Float(b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -417,12 +417,12 @@ namespace STUN.Utils {
 					b2 = buffer[offset + 2];
 					b3 = buffer[offset + 3];
 				}
-				return Afloat;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Int {
-			[FieldOffset(0)] public int Aint;
+			[FieldOffset(0)] public int value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -434,12 +434,12 @@ namespace STUN.Utils {
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Int(int Aint) : this() {
-				this.Aint = Aint;
+			public Int(int value) : this() {
+				this.value = value;
 			}
 
 			public int GetReversed() {
-				return new Int(b3, b2, b1, b0).Aint;
+				return new Int(b3, b2, b1, b0).value;
 			}
 
 			private static readonly bool isBigEndian = !BitConverter.IsLittleEndian;
@@ -468,12 +468,12 @@ namespace STUN.Utils {
 					b2 = buffer[offset + 2];
 					b3 = buffer[offset + 3];
 				}
-				return Aint;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Uint {
-			[FieldOffset(0)] public uint Auint;
+			[FieldOffset(0)] public uint value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 			[FieldOffset(2)] public byte b2;
@@ -485,12 +485,12 @@ namespace STUN.Utils {
 				this.b2 = b2;
 				this.b3 = b3;
 			}
-			public Uint(uint Auint) : this() {
-				this.Auint = Auint;
+			public Uint(uint value) : this() {
+				this.value = value;
 			}
 
 			public uint GetReversed() {
-				return new Uint(b3, b2, b1, b0).Auint;
+				return new Uint(b3, b2, b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -518,13 +518,13 @@ namespace STUN.Utils {
 					b2 = buffer[offset + 2];
 					b3 = buffer[offset + 3];
 				}
-				return Auint;
+				return value;
 			}
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Char {
-			[FieldOffset(0)] public char Achar;
+			[FieldOffset(0)] public char value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
@@ -532,12 +532,12 @@ namespace STUN.Utils {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Char(char Achar) : this() {
-				this.Achar = Achar;
+			public Char(char value) : this() {
+				this.value = value;
 			}
 
 			public char GetReversed() {
-				return new Char(b1, b0).Achar;
+				return new Char(b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -557,12 +557,12 @@ namespace STUN.Utils {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 				}
-				return Achar;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Short {
-			[FieldOffset(0)] public short Ashort;
+			[FieldOffset(0)] public short value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
@@ -570,12 +570,12 @@ namespace STUN.Utils {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Short(short Ashort) : this() {
-				this.Ashort = Ashort;
+			public Short(short value) : this() {
+				this.value = value;
 			}
 
 			public short GetReversed() {
-				return new Short(b1, b0).Ashort;
+				return new Short(b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -595,12 +595,12 @@ namespace STUN.Utils {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 				}
-				return Ashort;
+				return value;
 			}
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Ushort {
-			[FieldOffset(0)] public ushort Aushort;
+			[FieldOffset(0)] public ushort value;
 			[FieldOffset(0)] public byte b0;
 			[FieldOffset(1)] public byte b1;
 
@@ -608,12 +608,12 @@ namespace STUN.Utils {
 				this.b0 = b0;
 				this.b1 = b1;
 			}
-			public Ushort(ushort Aushort) : this() {
-				this.Aushort = Aushort;
+			public Ushort(ushort value) : this() {
+				this.value = value;
 			}
 
 			public ushort GetReversed() {
-				return new Ushort(b1, b0).Aushort;
+				return new Ushort(b1, b0).value;
 			}
 
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
@@ -633,7 +633,7 @@ namespace STUN.Utils {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 				}
-				return Aushort;
+				return value;
 			}
 		}
 	}
