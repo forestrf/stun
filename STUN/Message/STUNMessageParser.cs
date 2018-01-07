@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-using STUN.Utils;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	/// <summary>
 	/// Parses STUN messages.
 	/// </summary>

@@ -1,7 +1,8 @@
 using STUN.Crypto;
-using STUN.Utils;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public struct STUNAttr_Fingerprint : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.FINGERPRINT;
 

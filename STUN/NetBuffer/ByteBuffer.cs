@@ -1,6 +1,6 @@
 using System;
 
-namespace STUN.Utils {
+namespace STUN.NetBuffer {
 	/// <summary>
 	/// Struct that wraps an <cref=data>array</cref> and writes/reads to it in Big Endian.
 	/// It works on the hole array or on a subset of it.

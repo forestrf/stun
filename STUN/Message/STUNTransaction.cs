@@ -1,7 +1,7 @@
-using STUN.Utils;
+using STUN.NetBuffer;
 using System;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	public struct Transaction {
 		/// <summary>lsb</summary>
 		public byte b0;

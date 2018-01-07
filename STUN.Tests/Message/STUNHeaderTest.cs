@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 
-using STUN.Utils;
 using NUnit.Framework;
+using STUN.Message;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
 namespace STUN.me.stojan.stun.message {
 	/**

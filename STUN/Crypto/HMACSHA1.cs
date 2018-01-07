@@ -1,4 +1,4 @@
-﻿using STUN.Utils;
+﻿using STUN.NetBuffer;
 
 namespace STUN.Crypto {
 	public class HMAC_SHA1 {

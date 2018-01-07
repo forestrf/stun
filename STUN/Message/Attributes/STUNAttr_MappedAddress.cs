@@ -1,8 +1,10 @@
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 using STUN.Utils;
 using System;
 using System.Net;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public struct STUNAttr_MappedAddress : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.MAPPED_ADDRESS;
 

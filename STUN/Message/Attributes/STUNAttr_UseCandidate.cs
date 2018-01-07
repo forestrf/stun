@@ -1,6 +1,7 @@
-using STUN.Utils;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public struct STUNAttr_UseCandidate : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.USE_CANDIDATE;
 		

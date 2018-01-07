@@ -1,6 +1,6 @@
-﻿using STUN.Utils;
+﻿using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public interface ISTUNAttr {
 		void WriteToBuffer(ref ByteBuffer buffer);
 	}

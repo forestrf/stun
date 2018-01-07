@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace STUN.Utils {
+namespace STUN.NetBuffer {
 	public enum Endianness {
 		/// <summary>
 		/// Network Byte order

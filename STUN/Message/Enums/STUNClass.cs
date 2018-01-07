@@ -1,5 +1,4 @@
-namespace STUN.me.stojan.stun.message {
-
+namespace STUN.Message.Enums {
 	public enum STUNClass : int {
 		Request = 0x0000,
 		Indication = 0x0010,

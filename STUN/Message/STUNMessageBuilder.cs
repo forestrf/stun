@@ -21,10 +21,11 @@
  */
 
 using STUN.Crypto;
-using STUN.me.stojan.stun.message.attribute;
-using STUN.Utils;
+using STUN.Message.Attributes;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	/// <summary>
 	/// A message builder for well-formed STUN messages.
 	/// </summary>

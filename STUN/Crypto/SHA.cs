@@ -2,7 +2,7 @@
 // MIT License
 // Bobby Cafazzo, Michael Muesch, Jason Torosian, Cory Zinkiewicz
 
-using STUN.Utils;
+using STUN.NetBuffer;
 using System;
 
 namespace STUN.Crypto {

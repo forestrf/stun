@@ -1,6 +1,7 @@
-using STUN.Utils;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public struct STUNAttr : ISTUNAttr {
 		private STUNAttribute type;
 		private ByteBuffer data;
@@ -12,7 +13,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			STUNTypeLengthValue.WriteTypeLength((ushort) type, (ushort) data.Length, ref buffer);
-			buffer.Put(data);
+			if (data.HasData()) buffer.Put(data);
 			STUNTypeLengthValue.WritePadding(ref buffer);
 		}
 	}

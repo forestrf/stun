@@ -1,7 +1,8 @@
-using STUN.Utils;
+using STUN.Message.Enums;
+using STUN.NetBuffer;
 using System.Text;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	public struct STUNAttr_Username : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.USERNAME;
 

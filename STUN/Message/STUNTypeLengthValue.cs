@@ -20,10 +20,9 @@
  * SOFTWARE.
  */
 
-using STUN.Utils;
-using System;
+using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	/// <summary>
 	/// Defines a STUN Type-Length-Value.
 	/// </summary>

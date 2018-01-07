@@ -1,4 +1,6 @@
-﻿namespace STUN.Utils {
+﻿using STUN.NetBuffer;
+
+namespace STUN.Utils {
 	internal struct IPv6Holder {
 		public ulong msb, lsb;
 

@@ -1,4 +1,7 @@
 using NUnit.Framework;
+using STUN.Message;
+using STUN.Message.Attributes;
+using STUN.Message.Enums;
 using System;
 using System.Text;
 

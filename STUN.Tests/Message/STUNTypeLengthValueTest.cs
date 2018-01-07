@@ -21,7 +21,8 @@
  */
 
 using NUnit.Framework;
-using STUN.Utils;
+using STUN.Message;
+using STUN.NetBuffer;
 
 namespace STUN.me.stojan.stun.message {
 	/**
