@@ -1,7 +1,7 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_Priority : ISTUNAttribute {
+	public struct STUNAttr_Priority : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.PRIORITY;
 
 		private uint priority;

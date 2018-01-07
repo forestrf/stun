@@ -2,7 +2,7 @@ using STUN.Utils;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_Username : ISTUNAttribute {
+	public struct STUNAttr_Username : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.USERNAME;
 
 		private ByteBuffer usernameInBuffer;

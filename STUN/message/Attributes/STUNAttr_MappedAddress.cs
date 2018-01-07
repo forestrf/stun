@@ -3,7 +3,7 @@ using System;
 using System.Net;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_MappedAddress : ISTUNAttribute {
+	public struct STUNAttr_MappedAddress : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.MAPPED_ADDRESS;
 
 		private ushort port;

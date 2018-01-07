@@ -3,7 +3,7 @@ using System;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_Software : ISTUNAttribute {
+	public struct STUNAttr_Software : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.SOFTWARE;
 
 		private string software;

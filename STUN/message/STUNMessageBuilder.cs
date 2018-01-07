@@ -97,7 +97,7 @@ namespace STUN.me.stojan.stun.message {
 			return this;
 		}
 		
-		public STUNMessageBuilder WriteAttr<T>(T attribute) where T : struct, ISTUNAttribute {
+		public STUNMessageBuilder WriteAttr<T>(T attribute) where T : struct, ISTUNAttr {
 			attribute.WriteToBuffer(ref buffer);
 			UpdateAttributesLength(ref buffer, buffer.Position);
 			return this;

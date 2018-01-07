@@ -2,7 +2,7 @@ using STUN.Crypto;
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_Fingerprint : ISTUNAttribute {
+	public struct STUNAttr_Fingerprint : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.FINGERPRINT;
 
 		private const int FINGERPRINT_XOR = 0x5354554e;

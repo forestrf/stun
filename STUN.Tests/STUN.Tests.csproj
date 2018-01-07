@@ -7,7 +7,7 @@
     <ProjectGuid>{D9B4E76E-2E35-48B4-8D3C-0674276476F1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>stun.Tests</RootNamespace>
+    <RootNamespace>STUN.Tests</RootNamespace>
     <AssemblyName>STUN.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -72,7 +72,6 @@
     <Compile Include="message\Attributes\STUNAttr_Fingerprint.cs" />
     <Compile Include="message\Attributes\STUNAttr_MessageIntegrity.cs" />
     <Compile Include="message\Attributes\STUNAttr_SoftwareTest.cs" />
-    <Compile Include="message\Attributes\STUNAttributeUnknownAttributesTest.cs" />
     <Compile Include="message\Attributes\STUNAttr_XORMappedAddressTest.cs" />
     <Compile Include="message\STUNHeaderTest.cs" />
     <Compile Include="message\STUNMessageBuilderTest.cs" />

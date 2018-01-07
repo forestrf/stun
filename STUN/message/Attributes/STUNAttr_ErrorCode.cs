@@ -3,7 +3,7 @@ using System;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_ErrorCode : ISTUNAttribute {
+	public struct STUNAttr_ErrorCode : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.ERROR_CODE;
 		
 		private ushort code;

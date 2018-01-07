@@ -3,7 +3,7 @@ using STUN.Utils;
 using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttr_MessageIntegrity : ISTUNAttribute {
+	public struct STUNAttr_MessageIntegrity : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.MESSAGE_INTEGRITY;
 		private const ushort HMAC_LENGTH = 20;
 
