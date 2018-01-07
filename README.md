@@ -1,6 +1,6 @@
 STUN
 ====
-Ported from [hf/stun](https://github.com/hf/stun) from Java to C#
+Ported by ASH KATCHAP from [hf/stun](https://github.com/hf/stun)
 
 This is a small, pure-C# library that implements the STUN message format as
 well as a non-blocking STUN client and server.
