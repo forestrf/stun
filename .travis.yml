@@ -1,8 +1,0 @@
-language: csharp
-solution: STUN.sln
-install:
-  - nuget restore STUN.sln
-  - nuget install NUnit.Runners -Version 3.2.0 -OutputDirectory testrunner
-script:
-  - msbuild /p:Configuration=Release STUN.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.2.0/tools/nunit3-console.exe ./STUN.Tests/bin/Release/STUN.Tests.dll

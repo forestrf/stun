@@ -1,7 +1,5 @@
 STUN
 ====
-[![Build Status](https://travis-ci.org/WebRTC-csharp/stun.svg?branch=master)](https://travis-ci.org/WebRTC-csharp/stun)
-
 Ported from [hf/stun](https://github.com/hf/stun) from Java to C#
 
 This is a small, pure-C# library that implements the STUN message format as
