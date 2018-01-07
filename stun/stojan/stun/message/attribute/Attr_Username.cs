@@ -1,12 +1,12 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct STUNAttribute_Username : ISTUNAttribute {
+	public struct Attr_Username : IAttr {
 		public const STUNAttribute TYPE = STUNAttribute.USERNAME;
 
 		public ByteBuffer buffer;
 
-		public STUNAttribute_Username(string value) {
+		public Attr_Username(string value) {
 			buffer = new ByteBuffer(System.Text.Encoding.UTF8.GetBytes(value));
 		}
 

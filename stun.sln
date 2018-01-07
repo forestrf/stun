@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun", "stun\stun.csproj", "{E579594B-DB1F-4FF5-95DD-3E25528E64C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUN", "STUN\STUN.csproj", "{E579594B-DB1F-4FF5-95DD-3E25528E64C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stun.Tests", "stun.Tests\stun.Tests.csproj", "{D9B4E76E-2E35-48B4-8D3C-0674276476F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUN.Tests", "STUN.Tests\STUN.Tests.csproj", "{D9B4E76E-2E35-48B4-8D3C-0674276476F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

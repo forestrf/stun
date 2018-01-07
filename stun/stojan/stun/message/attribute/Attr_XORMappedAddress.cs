@@ -3,51 +3,29 @@ using System;
 using System.Net;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct IPv6 {
-		public ulong msb, lsb;
-
-		public IPv6(byte[] bytes) {
-			var buffer = new ByteBuffer(bytes);
-			msb = buffer.GetULong();
-			lsb = buffer.GetULong();
-		}
-		public void Write(ref ByteBuffer buffer) {
-			buffer.Put(msb);
-			buffer.Put(lsb);
-		}
-	}
-
-	public struct STUNAttribute_XORMappedAddress : ISTUNAttribute {
+	public struct Attr_XORMappedAddress : IAttr {
 		public const STUNAttribute TYPE = STUNAttribute.XOR_MAPPED_ADDRESS;
-		private const int IPV4_LENGTH = 4;
-		private const int IPV6_LENGTH = 16;
-
-		private enum Family {
-			ADDRESS_IPV4 = 0x01,
-			ADDRESS_IPV6 = 0x02
-		}
-
-		private Family family;
-		private uint ipv4;
-		private IPv6 ipv6;
 
 		private ushort port;
+		private uint ipv4;
+		private IPv6Holder ipv6;
+		private AddressFamily family;
 
-		public STUNAttribute_XORMappedAddress(IPAddress address, ushort port) {
+		public Attr_XORMappedAddress(IPAddress address, ushort port) {
 			switch (address.AddressFamily) {
 				case System.Net.Sockets.AddressFamily.InterNetwork:
-					family = Family.ADDRESS_IPV4;
+					family = AddressFamily.IPv4;
 					ipv4 = (uint) address.Address; // Obsolete, but avoids generating Garbage
 					if (BitConverter.IsLittleEndian) {
 						// Reverse byte order
 						ipv4 = ipv4 << 24 | (ipv4 & 0xff00) << 8 | (ipv4 & 0xff0000) >> 8 | ipv4 >> 24;
 					}
-					ipv6 = new IPv6();
+					ipv6 = new IPv6Holder();
 					break;
 				case System.Net.Sockets.AddressFamily.InterNetworkV6:
-					family = Family.ADDRESS_IPV6;
+					family = AddressFamily.IPv6;
 					ipv4 = 0;
-					ipv6 = new IPv6(address.GetAddressBytes());
+					ipv6 = new IPv6Holder(address.GetAddressBytes());
 					break;
 				default:
 					throw new Exception();
@@ -56,7 +34,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
-			ushort length = (ushort) (family == Family.ADDRESS_IPV4 ? 4 + IPV4_LENGTH : 4 + IPV6_LENGTH);
+			ushort length = (ushort) (4 + (family == AddressFamily.IPv4 ? AddressLength.IPv4 : AddressLength.IPv6));
 			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, length, ref buffer);
 
 			ByteBuffer attr = new ByteBuffer(buffer.data, buffer.absPosition);
@@ -66,7 +44,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			buffer.Put((byte) family);
 			buffer.Put((ushort) port);
 
-			if (Family.ADDRESS_IPV4 == family) {
+			if (AddressFamily.IPv4 == family) {
 				buffer.Put(ipv4);
 			} else {
 				ipv6.Write(ref buffer);

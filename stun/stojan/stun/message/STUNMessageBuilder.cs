@@ -97,7 +97,7 @@ namespace STUN.me.stojan.stun.message {
 			return this;
 		}
 		
-		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, ISTUNAttribute {
+		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, IAttr {
 			attribute.WriteToBuffer(ref buffer);
 			UpdateAttributesLength(ref buffer, buffer.Position);
 			return this;
@@ -126,9 +126,9 @@ namespace STUN.me.stojan.stun.message {
 		/// Build a byte representation of the message.
 		/// </summary>
 		public ByteBuffer Build(string key, bool addFingerprint, ref HMAC_SHA1 hmacGenerator) {
-			WriteAttribute(new STUNAttribute_MessageIntegrity(key, ref hmacGenerator));
+			WriteAttribute(new Attr_MessageIntegrity(key, ref hmacGenerator));
 			if (addFingerprint)
-				WriteAttribute(new STUNAttribute_Fingerprint());
+				WriteAttribute(new Attr_Fingerprint());
 			return buffer.GetCropToCurrentPosition();
 		}
 	}

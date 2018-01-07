@@ -1,9 +1,16 @@
 using System;
-using System.Text;
 
 namespace STUN.Utils {
+	/// <summary>
+	/// Struct that wraps an <cref=data>array</cref> and writes/reads to it in Big Endian.
+	/// It works on the hole array or on a subset of it.
+	/// Because it is an struct, you don't need to pool it but you may need to pass it to other methods using the ref keyword
+	/// </summary>
 	public struct ByteBuffer {
 
+		/// <summary>
+		/// Wrapped array
+		/// </summary>
 		public byte[] data;
 
 		/// <summary>
