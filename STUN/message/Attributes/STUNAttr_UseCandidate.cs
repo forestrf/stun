@@ -1,7 +1,7 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct Attr_UseCandidate : IAttr {
+	public struct STUNAttr_UseCandidate : ISTUNAttribute {
 		public const STUNAttribute TYPE = STUNAttribute.USE_CANDIDATE;
 		
 		public void WriteToBuffer(ref ByteBuffer buffer) {

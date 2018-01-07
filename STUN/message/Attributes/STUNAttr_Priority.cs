@@ -1,12 +1,12 @@
 using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct Attr_Priority : IAttr {
+	public struct STUNAttr_Priority : ISTUNAttribute {
 		public const STUNAttribute TYPE = STUNAttribute.PRIORITY;
 
-		public uint priority;
+		private uint priority;
 
-		public Attr_Priority(uint value) {
+		public STUNAttr_Priority(uint value) {
 			this.priority = value;
 		}
 

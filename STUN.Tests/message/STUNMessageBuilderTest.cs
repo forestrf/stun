@@ -135,9 +135,9 @@ namespace STUN.me.stojan.stun.message {
 			msg.SetMessageType(STUNClass.Request, STUNMethod.Binding);
 			var tr = new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10);
 			msg.SetTransaction(tr);
-			msg.WriteAttribute(new Attr_Username("a:b"));
-			msg.WriteAttribute(new Attr_Priority(0x6e7f1eff));
-			msg.WriteAttribute(new Attr_UseCandidate());
+			msg.WriteAttr(new STUNAttr_Username("a:b"));
+			msg.WriteAttr(new STUNAttr_Priority(0x6e7f1eff));
+			msg.WriteAttr(new STUNAttr_UseCandidate());
 			var stunReq = msg.Build("pass", false, ref hmacGenerator);
 			
 

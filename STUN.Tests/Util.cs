@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace stun.Tests {
+namespace STUN.Tests {
 	public static class Util {
 		public static string ByteArrayToCSharpHexDefinition(byte[] arr) {
 			StringBuilder t = new StringBuilder(arr.Length);

@@ -1,7 +1,7 @@
 ﻿using STUN.Utils;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public interface IAttr {
+	public interface ISTUNAttribute {
 		void WriteToBuffer(ref ByteBuffer buffer);
 	}
 }

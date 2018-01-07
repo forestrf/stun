@@ -67,17 +67,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crypto\SHATest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttributeErrorCodeTest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttribute_MappedAddressTest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttribute_Fingerprint.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttribute_MessageIntegrity.cs" />
-    <Compile Include="stojan\stun\message\attribute\Attr_SoftwareTest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttributeUnknownAttributesTest.cs" />
-    <Compile Include="stojan\stun\message\attribute\STUNAttribute_XORMappedAddressTest.cs" />
-    <Compile Include="stojan\stun\message\STUNHeaderTest.cs" />
-    <Compile Include="stojan\stun\message\STUNMessageBuilderTest.cs" />
-    <Compile Include="stojan\stun\message\STUNMessageParserTest.cs" />
-    <Compile Include="stojan\stun\message\STUNTypeLengthValueTest.cs" />
+    <Compile Include="message\Attributes\STUNAttr_ErrorCodeTest.cs" />
+    <Compile Include="message\Attributes\STUNAttr_MappedAddressTest.cs" />
+    <Compile Include="message\Attributes\STUNAttr_Fingerprint.cs" />
+    <Compile Include="message\Attributes\STUNAttr_MessageIntegrity.cs" />
+    <Compile Include="message\Attributes\STUNAttr_SoftwareTest.cs" />
+    <Compile Include="message\Attributes\STUNAttributeUnknownAttributesTest.cs" />
+    <Compile Include="message\Attributes\STUNAttr_XORMappedAddressTest.cs" />
+    <Compile Include="message\STUNHeaderTest.cs" />
+    <Compile Include="message\STUNMessageBuilderTest.cs" />
+    <Compile Include="message\STUNMessageParserTest.cs" />
+    <Compile Include="message\STUNTypeLengthValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

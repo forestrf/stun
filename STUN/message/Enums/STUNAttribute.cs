@@ -1,5 +1,4 @@
 namespace STUN.me.stojan.stun.message {
-
 	public enum STUNAttribute : ushort {
 		MAPPED_ADDRESS = 0x0001, // [RFC5389]
 		CHANGE_REQUEST = 0x0003, // [RFC5780]

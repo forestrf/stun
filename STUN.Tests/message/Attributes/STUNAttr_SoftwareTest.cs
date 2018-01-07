@@ -4,7 +4,7 @@ using System.Text;
 
 namespace STUN.me.stojan.stun.message.attribute {
 	[TestFixture]
-	public class Attr_SoftwareTest {
+	public class STUNAttr_SoftwareTest {
 		[Test]
 		public void NoErrors() {
 			byte[] expected = new byte[] {
@@ -17,12 +17,8 @@ namespace STUN.me.stojan.stun.message.attribute {
 			var msg = new STUNMessageBuilder(new byte[128]);
 			msg.SetMessageType(STUNClass.Success, STUNMethod.Binding);
 			msg.SetTransaction(new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttribute(new Attr_Software("123456"));
+			msg.WriteAttr(new STUNAttr_Software("123456"));
 			var stunReq = msg.Build();
-			string copyme = "";
-			foreach (var i in stunReq.ToArray()) {
-				copyme += "0x" + i.ToString("X") + ", ";
-			}
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
 		}
@@ -73,7 +69,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 			var msg = new STUNMessageBuilder(new byte[256]);
 			msg.SetMessageType(STUNClass.Success, STUNMethod.Binding);
 			msg.SetTransaction(new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttribute(new Attr_Software(builder.ToString()));
+			msg.WriteAttr(new STUNAttr_Software(builder.ToString()));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());

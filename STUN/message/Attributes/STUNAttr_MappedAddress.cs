@@ -3,7 +3,7 @@ using System;
 using System.Net;
 
 namespace STUN.me.stojan.stun.message.attribute {
-	public struct Attr_MappedAddress : IAttr {
+	public struct STUNAttr_MappedAddress : ISTUNAttribute {
 		public const STUNAttribute TYPE = STUNAttribute.MAPPED_ADDRESS;
 
 		private ushort port;
@@ -11,7 +11,7 @@ namespace STUN.me.stojan.stun.message.attribute {
 		private IPv6Holder ipv6;
 		private AddressFamily family;
 
-		public Attr_MappedAddress(IPAddress address, ushort port) {
+		public STUNAttr_MappedAddress(IPAddress address, ushort port) {
 			switch (address.AddressFamily) {
 				case System.Net.Sockets.AddressFamily.InterNetwork:
 					family = AddressFamily.IPv4;
