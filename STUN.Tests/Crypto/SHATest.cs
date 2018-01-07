@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System.Security.Cryptography;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Crypto {
 	[TestFixture]
 	public class SHATest {
 		[Test]
@@ -25,16 +25,16 @@ namespace STUN.me.stojan.stun.message {
 			uint[] tmp2 = null;
 
 			for (int i = 0; i < 3; i++) {
-				Crypto.SHA.computeSHA1(bytes16, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA1(bytes16, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes16), output);
 
-				Crypto.SHA.computeSHA1(bytes64, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA1(bytes64, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes64), output);
 
-				Crypto.SHA.computeSHA1(bytes256, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA1(bytes256, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes256), output);
 
-				Crypto.SHA.computeSHA1(bytes512, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA1(bytes512, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(bytes512), output);
 			}
 			
@@ -42,16 +42,16 @@ namespace STUN.me.stojan.stun.message {
 
 			var sha256managed = new SHA256Managed();
 			for (int i = 0; i < 3; i++) {
-				Crypto.SHA.computeSHA256(bytes16, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA256(bytes16, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha256managed.ComputeHash(bytes16), output);
 
-				Crypto.SHA.computeSHA256(bytes64, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA256(bytes64, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha256managed.ComputeHash(bytes64), output);
 
-				Crypto.SHA.computeSHA256(bytes256, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA256(bytes256, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha256managed.ComputeHash(bytes256), output);
 
-				Crypto.SHA.computeSHA256(bytes512, output, 0, ref tmp1, ref tmp2);
+				SHA.computeSHA256(bytes512, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha256managed.ComputeHash(bytes512), output);
 			}
 
@@ -59,7 +59,7 @@ namespace STUN.me.stojan.stun.message {
 			random.NextBytes(key);
 			
 			HMACSHA1 hMACSHA1_1 = new HMACSHA1(key);
-			Crypto.HMAC_SHA1 hMACSHA1_2 = new Crypto.HMAC_SHA1(key);
+			HMAC_SHA1 hMACSHA1_2 = new HMAC_SHA1(key);
 
 			output = new byte[20];
 

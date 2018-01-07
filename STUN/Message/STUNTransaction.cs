@@ -37,7 +37,7 @@ namespace STUN.me.stojan.stun.message {
 			b[11], b[10], b[9], b[8], b[7], b[6], 
 			b[5], b[4], b[3], b[2], b[1], b[0]) { }
 
-		public Transaction(Random random) : this() {
+		public Transaction(Random random) {
 			int r1 = random.Next();
 			int r2 = random.Next();
 			int r3 = random.Next();
