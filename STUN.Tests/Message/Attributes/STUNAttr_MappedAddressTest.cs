@@ -1,9 +1,7 @@
 using NUnit.Framework;
-using STUN.Message;
-using STUN.Message.Attributes;
 using STUN.Message.Enums;
 
-namespace STUN.me.stojan.stun.message.attribute {
+namespace STUN.Message.Attributes {
 	[TestFixture]
 	public class STUNAttr_MappedAddressTest {
 		[Test]

@@ -21,11 +21,10 @@
  */
 
 using NUnit.Framework;
-using STUN.Message;
 using STUN.Message.Enums;
 using STUN.NetBuffer;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	/**
 	 * Created by vuk on 24/10/16.
 	 */

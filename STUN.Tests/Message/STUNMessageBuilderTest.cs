@@ -21,14 +21,13 @@
  */
 
 using NUnit.Framework;
-using System;
 using STUN.Crypto;
+using STUN.Message.Attributes;
 using STUN.Message.Enums;
 using STUN.NetBuffer;
-using STUN.Message;
-using STUN.Message.Attributes;
+using System;
 
-namespace STUN.me.stojan.stun.message {
+namespace STUN.Message {
 	/**
 	 * Created by vuk on 24/10/16.
 	 */
