@@ -9,5 +9,8 @@ namespace STUN.Message.Attributes {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, 0, ref buffer);
 			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+		}
 	}
 }

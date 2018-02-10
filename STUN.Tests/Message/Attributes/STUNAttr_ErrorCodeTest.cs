@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using STUN.Message.Enums;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace STUN.Message.Attributes {
@@ -16,13 +17,25 @@ namespace STUN.Message.Attributes {
 				0x35, 0x36, 0x00, 0x00
 			};
 
+			ushort errorCode = 456;
+			string errorMessage = "123456";
+
 			var msg = new STUNMessageBuilder(new byte[128],
 				STUNClass.Success, STUNMethod.Binding,
 				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttribute(new STUNAttr_ErrorCode(456, "123456"));
+			msg.WriteAttribute(new STUNAttr_ErrorCode(errorCode, errorMessage));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
+
+			var attrs = new List<STUNAttr>();
+			var parser = new STUNMessageParser(stunReq, ref attrs);
+			Assert.IsTrue(parser.valid);
+
+			STUNAttr_ErrorCode parsedAttr = new STUNAttr_ErrorCode();
+			parsedAttr.ReadFromBuffer(attrs[0]);
+			Assert.AreEqual(errorCode, parsedAttr.code, "Parser can't read the errorCode correctly");
+			Assert.AreEqual(errorMessage, parsedAttr.reason, "Parser can't read the errorMessage correctly");
 		}
 
 		[Test]

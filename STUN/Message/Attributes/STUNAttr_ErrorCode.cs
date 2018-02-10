@@ -7,8 +7,8 @@ namespace STUN.Message.Attributes {
 	public struct STUNAttr_ErrorCode : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.ERROR_CODE;
 		
-		private ushort code;
-		private string reason;
+		public ushort code;
+		public string reason;
 
 		public STUNAttr_ErrorCode(ushort code, string reason) {
 			this.code = code;
@@ -19,7 +19,6 @@ namespace STUN.Message.Attributes {
 			ByteBuffer attrStart = buffer; // Make a copy that will retain the current position
 			STUNTypeLengthValue.WriteTypeLength(0, 0, ref buffer); // write temporal values
 			
-
 			int errorClass = code / 100;
 			int errorNumber = code % 100;
 
@@ -35,6 +34,15 @@ namespace STUN.Message.Attributes {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) (4 + length), ref attrStart); // Write definitive values
 
 			STUNTypeLengthValue.AddPadding(ref buffer);
+		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+			var buffer = attr.data;
+			buffer.GetUShort();
+			byte errorClass = buffer.GetByte();
+			byte errorNumber = buffer.GetByte();
+			code = (ushort) (errorClass * 100 + errorNumber % 100);
+			reason = Encoding.UTF8.GetString(buffer.data, buffer.absPosition, buffer.Length - 4);
 		}
 	}
 }

@@ -64,6 +64,7 @@
     <Compile Include="Message\Enums\STUNMethod.cs" />
     <Compile Include="Message\STUNTransaction.cs" />
     <Compile Include="Message\STUNTypeLengthValue.cs" />
+    <Compile Include="Utils\IPv4Holder.cs" />
     <Compile Include="Utils\IPv6Holder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

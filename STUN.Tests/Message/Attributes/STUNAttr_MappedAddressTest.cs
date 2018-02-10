@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using STUN.Message.Enums;
+using System.Collections.Generic;
+using System.Net;
 
 namespace STUN.Message.Attributes {
 	[TestFixture]
@@ -13,13 +15,26 @@ namespace STUN.Message.Attributes {
 				0x00, 0x01, 0x12, 0x34, 0x01, 0x02, 0x03, 0x04
 			};
 
+			IPAddress usedAddress = IPAddress.Parse("1.2.3.4");
+			ushort usedPort = 4660;
+
 			var msg = new STUNMessageBuilder(new byte[128],
 				STUNClass.Success, STUNMethod.Binding,
 				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttribute(new STUNAttr_MappedAddress(System.Net.IPAddress.Parse("1.2.3.4"), 4660));
+			msg.WriteAttribute(new STUNAttr_MappedAddress(usedAddress, usedPort));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
+
+			var attrs = new List<STUNAttr>();
+			var parser = new STUNMessageParser(stunReq, ref attrs);
+			Assert.IsTrue(parser.valid);
+
+			STUNAttr_MappedAddress parsedAddr = new STUNAttr_MappedAddress();
+			parsedAddr.ReadFromBuffer(attrs[0]);
+			Assert.AreEqual(usedPort, parsedAddr.port, "Parser can't read the address correctly");
+			Assert.IsTrue(parsedAddr.isIPv4());
+			Assert.AreEqual(usedAddress, parsedAddr.ipv4.ToIPAddress(), "Parser can't read the port correctly");
 		}
 
 		[Test]
@@ -34,13 +49,26 @@ namespace STUN.Message.Attributes {
 				0x03, 0x70, 0x73, 0x34
 			};
 
+			IPAddress usedAddress = IPAddress.Parse("[2001:0db8:85a3:0000:0000:8a2e:0370:7334]");
+			ushort usedPort = 4660;
+
 			var msg = new STUNMessageBuilder(new byte[128],
 				STUNClass.Success, STUNMethod.Binding,
 				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttribute(new STUNAttr_MappedAddress(System.Net.IPAddress.Parse("[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"), 4660));
+			msg.WriteAttribute(new STUNAttr_MappedAddress(usedAddress, usedPort));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
+
+			var attrs = new List<STUNAttr>();
+			var parser = new STUNMessageParser(stunReq, ref attrs);
+			Assert.IsTrue(parser.valid);
+
+			STUNAttr_MappedAddress parsedAddr = new STUNAttr_MappedAddress();
+			parsedAddr.ReadFromBuffer(attrs[0]);
+			Assert.AreEqual(usedPort, parsedAddr.port, "Parser can't read the address correctly");
+			Assert.IsFalse(parsedAddr.isIPv4());
+			Assert.AreEqual(usedAddress, parsedAddr.ipv6.ToIPAddress(), "Parser can't read the port correctly");
 		}
 	}
 }

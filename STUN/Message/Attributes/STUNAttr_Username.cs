@@ -1,5 +1,6 @@
 using STUN.Message.Enums;
 using STUN.NetBuffer;
+using System;
 using System.Text;
 
 namespace STUN.Message.Attributes {
@@ -7,7 +8,7 @@ namespace STUN.Message.Attributes {
 		public const STUNAttribute TYPE = STUNAttribute.USERNAME;
 
 		private ByteBuffer usernameInBuffer;
-		private string usernameInString;
+		public string usernameInString;
 
 		public STUNAttr_Username(string value) : this() {
 			usernameInString = value;
@@ -35,6 +36,10 @@ namespace STUN.Message.Attributes {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) length, ref attrStart); // Write definitive values
 			
 			STUNTypeLengthValue.AddPadding(ref buffer);
+		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+			usernameInString = Encoding.UTF8.GetString(attr.data.data, attr.data.absPosition, Math.Min(512, attr.data.Length));
 		}
 	}
 }

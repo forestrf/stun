@@ -47,10 +47,7 @@ namespace STUN.Message {
 			transaction = new Transaction(new ByteBuffer(buffer.data, buffer.absPosition));
 			buffer.Position += transaction.Length;
 
-			// check CRC if any, and fingerprint
 			if (null == attrs) attrs = new List<STUNAttr>();
-
-			// inputStream.Length
 
 			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
 				return;
@@ -60,11 +57,13 @@ namespace STUN.Message {
 				STUNAttribute type;
 				ushort length;
 				STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out length);
-				STUNAttr attr = new STUNAttr(type, new ByteBuffer(buffer.data, buffer.absPosition, length));
+				STUNAttr attr = new STUNAttr(type, new ByteBuffer(buffer.data, buffer.absPosition, length), inputStream);
 				buffer.Position += length;
 				STUNTypeLengthValue.AddPadding(ref buffer);
 				attrs.Add(attr);
 			}
+
+			// check CRC if any, and fingerprint. TO DO
 
 			valid = true;
 		}

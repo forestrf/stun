@@ -8,33 +8,29 @@ namespace STUN.Message.Attributes {
 	public struct STUNAttr_MappedAddress : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.MAPPED_ADDRESS;
 
-		private ushort port;
-		private uint ipv4;
-		private IPv6Holder ipv6;
+		public ushort port;
+		public IPv4Holder ipv4;
+		public IPv6Holder ipv6;
 		private AddressFamily family;
 
 		public STUNAttr_MappedAddress(IPAddress address, ushort port) {
 			switch (address.AddressFamily) {
 				case System.Net.Sockets.AddressFamily.InterNetwork:
 					family = AddressFamily.IPv4;
-					ipv4 = (uint) address.Address; // Obsolete, but avoids generating Garbage
-					if (BitConverter.IsLittleEndian) {
-						// Reverse byte order
-						ipv4 = ipv4 << 24 | (ipv4 & 0xff00) << 8 | (ipv4 & 0xff0000) >> 8 | ipv4 >> 24;
-					}
+					ipv4 = new IPv4Holder(address);
 					ipv6 = new IPv6Holder();
 					break;
 				case System.Net.Sockets.AddressFamily.InterNetworkV6:
 					family = AddressFamily.IPv6;
-					ipv4 = 0;
-					ipv6 = new IPv6Holder(address.GetAddressBytes());
+					ipv4 = new IPv4Holder();
+					ipv6 = new IPv6Holder(address);
 					break;
 				default:
 					throw new Exception();
 			}
 			this.port = port;
 		}
-
+		
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			ushort length = (ushort) (4 + (family == AddressFamily.IPv4 ? AddressLength.IPv4 : AddressLength.IPv6));
 			STUNTypeLengthValue.WriteTypeLength(TYPE, length, ref buffer);
@@ -47,12 +43,29 @@ namespace STUN.Message.Attributes {
 			buffer.Put((ushort) port);
 
 			if (AddressFamily.IPv4 == family) {
-				buffer.Put(ipv4);
+				ipv4.Write(ref buffer);
 			} else {
 				ipv6.Write(ref buffer);
 			}
 
 			STUNTypeLengthValue.AddPadding(ref buffer);
+		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+			var buffer = attr.data;
+			buffer.GetByte();
+			family = (AddressFamily) buffer.GetByte();
+			port = buffer.GetUShort();
+
+			if (AddressFamily.IPv4 == family) {
+				ipv4.Read(ref buffer);
+			} else {
+				ipv6.Read(ref buffer);
+			}
+		}
+
+		public bool isIPv4() {
+			return AddressFamily.IPv4 == family;
 		}
 	}
 }

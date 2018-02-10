@@ -7,7 +7,7 @@ namespace STUN.Message.Attributes {
 	public struct STUNAttr_Software : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.SOFTWARE;
 
-		private string software;
+		public string software;
 
 		public STUNAttr_Software(string software) {
 			this.software = software;
@@ -23,6 +23,10 @@ namespace STUN.Message.Attributes {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) length, ref attrStart); // Write definitive values
 
 			STUNTypeLengthValue.AddPadding(ref buffer);
+		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+			software = Encoding.UTF8.GetString(attr.data.data, attr.data.absPosition, Math.Min(128, attr.data.Length));
 		}
 	}
 }

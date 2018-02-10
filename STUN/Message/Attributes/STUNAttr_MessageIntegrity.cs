@@ -24,5 +24,9 @@ namespace STUN.Message.Attributes {
 			buffer.Position += HMAC_LENGTH;
 			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
+
+		public void ReadFromBuffer(STUNAttr attr) {
+			throw new System.NotImplementedException();
+		}
 	}
 }
