@@ -29,14 +29,12 @@ namespace STUN.Message {
 	/// <summary>
 	/// A message builder for well-formed STUN messages.
 	/// </summary>
-	public class STUNMessageBuilder {
+	public struct STUNMessageBuilder {
 		private static readonly int MINIMUM_BUFFER_SIZE = 1024;
 		internal const int HEADER_LENGTH = 20;
 
 		private ByteBuffer buffer;
-
-
-		private STUNMessageBuilder() { }
+		
 
 		public STUNMessageBuilder(byte[] buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) : this(new ByteBuffer(buffer), stunClass, stunMethod, transaction) { }
 
@@ -91,16 +89,14 @@ namespace STUN.Message {
 		/// <param name="type">The message type</param>
 		/// <param name="value">The message value</param>
 		/// <returns>This builder, never null</returns>
-		public STUNMessageBuilder WriteAttribute(int type, byte[] value) {
+		public void WriteAttribute(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
 			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
-			return this;
 		}
 		
-		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, ISTUNAttr {
+		public void WriteAttribute<T>(T attribute) where T : struct, ISTUNAttr {
 			attribute.WriteToBuffer(ref buffer);
 			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
-			return this;
 		} 
 
 		public static void UpdateHeaderAttributesLength(ref ByteBuffer buffer, int attributesLength) {
