@@ -19,13 +19,12 @@ namespace STUN.Message.Attributes {
 
 			HMAC_SHA1 hmacGenerator = null;
 			
-			var msg = new STUNMessageBuilder(new byte[1024]);
-			msg.SetMessageType(STUNClass.Request, STUNMethod.Binding);
-			var tr = new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10);
-			msg.SetTransaction(tr);
-			msg.WriteAttr(new STUNAttr_Username("a:b"));
-			msg.WriteAttr(new STUNAttr_Priority(0x6e7f1eff));
-			msg.WriteAttr(new STUNAttr_UseCandidate());
+			var msg = new STUNMessageBuilder(new byte[1024],
+				STUNClass.Request, STUNMethod.Binding,
+				new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10));
+			msg.WriteAttribute(new STUNAttr_Username("a:b"));
+			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
+			msg.WriteAttribute(new STUNAttr_UseCandidate());
 			var stunReq = msg.Build("pass", true, ref hmacGenerator);
 
 

@@ -21,9 +21,11 @@
  */
 
 using NUnit.Framework;
+using STUN.Message.Attributes;
 using STUN.Message.Enums;
 using STUN.NetBuffer;
 using System;
+using System.Collections.Generic;
 
 namespace STUN.Message {
 	/**
@@ -33,59 +35,52 @@ namespace STUN.Message {
 	public class STUNMessageParserTest {
 		[Test]
 		public void parsing() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Error, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
 			builder.WriteAttribute(0b111, new byte[] { 255 });
 			builder.WriteAttribute(0b010, new byte[] { 0, 255, 0, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message));
-
-			STUNMessageParser.Header header;
-			Assert.IsTrue(parser.Start(out header));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message), ref attrs);
+			Assert.IsTrue(parser.valid);
 
 			byte[] copy = new byte[20];
 			Buffer.BlockCopy(message, 0, copy, 0, 20);
-			CollectionAssert.AreEqual(copy, header.header.ToArray());
+			CollectionAssert.AreEqual(copy, parser.GetHeader().ToArray());
 
-			Assert.AreEqual(STUNClass.Error, header.Group());
-			Assert.AreEqual(STUNMethod.Binding, header.Method());
-			var transaction = header.Transaction();
+			Assert.AreEqual(STUNClass.Error, parser.stunClass);
+			Assert.AreEqual(STUNMethod.Binding, parser.stunMethod);
+			var transaction = parser.transaction;
 			Assert.AreEqual(1, transaction[0]);
 			for (int i = 1; i < transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
-			Assert.IsTrue(0 == header.Length() % 4);
-			Assert.IsTrue(header.IsMagicCookieValid());
+			Assert.IsTrue(0 == parser.length % 4);
+			Assert.IsTrue(parser.valid);
 
-			STUNMessageParser.TypeLengthValue tlv1 = header.Next(parser);
+			Assert.AreEqual(2, attrs.Count, "Wrong number of attributes");
+
+			var tlv1 = attrs[0];
 
 			Assert.IsNotNull(tlv1);
-			Assert.AreEqual(0b111, tlv1.Type());
-			CollectionAssert.AreEqual(new byte[] { 0, 0b111, 0, 1 }, tlv1.Header().ToArray());
-			CollectionAssert.AreEqual(new byte[] { 255 }, tlv1.Value().ToArray());
-			Assert.AreEqual(1, tlv1.Length());
-			Assert.AreEqual(3, tlv1.Padding());
+			Assert.AreEqual((STUNAttribute) 0b111, tlv1.type);
+			CollectionAssert.AreEqual(new byte[] { 255 }, tlv1.data.ToArray());
+			Assert.AreEqual(1, tlv1.data.Length);
 
-			STUNMessageParser.TypeLengthValue tlv2 = tlv1.Next(parser);
+			var tlv2 = attrs[1];
 
 			Assert.IsNotNull(tlv2);
-			Assert.AreEqual(0b010, tlv2.Type());
-			CollectionAssert.AreEqual(new byte[] { 0, 0b010, 0, 4 }, tlv2.Header().ToArray());
-			CollectionAssert.AreEqual(new byte[] { 0, 255, 0, 255 }, tlv2.Value().ToArray());
-			Assert.AreEqual(4, tlv2.Length());
-			Assert.AreEqual(0, tlv2.Padding());
-
-			Assert.IsNull(tlv2.Next(parser));
+			Assert.AreEqual((STUNAttribute) 0b010, tlv2.type);
+			CollectionAssert.AreEqual(new byte[] { 0, 255, 0, 255 }, tlv2.data.ToArray());
+			Assert.AreEqual(4, tlv2.data.Length);
 		}
 
 		[Test]
 		public void shortHeader() {
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]));
-
-			STUNMessageParser.Header o;
-			Assert.IsFalse(parser.Start(out o));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]), ref attrs);
+			Assert.IsFalse(parser.valid);
 		}
 
 		[Test]
@@ -93,10 +88,9 @@ namespace STUN.Message {
 			byte[] header = new byte[20];
 			header[0] = 255;
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
-
-			STUNMessageParser.Header o;
-			Assert.IsFalse(parser.Start(out o));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), ref attrs);
+			Assert.IsFalse(parser.valid);
 		}
 
 		[Test]
@@ -106,72 +100,66 @@ namespace STUN.Message {
 			header[2] = 0;
 			header[3] = 3;
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
-
-			STUNMessageParser.Header o;
-			Assert.IsFalse(parser.Start(out o));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), ref attrs);
+			Assert.IsFalse(parser.valid);
 		}
 
 		[Test]
 		public void noTLV() {
 			byte[] header = new byte[20];
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header));
-
-			STUNMessageParser.Header h;
-			Assert.IsTrue(parser.Start(out h));
-			Assert.IsNull(h.Next(parser));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), ref attrs);
+			Assert.IsFalse(parser.valid);
 		}
 
 		[Test]
 		public void eosAtReadingFirstTLVHeader() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Request, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1));
-
-			STUNMessageParser.Header h;
-			Assert.IsTrue(parser.Start(out h));
-			Assert.IsNull(h.Next(parser));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1), ref attrs);
+			
+			Assert.IsFalse(parser.valid);
+			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 
 		[Test]
 		public void eosAtReadingFirstTLVValue() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Request, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1));
-
-			STUNMessageParser.Header h;
-			Assert.IsTrue(parser.Start(out h));
-			Assert.IsNull(h.Next(parser));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1), ref attrs);
+			
+			Assert.IsFalse(parser.valid);
+			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 
 		[Test]
 		public void eosAtReadingFirstTLVPadding() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Request, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Request, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
 
 			byte[] message = builder.Build().ToArray();
 
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1));
-
-			STUNMessageParser.Header h;
-			Assert.IsTrue(parser.Start(out h));
-			Assert.IsNull(h.Next(parser));
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1), ref attrs);
+			
+			Assert.IsFalse(parser.valid);
+			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 	}
 }

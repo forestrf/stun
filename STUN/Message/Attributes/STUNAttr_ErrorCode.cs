@@ -32,9 +32,9 @@ namespace STUN.Message.Attributes {
 			int length = Encoding.UTF8.GetBytes(reason, 0, Math.Min(reason.Length, 128), buffer.data, buffer.absPosition);
 			buffer.Position += length;
 
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, (ushort) (4 + length), ref attrStart); // Write definitive values
+			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) (4 + length), ref attrStart); // Write definitive values
 
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

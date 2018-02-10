@@ -196,17 +196,17 @@ namespace STUN.NetBuffer {
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, byte value) {
-			data[offset] = value;
+			data[offset + absOffset] = value;
 			UpdateDataSize(offset + absOffset + 1);
 		}
 
 		public void Put(byte[] data, int offset, int length) {
-			Buffer.BlockCopy(data, offset, this.data, absPosition, length);
+			Buffer.BlockCopy(data, offset + absOffset, this.data, absPosition, length);
 			absPosition += length;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(ByteBuffer data, int offset, int length) {
-			Buffer.BlockCopy(data.data, data.absOffset + offset, this.data, absPosition, length);
+			Buffer.BlockCopy(data.data, data.absOffset + offset + absOffset, this.data, absPosition, length);
 			absPosition += length;
 			UpdateDataSize(absPosition);
 		}

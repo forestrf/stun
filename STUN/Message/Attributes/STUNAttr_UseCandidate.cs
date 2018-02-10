@@ -6,8 +6,8 @@ namespace STUN.Message.Attributes {
 		public const STUNAttribute TYPE = STUNAttribute.USE_CANDIDATE;
 		
 		public void WriteToBuffer(ref ByteBuffer buffer) {
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, 0, ref buffer);
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.WriteTypeLength(TYPE, 0, ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

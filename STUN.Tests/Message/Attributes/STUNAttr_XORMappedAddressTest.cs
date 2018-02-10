@@ -13,10 +13,10 @@ namespace STUN.Message.Attributes {
 				0x00, 0x01, 0xFC, 0xC7, 0x20, 0x10, 0xA7, 0x46
 			};
 
-			var msg = new STUNMessageBuilder(new byte[128]);
-			msg.SetMessageType(STUNClass.Success, STUNMethod.Binding);
-			msg.SetTransaction(new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttr(new Attr_XORMappedAddress(System.Net.IPAddress.Parse("1.2.3.4"), 56789));
+			var msg = new STUNMessageBuilder(new byte[128],
+				STUNClass.Success, STUNMethod.Binding,
+				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
+			msg.WriteAttribute(new Attr_XORMappedAddress(System.Net.IPAddress.Parse("1.2.3.4"), 56789));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
@@ -34,10 +34,10 @@ namespace STUN.Message.Attributes {
 				0x0B, 0x79, 0x79, 0x3F
 			};
 
-			var msg = new STUNMessageBuilder(new byte[128]);
-			msg.SetMessageType(STUNClass.Success, STUNMethod.Binding);
-			msg.SetTransaction(new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
-			msg.WriteAttr(new Attr_XORMappedAddress(System.Net.IPAddress.Parse("[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"), 56789));
+			var msg = new STUNMessageBuilder(new byte[128],
+				STUNClass.Success, STUNMethod.Binding,
+				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
+			msg.WriteAttribute(new Attr_XORMappedAddress(System.Net.IPAddress.Parse("[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"), 56789));
 			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());

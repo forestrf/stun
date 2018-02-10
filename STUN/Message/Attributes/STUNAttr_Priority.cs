@@ -12,9 +12,9 @@ namespace STUN.Message.Attributes {
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, 4, ref buffer);
+			STUNTypeLengthValue.WriteTypeLength(TYPE, 4, ref buffer);
 			buffer.Put(priority);
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

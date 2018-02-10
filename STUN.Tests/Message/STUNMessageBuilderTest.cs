@@ -35,10 +35,9 @@ namespace STUN.Message {
 	public class STUNMessageBuilderTest {
 		[Test]
 		public void buildMessage() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Error, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
 			builder.WriteAttribute(0b111, new byte[] { 255 });
 
 			byte[] message = builder.Build().ToArray();
@@ -86,10 +85,9 @@ namespace STUN.Message {
 
 		[Test]
 		public void header() {
-			STUNMessageBuilder builder = new STUNMessageBuilder(null);
-
-			builder.SetMessageType(STUNClass.Error, STUNMethod.Binding);
-			builder.SetTransaction(new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
+			STUNMessageBuilder builder = new STUNMessageBuilder(null,
+				STUNClass.Error, STUNMethod.Binding,
+				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
 			builder.WriteAttribute(0xABABA, new byte[20]);
 
 			byte[] header = builder.GetHeader().ToArray();
@@ -132,13 +130,12 @@ namespace STUN.Message {
 			HMAC_SHA1 hmacGenerator = null;
 
 			// Test using an offseted ByteBuffer
-			var msg = new STUNMessageBuilder(new ByteBuffer(new byte[1024], 30, 700));
-			msg.SetMessageType(STUNClass.Request, STUNMethod.Binding);
-			var tr = new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10);
-			msg.SetTransaction(tr);
-			msg.WriteAttr(new STUNAttr_Username("a:b"));
-			msg.WriteAttr(new STUNAttr_Priority(0x6e7f1eff));
-			msg.WriteAttr(new STUNAttr_UseCandidate());
+			var msg = new STUNMessageBuilder(new ByteBuffer(new byte[1024], 30, 700),
+				STUNClass.Request, STUNMethod.Binding,
+				new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10));
+			msg.WriteAttribute(new STUNAttr_Username("a:b"));
+			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
+			msg.WriteAttribute(new STUNAttr_UseCandidate());
 			var stunReq = msg.Build("pass", false, ref hmacGenerator);
 			
 

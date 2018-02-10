@@ -32,9 +32,9 @@ namespace STUN.Message.Attributes {
 				buffer.absPosition += length;
 			}
 
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, (ushort) length, ref attrStart); // Write definitive values
+			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) length, ref attrStart); // Write definitive values
 			
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

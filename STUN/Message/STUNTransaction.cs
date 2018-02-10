@@ -18,6 +18,8 @@ namespace STUN.Message {
 		/// <summary>msb</summary>
 		public byte b11;
 
+		public int Length { get { return 12; } }
+
 		public Transaction(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7, byte b8, byte b9, byte b10, byte b11) {
 			this.b0 = b0;
 			this.b1 = b1;
@@ -34,7 +36,11 @@ namespace STUN.Message {
 		}
 
 		public Transaction(byte[] b) : this(
-			b[11], b[10], b[9], b[8], b[7], b[6], 
+			b[11], b[10], b[9], b[8], b[7], b[6],
+			b[5], b[4], b[3], b[2], b[1], b[0]) { }
+
+		public Transaction(ByteBuffer b) : this(
+			b[11], b[10], b[9], b[8], b[7], b[6],
 			b[5], b[4], b[3], b[2], b[1], b[0]) { }
 
 		public Transaction(Random random) {
@@ -56,6 +62,43 @@ namespace STUN.Message {
 			b9 = (byte) (r3 >> 16);
 			b10 = (byte) (r3 >> 8);
 			b11 = (byte) (r3);
+		}
+
+		public byte this[int i] {
+			get {
+				switch(i) {
+					case 0: return b11;
+					case 1: return b10;
+					case 2: return b9;
+					case 3: return b8;
+					case 4: return b7;
+					case 5: return b6;
+					case 6: return b5;
+					case 7: return b4;
+					case 8: return b3;
+					case 9: return b2;
+					case 10: return b1;
+					case 11: return b0;
+				}
+				throw new IndexOutOfRangeException("Trying to access an invalid transaction byte");
+			}
+			set {
+				switch (i) {
+					case 0: b11 = value; return;
+					case 1: b10 = value; return;
+					case 2: b9 = value; return;
+					case 3: b8 = value; return;
+					case 4: b7 = value; return;
+					case 5: b6 = value; return;
+					case 6: b5 = value; return;
+					case 7: b4 = value; return;
+					case 8: b3 = value; return;
+					case 9: b2 = value; return;
+					case 10: b1 = value; return;
+					case 11: b0 = value; return;
+				}
+				throw new IndexOutOfRangeException("Trying to access an invalid transaction byte");
+			}
 		}
 
 		public void Write(ByteBuffer buffer, int offset) {

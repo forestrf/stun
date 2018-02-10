@@ -83,10 +83,7 @@ namespace STUN.Crypto {
 			Array.Copy(secret, bo, secret.Length);
 
 			for (int i = 0; i < 64; i++) {
-				// Xor bi with 0x36
 				bi[i] = (byte) (bi[i] ^ 0x36);
-
-				// Xor bo with 0x5c
 				bo[i] = (byte) (bo[i] ^ 0x5c);
 			}
 
@@ -126,10 +123,7 @@ namespace STUN.Crypto {
 			Array.Copy(secret, bo, secret.Length);
 
 			for (int i = 0; i < 64; i++) {
-				// Xor bi with 0x36
 				bi[i] = (byte) (bi[i] ^ 0x36);
-
-				// Xor bo with 0x5c
 				bo[i] = (byte) (bo[i] ^ 0x5c);
 			}
 
@@ -241,7 +235,7 @@ namespace STUN.Crypto {
 			bytes_from_big_endian(h3, ref output20, outputOffset + 12);
 			bytes_from_big_endian(h4, ref output20, outputOffset + 16);
 		}
-		
+
 		/// <summary>
 		/// Compute SHA-256 digest
 		/// </summary>

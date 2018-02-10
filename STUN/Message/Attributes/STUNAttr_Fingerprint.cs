@@ -10,11 +10,11 @@ namespace STUN.Message.Attributes {
 		
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			int count = buffer.Position;
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, 4, ref buffer);
-			STUNMessageBuilder.UpdateAttributesLength(ref buffer, buffer.Position + 4);
+			STUNTypeLengthValue.WriteTypeLength(TYPE, 4, ref buffer);
+			STUNMessageBuilder.UpdateHeaderAttributesLength(ref buffer, buffer.Position + 4);
 			uint crc = Crc32.CRC32.Calculate(buffer.data, buffer.absOffset, count) ^ FINGERPRINT_XOR;
 			buffer.Put(crc);
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

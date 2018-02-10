@@ -3,8 +3,8 @@ using STUN.NetBuffer;
 
 namespace STUN.Message.Attributes {
 	public struct STUNAttr : ISTUNAttr {
-		private STUNAttribute type;
-		private ByteBuffer data;
+		public readonly STUNAttribute type;
+		public readonly ByteBuffer data;
 
 		public STUNAttr(STUNAttribute type, ByteBuffer data) {
 			this.type = type;
@@ -12,9 +12,9 @@ namespace STUN.Message.Attributes {
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
-			STUNTypeLengthValue.WriteTypeLength((ushort) type, (ushort) data.Length, ref buffer);
+			STUNTypeLengthValue.WriteTypeLength(type, (ushort) data.Length, ref buffer);
 			if (data.HasData()) buffer.Put(data);
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

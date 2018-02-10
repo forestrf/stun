@@ -37,7 +37,7 @@ namespace STUN.Message.Attributes {
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			ushort length = (ushort) (4 + (family == AddressFamily.IPv4 ? AddressLength.IPv4 : AddressLength.IPv6));
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, length, ref buffer);
+			STUNTypeLengthValue.WriteTypeLength(TYPE, length, ref buffer);
 
 			ByteBuffer attr = new ByteBuffer(buffer.data, buffer.absPosition);
 
@@ -58,7 +58,7 @@ namespace STUN.Message.Attributes {
 			for (int i = 4; i < length; i++)
 				attr[i] = (byte) (attr[i] ^ buffer[i]);
 			
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 
 		// I need something like "read from buffer" to fill the structs

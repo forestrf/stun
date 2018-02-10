@@ -18,11 +18,11 @@ namespace STUN.Message.Attributes {
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			int count = buffer.Position;
-			STUNTypeLengthValue.WriteTypeLength((ushort) TYPE, HMAC_LENGTH, ref buffer);
-			STUNMessageBuilder.UpdateAttributesLength(ref buffer, buffer.Position + HMAC_LENGTH);
+			STUNTypeLengthValue.WriteTypeLength(TYPE, HMAC_LENGTH, ref buffer);
+			STUNMessageBuilder.UpdateHeaderAttributesLength(ref buffer, buffer.Position + HMAC_LENGTH);
 			hmacsha1Instance.ComputeHash(buffer.data, buffer.absOffset, count, buffer.data, buffer.absPosition);
 			buffer.Position += HMAC_LENGTH;
-			STUNTypeLengthValue.WritePadding(ref buffer);
+			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 	}
 }

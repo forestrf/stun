@@ -37,10 +37,10 @@ namespace STUN.Message {
 
 
 		private STUNMessageBuilder() { }
-		public STUNMessageBuilder(byte[] buffer) : this(new ByteBuffer(buffer)) {
 
-		}
-		public STUNMessageBuilder(ByteBuffer buffer) {
+		public STUNMessageBuilder(byte[] buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) : this(new ByteBuffer(buffer), stunClass, stunMethod, transaction) { }
+
+		public STUNMessageBuilder(ByteBuffer buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) {
 			if (!buffer.HasData() || buffer.Length < MINIMUM_BUFFER_SIZE) {
 				this.buffer = new ByteBuffer(new byte[MINIMUM_BUFFER_SIZE]);
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
@@ -48,6 +48,10 @@ namespace STUN.Message {
 				this.buffer = buffer;
 			}
 			this.buffer.absPosition = HEADER_LENGTH;
+
+			SetMessageType(stunClass, stunMethod);
+			this.buffer.Put(4, STUNHeader.MAGIC_COOKIE);
+			SetTransaction(transaction);
 		}
 
 		/// <summary>
@@ -56,10 +60,9 @@ namespace STUN.Message {
 		/// <param name="group">The STUN class</param>
 		/// <param name="method">The STUN method</param>
 		/// <returns>This builder, never null</returns>
-		public STUNMessageBuilder SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
+		private void SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
 			ushort stunMessageType = (ushort) (0x3FFF & ((int) stunClass | (int) stunMethod));
 			buffer.Put(0, stunMessageType);
-			return this;
 		}
 
 		/// <summary>
@@ -67,23 +70,19 @@ namespace STUN.Message {
 		/// </summary>
 		/// <param name="transaction">The transaction value, will be clamped to last 96 bits</param>
 		/// <returns>This builder, never null</returns>
-		public STUNMessageBuilder SetTransaction(Transaction transaction) {
-			buffer.Put(buffer.absOffset + 4, STUNHeader.MAGIC_COOKIE);
-
-			buffer.Put(buffer.absOffset + 4 + 4, transaction.b11);
-			buffer.Put(buffer.absOffset + 4 + 4 + 1, transaction.b10);
-			buffer.Put(buffer.absOffset + 4 + 4 + 2, transaction.b9);
-			buffer.Put(buffer.absOffset + 4 + 4 + 3, transaction.b8);
-			buffer.Put(buffer.absOffset + 4 + 4 + 4, transaction.b7);
-			buffer.Put(buffer.absOffset + 4 + 4 + 5, transaction.b6);
-			buffer.Put(buffer.absOffset + 4 + 4 + 6, transaction.b5);
-			buffer.Put(buffer.absOffset + 4 + 4 + 7, transaction.b4);
-			buffer.Put(buffer.absOffset + 4 + 4 + 8, transaction.b3);
-			buffer.Put(buffer.absOffset + 4 + 4 + 9, transaction.b2);
-			buffer.Put(buffer.absOffset + 4 + 4 + 10, transaction.b1);
-			buffer.Put(buffer.absOffset + 4 + 4 + 11, transaction.b0);
-
-			return this;
+		private void SetTransaction(Transaction transaction) {
+			buffer.Put(4 + 4 + 0, transaction.b11);
+			buffer.Put(4 + 4 + 1, transaction.b10);
+			buffer.Put(4 + 4 + 2, transaction.b9);
+			buffer.Put(4 + 4 + 3, transaction.b8);
+			buffer.Put(4 + 4 + 4, transaction.b7);
+			buffer.Put(4 + 4 + 5, transaction.b6);
+			buffer.Put(4 + 4 + 6, transaction.b5);
+			buffer.Put(4 + 4 + 7, transaction.b4);
+			buffer.Put(4 + 4 + 8, transaction.b3);
+			buffer.Put(4 + 4 + 9, transaction.b2);
+			buffer.Put(4 + 4 + 10, transaction.b1);
+			buffer.Put(4 + 4 + 11, transaction.b0);
 		}
 		
 		/// <summary>
@@ -94,17 +93,17 @@ namespace STUN.Message {
 		/// <returns>This builder, never null</returns>
 		public STUNMessageBuilder WriteAttribute(int type, byte[] value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
-			UpdateAttributesLength(ref buffer, buffer.Position);
+			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
 			return this;
 		}
 		
-		public STUNMessageBuilder WriteAttr<T>(T attribute) where T : struct, ISTUNAttr {
+		public STUNMessageBuilder WriteAttribute<T>(T attribute) where T : struct, ISTUNAttr {
 			attribute.WriteToBuffer(ref buffer);
-			UpdateAttributesLength(ref buffer, buffer.Position);
+			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
 			return this;
 		} 
 
-		public static void UpdateAttributesLength(ref ByteBuffer buffer, int attributesLength) {
+		public static void UpdateHeaderAttributesLength(ref ByteBuffer buffer, int attributesLength) {
 			ushort length = (ushort) ((attributesLength - HEADER_LENGTH) & 0xFFFF);
 			buffer.Put(2, length);
 		}
@@ -127,9 +126,9 @@ namespace STUN.Message {
 		/// Build a byte representation of the message.
 		/// </summary>
 		public ByteBuffer Build(string key, bool addFingerprint, ref HMAC_SHA1 hmacGenerator) {
-			WriteAttr(new STUNAttr_MessageIntegrity(key, ref hmacGenerator));
+			WriteAttribute(new STUNAttr_MessageIntegrity(key, ref hmacGenerator));
 			if (addFingerprint)
-				WriteAttr(new STUNAttr_Fingerprint());
+				WriteAttribute(new STUNAttr_Fingerprint());
 			return buffer.GetCropToCurrentPosition();
 		}
 	}

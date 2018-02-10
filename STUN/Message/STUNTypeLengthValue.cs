@@ -38,14 +38,18 @@ namespace STUN.Message {
 			buffer.Put((ushort) value.Length);
 			buffer.Put(value);
 
-			WritePadding(ref buffer);
+			AddPadding(ref buffer);
 		}
 
-		public static void WriteTypeLength(ushort type, ushort length, ref ByteBuffer buffer) {
-			buffer.Put(type);
+		public static void WriteTypeLength(Enums.STUNAttribute type, ushort length, ref ByteBuffer buffer) {
+			buffer.Put((ushort) type);
 			buffer.Put(length);
 		}
-		public static void WritePadding(ref ByteBuffer buffer) {
+		public static void ReadTypeLength(ref ByteBuffer buffer, out Enums.STUNAttribute type, out ushort length) {
+			type = (Enums.STUNAttribute) buffer.GetUShort();
+			length = buffer.GetUShort();
+		}
+		public static void AddPadding(ref ByteBuffer buffer) {
 			int padding = (4 - (buffer.Position & 0x3)) & 0x3;
 			buffer.Position += padding;
 		}

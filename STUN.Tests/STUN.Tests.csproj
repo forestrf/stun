@@ -69,8 +69,8 @@
     <Compile Include="Crypto\SHATest.cs" />
     <Compile Include="Message\Attributes\STUNAttr_ErrorCodeTest.cs" />
     <Compile Include="Message\Attributes\STUNAttr_MappedAddressTest.cs" />
-    <Compile Include="Message\Attributes\STUNAttr_Fingerprint.cs" />
-    <Compile Include="Message\Attributes\STUNAttr_MessageIntegrity.cs" />
+    <Compile Include="Message\Attributes\STUNAttr_FingerprintTest.cs" />
+    <Compile Include="Message\Attributes\STUNAttr_MessageIntegrityTest.cs" />
     <Compile Include="Message\Attributes\STUNAttr_SoftwareTest.cs" />
     <Compile Include="Message\Attributes\STUNAttr_XORMappedAddressTest.cs" />
     <Compile Include="Message\STUNHeaderTest.cs" />
