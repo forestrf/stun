@@ -83,6 +83,10 @@ namespace STUN.NetBuffer {
 			return b;
 		}
 
+		public void SkipBytes(int numberOfBytes) {
+			absPosition += numberOfBytes;
+		}
+
 		public void Rewind() {
 			absPosition = 0;
 		}

@@ -28,7 +28,7 @@ namespace STUN.Message.Attributes {
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
 
 			var attrs = new List<STUNAttr>();
-			var parser = new STUNMessageParser(stunReq, ref attrs);
+			var parser = new STUNMessageParser(stunReq, attrs);
 			Assert.IsTrue(parser.valid);
 
 			STUNAttr_XORMappedAddress parsedAddr = new STUNAttr_XORMappedAddress();
@@ -62,7 +62,7 @@ namespace STUN.Message.Attributes {
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
 
 			var attrs = new List<STUNAttr>();
-			var parser = new STUNMessageParser(stunReq, ref attrs);
+			var parser = new STUNMessageParser(stunReq, attrs);
 			Assert.IsTrue(parser.valid);
 
 			STUNAttr_XORMappedAddress parsedAddr = new STUNAttr_XORMappedAddress();

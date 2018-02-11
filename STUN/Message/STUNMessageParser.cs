@@ -1,8 +1,6 @@
 using STUN.Message.Attributes;
 using STUN.Message.Enums;
 using STUN.NetBuffer;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace STUN.Message {
@@ -15,13 +13,14 @@ namespace STUN.Message {
 		public readonly ushort length;
 		public readonly Transaction transaction;
 		public readonly bool valid;
-		public readonly ByteBuffer buffer;
+		public ByteBuffer buffer;
 
 		/// <summary>
 		/// Create a parser from the input stream.
 		/// </summary>
 		/// <param name="inputStream">The input stream, must not be null</param>
-		public STUNMessageParser(ByteBuffer inputStream, ref List<STUNAttr> attrs) : this() {
+		public STUNMessageParser(ByteBuffer inputStream, List<STUNAttr> attrs) : this() {
+			if (null == attrs) return;
 			if (inputStream.Length < STUNMessageBuilder.HEADER_LENGTH) {
 				Logger.Error("The message is not long enough");
 				return;
@@ -46,26 +45,30 @@ namespace STUN.Message {
 
 			transaction = new Transaction(new ByteBuffer(buffer.data, buffer.absPosition));
 			buffer.Position += transaction.Length;
-
-			if (null == attrs) attrs = new List<STUNAttr>();
-
+			
 			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
 				return;
 			}
 
-			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
-				STUNAttribute type;
-				ushort length;
-				STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out length);
-				STUNAttr attr = new STUNAttr(type, new ByteBuffer(buffer.data, buffer.absPosition, length), inputStream);
-				buffer.Position += length;
-				STUNTypeLengthValue.AddPadding(ref buffer);
-				attrs.Add(attr);
-			}
+			FillAttributesArray(attrs);
 
 			// check CRC if any, and fingerprint. TO DO
 
 			valid = true;
+		}
+
+		public void FillAttributesArray(List<STUNAttr> attributes) {
+			buffer.Rewind();
+			buffer.SkipBytes(STUNMessageBuilder.HEADER_LENGTH);
+			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
+				STUNAttribute type;
+				ushort length;
+				STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out length);
+				STUNAttr attr = new STUNAttr(type, new ByteBuffer(buffer.data, buffer.absPosition, length), new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length));
+				buffer.Position += length;
+				STUNTypeLengthValue.AddPadding(ref buffer);
+				attributes.Add(attr);
+			}
 		}
 
 		public ByteBuffer GetHeader() {
