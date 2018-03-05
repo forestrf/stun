@@ -29,7 +29,7 @@ namespace STUN.Message.Attributes {
 
 			var attrs = new List<STUNAttr>();
 			var parser = new STUNMessageParser(stunReq, attrs);
-			Assert.IsTrue(parser.valid);
+			Assert.IsTrue(parser.isValid);
 
 			STUNAttr_XORMappedAddress parsedAddr = new STUNAttr_XORMappedAddress();
 			parsedAddr.ReadFromBuffer(attrs[0]);
@@ -63,7 +63,7 @@ namespace STUN.Message.Attributes {
 
 			var attrs = new List<STUNAttr>();
 			var parser = new STUNMessageParser(stunReq, attrs);
-			Assert.IsTrue(parser.valid);
+			Assert.IsTrue(parser.isValid);
 
 			STUNAttr_XORMappedAddress parsedAddr = new STUNAttr_XORMappedAddress();
 			parsedAddr.ReadFromBuffer(attrs[0]);

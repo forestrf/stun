@@ -12,7 +12,7 @@ namespace STUN.Message {
 		public readonly STUNMethod stunMethod;
 		public readonly ushort length;
 		public readonly Transaction transaction;
-		public readonly bool valid;
+		public readonly bool isValid;
 		public ByteBuffer buffer;
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace STUN.Message {
 
 			// check CRC if any, and fingerprint. TO DO
 
-			valid = true;
+			isValid = true;
 		}
 
 		public void FillAttributesArray(List<STUNAttr> attributes) {

@@ -45,7 +45,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message), attrs);
-			Assert.IsTrue(parser.valid);
+			Assert.IsTrue(parser.isValid);
 
 			byte[] copy = new byte[20];
 			Buffer.BlockCopy(message, 0, copy, 0, 20);
@@ -57,7 +57,7 @@ namespace STUN.Message {
 			Assert.AreEqual(1, transaction[0]);
 			for (int i = 1; i < transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
 			Assert.IsTrue(0 == parser.length % 4);
-			Assert.IsTrue(parser.valid);
+			Assert.IsTrue(parser.isValid);
 
 			Assert.AreEqual(2, attrs.Count, "Wrong number of attributes");
 
@@ -80,7 +80,7 @@ namespace STUN.Message {
 		public void shortHeader() {
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]), attrs);
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 		}
 
 		[Test]
@@ -90,7 +90,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 		}
 
 		[Test]
@@ -102,7 +102,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 		}
 
 		[Test]
@@ -111,7 +111,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 		}
 
 		[Test]
@@ -126,7 +126,7 @@ namespace STUN.Message {
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1), attrs);
 			
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 
@@ -142,7 +142,7 @@ namespace STUN.Message {
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1), attrs);
 			
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 
@@ -158,7 +158,7 @@ namespace STUN.Message {
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1), attrs);
 			
-			Assert.IsFalse(parser.valid);
+			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
 	}

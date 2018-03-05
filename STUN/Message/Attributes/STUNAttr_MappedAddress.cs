@@ -35,8 +35,6 @@ namespace STUN.Message.Attributes {
 			ushort length = (ushort) (4 + (family == AddressFamily.IPv4 ? AddressLength.IPv4 : AddressLength.IPv6));
 			STUNTypeLengthValue.WriteTypeLength(TYPE, length, ref buffer);
 
-			ByteBuffer attr = new ByteBuffer(buffer.data, buffer.absPosition);
-
 			// 4 bytes
 			buffer.Put((byte) 0);
 			buffer.Put((byte) family);

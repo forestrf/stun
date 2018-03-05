@@ -30,7 +30,7 @@ namespace STUN.Message.Attributes {
 
 			var attrs = new List<STUNAttr>();
 			var parser = new STUNMessageParser(stunReq, attrs);
-			Assert.IsTrue(parser.valid);
+			Assert.IsTrue(parser.isValid);
 
 			STUNAttr_ErrorCode parsedAttr = new STUNAttr_ErrorCode();
 			parsedAttr.ReadFromBuffer(attrs[0]);

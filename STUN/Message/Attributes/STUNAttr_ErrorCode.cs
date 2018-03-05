@@ -25,7 +25,7 @@ namespace STUN.Message.Attributes {
 			// 4 bytes
 			buffer.Put((byte) 0);
 			buffer.Put((byte) 0);
-			buffer.Put((byte) (errorClass & 0b111));
+			buffer.Put((byte) (errorClass & 0x7));
 			buffer.Put((byte) errorNumber);
 
 			int length = Encoding.UTF8.GetBytes(reason, 0, Math.Min(reason.Length, 128), buffer.data, buffer.absPosition);
