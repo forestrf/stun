@@ -15,6 +15,10 @@ namespace STUN.Message {
 		public readonly bool isValid;
 		public ByteBuffer buffer;
 
+		public static bool IsSTUN(byte[] buffer, int startPosition) {
+			return 0 == (0xFE & buffer[startPosition]);
+		}
+
 		/// <summary>
 		/// Create a parser from the input stream.
 		/// </summary>
