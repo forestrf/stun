@@ -19,12 +19,12 @@ namespace STUN.NetBuffer {
 		public int absPosition;
 
 		/// <summary>
-		/// Position of the 0-index
+		/// Position of the 0-index for this section inside <see cref="data"/>
 		/// </summary>
 		public int absOffset;
 
 		/// <summary>
-		/// usable bits in <see cref="data"/> from 0
+		/// usable bytes in <see cref="data"/> from 0
 		/// </summary>
 		public int absLength;
 
@@ -36,7 +36,7 @@ namespace STUN.NetBuffer {
 			data = buffer;
 			absPosition = offset;
 			absLength = offset + length;
-			this.absOffset = offset;
+			absOffset = offset;
 		}
 
 		/// <summary>Relative to <see cref="absOffset"/></summary>
@@ -93,7 +93,7 @@ namespace STUN.NetBuffer {
 
 		public byte[] ToArray() {
 			byte[] copy = new byte[Length];
-			Buffer.BlockCopy(data, absOffset, copy, 0, Length);
+			Buffer.BlockCopy(data, absOffset, copy, 0, copy.Length);
 			return copy;
 		}
 
