@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="Utils\AddressFamily.cs" />
     <Compile Include="NetBuffer\ByteBuffer.cs" />
-    <Compile Include="NetBuffer\FastBitConverter.cs" />
+    <Compile Include="NetBuffer\FastByte.cs" />
     <Compile Include="Crypto\Crc32c.cs" />
     <Compile Include="Crypto\HMACSHA1.cs" />
     <Compile Include="Crypto\SHA.cs" />

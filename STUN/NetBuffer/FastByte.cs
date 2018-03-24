@@ -8,7 +8,7 @@ namespace STUN.NetBuffer {
 		/// </summary>
 		Big = 0,
 		/// <summary>
-		/// Intel/AMD
+		/// x86 / x64
 		/// </summary>
 		Little = 1
 	};
@@ -17,11 +17,11 @@ namespace STUN.NetBuffer {
 	/// structs for converting simple types to bytes and back
 	/// Includes methods to write and read from a buffer
 	/// </summary>
-	public static class FastBit {
-		private static int isBigEndian = BitConverter.IsLittleEndian ? 0 : 1;
+	public static class FastByte {
+		private static int IsBigEndian = BitConverter.IsLittleEndian ? 0 : 1;
 
 		private static bool WantReversedEndian(Endianness endianness) {
-			return (isBigEndian ^ (int) endianness) != 1;
+			return (IsBigEndian ^ (int) endianness) != 1;
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
@@ -295,81 +295,7 @@ namespace STUN.NetBuffer {
 				return value;
 			}
 		}
-		[StructLayout(LayoutKind.Explicit)]
-		public struct Ulong {
-			[FieldOffset(0)] public ulong value;
-			[FieldOffset(0)] public byte b0;
-			[FieldOffset(1)] public byte b1;
-			[FieldOffset(2)] public byte b2;
-			[FieldOffset(3)] public byte b3;
-			[FieldOffset(4)] public byte b4;
-			[FieldOffset(5)] public byte b5;
-			[FieldOffset(6)] public byte b6;
-			[FieldOffset(7)] public byte b7;
-
-			public Ulong(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) : this() {
-				this.b0 = b0;
-				this.b1 = b1;
-				this.b2 = b2;
-				this.b3 = b3;
-				this.b4 = b4;
-				this.b5 = b5;
-				this.b6 = b6;
-				this.b7 = b7;
-			}
-			public Ulong(ulong value) : this() {
-				this.value = value;
-			}
-
-			public ulong GetReversed() {
-				return new Ulong(b7, b6, b5, b4, b3, b2, b1, b0).value;
-			}
-
-			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					buffer[offset + 7] = b0;
-					buffer[offset + 6] = b1;
-					buffer[offset + 5] = b2;
-					buffer[offset + 4] = b3;
-					buffer[offset + 3] = b4;
-					buffer[offset + 2] = b5;
-					buffer[offset + 1] = b6;
-					buffer[offset] = b7;
-				} else {
-					buffer[offset] = b0;
-					buffer[offset + 1] = b1;
-					buffer[offset + 2] = b2;
-					buffer[offset + 3] = b3;
-					buffer[offset + 4] = b4;
-					buffer[offset + 5] = b5;
-					buffer[offset + 6] = b6;
-					buffer[offset + 7] = b7;
-				}
-			}
-			public ulong Read(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					b0 = buffer[offset + 7];
-					b1 = buffer[offset + 6];
-					b2 = buffer[offset + 5];
-					b3 = buffer[offset + 4];
-					b4 = buffer[offset + 3];
-					b5 = buffer[offset + 2];
-					b6 = buffer[offset + 1];
-					b7 = buffer[offset];
-				} else {
-					b0 = buffer[offset];
-					b1 = buffer[offset + 1];
-					b2 = buffer[offset + 2];
-					b3 = buffer[offset + 3];
-					b4 = buffer[offset + 4];
-					b5 = buffer[offset + 5];
-					b6 = buffer[offset + 6];
-					b7 = buffer[offset + 7];
-				}
-				return value;
-			}
-		}
-
+		
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Float {
 			[FieldOffset(0)] public float value;
@@ -441,8 +367,7 @@ namespace STUN.NetBuffer {
 			public int GetReversed() {
 				return new Int(b3, b2, b1, b0).value;
 			}
-
-			private static readonly bool isBigEndian = !BitConverter.IsLittleEndian;
+			
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
 				if (WantReversedEndian(endianness)) {
 					buffer[offset + 3] = b0;
@@ -471,95 +396,7 @@ namespace STUN.NetBuffer {
 				return value;
 			}
 		}
-		[StructLayout(LayoutKind.Explicit)]
-		public struct Uint {
-			[FieldOffset(0)] public uint value;
-			[FieldOffset(0)] public byte b0;
-			[FieldOffset(1)] public byte b1;
-			[FieldOffset(2)] public byte b2;
-			[FieldOffset(3)] public byte b3;
-
-			public Uint(byte b0, byte b1, byte b2, byte b3) : this() {
-				this.b0 = b0;
-				this.b1 = b1;
-				this.b2 = b2;
-				this.b3 = b3;
-			}
-			public Uint(uint value) : this() {
-				this.value = value;
-			}
-
-			public uint GetReversed() {
-				return new Uint(b3, b2, b1, b0).value;
-			}
-
-			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					buffer[offset + 3] = b0;
-					buffer[offset + 2] = b1;
-					buffer[offset + 1] = b2;
-					buffer[offset] = b3;
-				} else {
-					buffer[offset] = b0;
-					buffer[offset + 1] = b1;
-					buffer[offset + 2] = b2;
-					buffer[offset + 3] = b3;
-				}
-			}
-			public uint Read(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					b0 = buffer[offset + 3];
-					b1 = buffer[offset + 2];
-					b2 = buffer[offset + 1];
-					b3 = buffer[offset];
-				} else {
-					b0 = buffer[offset];
-					b1 = buffer[offset + 1];
-					b2 = buffer[offset + 2];
-					b3 = buffer[offset + 3];
-				}
-				return value;
-			}
-		}
-
-		[StructLayout(LayoutKind.Explicit)]
-		public struct Char {
-			[FieldOffset(0)] public char value;
-			[FieldOffset(0)] public byte b0;
-			[FieldOffset(1)] public byte b1;
-
-			public Char(byte b0, byte b1) : this() {
-				this.b0 = b0;
-				this.b1 = b1;
-			}
-			public Char(char value) : this() {
-				this.value = value;
-			}
-
-			public char GetReversed() {
-				return new Char(b1, b0).value;
-			}
-
-			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					buffer[offset + 1] = b0;
-					buffer[offset] = b1;
-				} else {
-					buffer[offset] = b0;
-					buffer[offset + 1] = b1;
-				}
-			}
-			public char Read(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					b0 = buffer[offset + 1];
-					b1 = buffer[offset];
-				} else {
-					b0 = buffer[offset];
-					b1 = buffer[offset + 1];
-				}
-				return value;
-			}
-		}
+		
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Short {
 			[FieldOffset(0)] public short value;
@@ -588,44 +425,6 @@ namespace STUN.NetBuffer {
 				}
 			}
 			public short Read(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					b0 = buffer[offset + 1];
-					b1 = buffer[offset];
-				} else {
-					b0 = buffer[offset];
-					b1 = buffer[offset + 1];
-				}
-				return value;
-			}
-		}
-		[StructLayout(LayoutKind.Explicit)]
-		public struct Ushort {
-			[FieldOffset(0)] public ushort value;
-			[FieldOffset(0)] public byte b0;
-			[FieldOffset(1)] public byte b1;
-
-			public Ushort(byte b0, byte b1) : this() {
-				this.b0 = b0;
-				this.b1 = b1;
-			}
-			public Ushort(ushort value) : this() {
-				this.value = value;
-			}
-
-			public ushort GetReversed() {
-				return new Ushort(b1, b0).value;
-			}
-
-			public void Write(byte[] buffer, int offset, Endianness endianness) {
-				if (WantReversedEndian(endianness)) {
-					buffer[offset + 1] = b0;
-					buffer[offset] = b1;
-				} else {
-					buffer[offset] = b0;
-					buffer[offset + 1] = b1;
-				}
-			}
-			public ushort Read(byte[] buffer, int offset, Endianness endianness) {
 				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 1];
 					b1 = buffer[offset];

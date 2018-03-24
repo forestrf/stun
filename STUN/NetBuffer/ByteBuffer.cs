@@ -7,6 +7,10 @@ namespace STUN.NetBuffer {
 	/// Because it is an struct, you don't need to pool it but you may need to pass it to other methods using the ref keyword
 	/// </summary>
 	public struct ByteBuffer {
+		/// <summary>
+		/// Endianness of the buffer. STUN uses big endian (Network bit order)
+		/// </summary>
+		public Endianness endianness;
 
 		/// <summary>
 		/// Wrapped array
@@ -32,7 +36,7 @@ namespace STUN.NetBuffer {
 
 		public ByteBuffer(byte[] buffer) : this(buffer, 0) { }
 		public ByteBuffer(byte[] buffer, int offset) : this(buffer, offset, null != buffer ? buffer.Length - offset : 0) { }
-		public ByteBuffer(byte[] buffer, int offset, int length) {
+		public ByteBuffer(byte[] buffer, int offset, int length) : this() {
 			data = buffer;
 			absPosition = offset;
 			absLength = offset + length;
@@ -115,82 +119,82 @@ namespace STUN.NetBuffer {
 		}
 
 		public void Put(float value) {
-			new FastBit.Float(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Float(value).Write(data, absPosition, endianness);
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, float value) {
-			new FastBit.Float(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Float(value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(double value) {
-			new FastBit.Double(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Double(value).Write(data, absPosition, endianness);
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, double value) {
-			new FastBit.Double(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Double(value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(long value) {
-			new FastBit.Long(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Long(value).Write(data, absPosition, endianness);
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, long value) {
-			new FastBit.Long(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Long(value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(ulong value) {
-			new FastBit.Ulong(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Long((long) value).Write(data, absPosition, endianness);
 			absPosition += 8;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, ulong value) {
-			new FastBit.Ulong(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Long((long) value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 8);
 		}
 
 		public void Put(int value) {
-			new FastBit.Int(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Int(value).Write(data, absPosition, endianness);
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, int value) {
-			new FastBit.Int(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Int(value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(uint value) {
-			new FastBit.Uint(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Int((int) value).Write(data, absPosition, endianness);
 			absPosition += 4;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, uint value) {
-			new FastBit.Uint(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Int((int) value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 4);
 		}
 
 		public void Put(ushort value) {
-			new FastBit.Ushort(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Short((short) value).Write(data, absPosition, endianness);
 			absPosition += 2;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, ushort value) {
-			new FastBit.Ushort(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Short((short) value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 2);
 		}
 		
 		public void Put(short value) {
-			new FastBit.Short(value).Write(data, absPosition, Endianness.Big);
+			new FastByte.Short(value).Write(data, absPosition, endianness);
 			absPosition += 2;
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, short value) {
-			new FastBit.Short(value).Write(data, offset + absOffset, Endianness.Big);
+			new FastByte.Short(value).Write(data, offset + absOffset, endianness);
 			UpdateDataSize(offset + absOffset + 2);
 		}
 		
@@ -230,73 +234,73 @@ namespace STUN.NetBuffer {
 		}
 
 		public ushort GetUShort(int offset) {
-			return new FastBit.Ushort().Read(data, this.absOffset + offset, Endianness.Big);
+			return (ushort) new FastByte.Short().Read(data, absOffset + offset, endianness);
 		}
 		public ushort GetUShort() {
-			ushort v = new FastBit.Ushort().Read(data, absPosition, Endianness.Big);
+			ushort v = (ushort) new FastByte.Short().Read(data, absPosition, endianness);
 			absPosition += 2;
 			return v;
 		}
 
 		public short GetShort(int offset) {
-			return new FastBit.Short().Read(data, this.absOffset + offset, Endianness.Big);
+			return new FastByte.Short().Read(data, absOffset + offset, endianness);
 		}
 		public short GetShort() {
-			short result = new FastBit.Short().Read(data, absPosition, Endianness.Big);
+			short result = new FastByte.Short().Read(data, absPosition, endianness);
 			absPosition += 2;
 			return result;
 		}
 
 		public long GetLong(int offset) {
-			return new FastBit.Long().Read(data, this.absOffset + offset, Endianness.Big);
+			return new FastByte.Long().Read(data, absOffset + offset, endianness);
 		}
 		public long GetLong() {
-			long result = new FastBit.Long().Read(data, absPosition, Endianness.Big);
+			long result = new FastByte.Long().Read(data, absPosition, endianness);
 			absPosition += 8;
 			return result;
 		}
 
 		public ulong GetULong(int offset) {
-			return new FastBit.Ulong().Read(data, this.absOffset + offset, Endianness.Big);
+			return (ulong) new FastByte.Long().Read(data, absOffset + offset, endianness);
 		}
 		public ulong GetULong() {
-			ulong result = new FastBit.Ulong().Read(data, absPosition, Endianness.Big);
+			ulong result = (ulong) new FastByte.Long().Read(data, absPosition, endianness);
 			absPosition += 8;
 			return result;
 		}
 
 		public int GetInt(int offset) {
-			return new FastBit.Int().Read(data, this.absOffset + offset, Endianness.Big);
+			return new FastByte.Int().Read(data, absOffset + offset, endianness);
 		}
 		public int GetInt() {
-			int result = new FastBit.Int().Read(data, absPosition, Endianness.Big);
+			int result = new FastByte.Int().Read(data, absPosition, endianness);
 			absPosition += 4;
 			return result;
 		}
 
 		public uint GetUInt(int offset) {
-			return new FastBit.Uint().Read(data, this.absOffset + offset, Endianness.Big);
+			return (uint) new FastByte.Int().Read(data, absOffset + offset, endianness);
 		}
 		public uint GetUInt() {
-			uint result = new FastBit.Uint().Read(data, absPosition, Endianness.Big);
+			uint result = (uint) new FastByte.Int().Read(data, absPosition, endianness);
 			absPosition += 4;
 			return result;
 		}
 
 		public float GetFloat(int offset) {
-			return new FastBit.Float().Read(data, this.absOffset + offset, Endianness.Big);
+			return new FastByte.Float().Read(data, absOffset + offset, endianness);
 		}
 		public float GetFloat() {
-			float result = new FastBit.Float().Read(data, absPosition, Endianness.Big);
+			float result = new FastByte.Float().Read(data, absPosition, endianness);
 			absPosition += 4;
 			return result;
 		}
 
 		public double GetDouble(int offset) {
-			return new FastBit.Double().Read(data, this.absOffset + offset, Endianness.Big);
+			return new FastByte.Double().Read(data, absOffset + offset, endianness);
 		}
 		public double GetDouble() {
-			double result = new FastBit.Double().Read(data, absPosition, Endianness.Big);
+			double result = new FastByte.Double().Read(data, absPosition, endianness);
 			absPosition += 8;
 			return result;
 		}
