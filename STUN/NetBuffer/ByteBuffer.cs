@@ -118,94 +118,94 @@ namespace STUN.NetBuffer {
 			if (position > Length) Length = position;
 		}
 
-		public void Put(float value) {
-			new FastByte.Float(value).Write(data, absPosition, endianness);
-			absPosition += 4;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, float value) {
-			new FastByte.Float(value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 4);
-		}
-
-		public void Put(double value) {
-			new FastByte.Double(value).Write(data, absPosition, endianness);
-			absPosition += 8;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, double value) {
-			new FastByte.Double(value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 8);
-		}
-
-		public void Put(long value) {
-			new FastByte.Long(value).Write(data, absPosition, endianness);
-			absPosition += 8;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, long value) {
-			new FastByte.Long(value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 8);
-		}
-
-		public void Put(ulong value) {
-			new FastByte.Long((long) value).Write(data, absPosition, endianness);
-			absPosition += 8;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, ulong value) {
-			new FastByte.Long((long) value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 8);
-		}
-
-		public void Put(int value) {
-			new FastByte.Int(value).Write(data, absPosition, endianness);
-			absPosition += 4;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, int value) {
-			new FastByte.Int(value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 4);
-		}
-
-		public void Put(uint value) {
-			new FastByte.Int((int) value).Write(data, absPosition, endianness);
-			absPosition += 4;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, uint value) {
-			new FastByte.Int((int) value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 4);
-		}
-
-		public void Put(ushort value) {
-			new FastByte.Short((short) value).Write(data, absPosition, endianness);
-			absPosition += 2;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, ushort value) {
-			new FastByte.Short((short) value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 2);
-		}
-		
-		public void Put(short value) {
-			new FastByte.Short(value).Write(data, absPosition, endianness);
-			absPosition += 2;
-			UpdateDataSize(absPosition);
-		}
-		public void Put(int offset, short value) {
-			new FastByte.Short(value).Write(data, offset + absOffset, endianness);
-			UpdateDataSize(offset + absOffset + 2);
-		}
-		
 		public void Put(byte value) {
 			data[absPosition] = value;
-			absPosition++;
+			absPosition += sizeof(byte);
 			UpdateDataSize(absPosition);
 		}
 		public void Put(int offset, byte value) {
 			data[offset + absOffset] = value;
-			UpdateDataSize(offset + absOffset + 1);
+			UpdateDataSize(offset + absOffset + sizeof(byte));
+		}
+
+		public void Put(short value) {
+			new FastByte.Short(value).Write(data, absPosition, endianness);
+			absPosition += sizeof(short);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, short value) {
+			new FastByte.Short(value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(short));
+		}
+
+		public void Put(ushort value) {
+			new FastByte.Short((short) value).Write(data, absPosition, endianness);
+			absPosition += sizeof(ushort);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, ushort value) {
+			new FastByte.Short((short) value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(ushort));
+		}
+
+		public void Put(int value) {
+			new FastByte.Int(value).Write(data, absPosition, endianness);
+			absPosition += sizeof(int);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, int value) {
+			new FastByte.Int(value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(int));
+		}
+
+		public void Put(uint value) {
+			new FastByte.Int((int) value).Write(data, absPosition, endianness);
+			absPosition += sizeof(uint);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, uint value) {
+			new FastByte.Int((int) value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(uint));
+		}
+
+		public void Put(long value) {
+			new FastByte.Long(value).Write(data, absPosition, endianness);
+			absPosition += sizeof(long);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, long value) {
+			new FastByte.Long(value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(long));
+		}
+
+		public void Put(ulong value) {
+			new FastByte.Long((long) value).Write(data, absPosition, endianness);
+			absPosition += sizeof(ulong);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, ulong value) {
+			new FastByte.Long((long) value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(ulong));
+		}
+
+		public void Put(float value) {
+			new FastByte.Float(value).Write(data, absPosition, endianness);
+			absPosition += sizeof(float);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, float value) {
+			new FastByte.Float(value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(float));
+		}
+
+		public void Put(double value) {
+			new FastByte.Double(value).Write(data, absPosition, endianness);
+			absPosition += sizeof(double);
+			UpdateDataSize(absPosition);
+		}
+		public void Put(int offset, double value) {
+			new FastByte.Double(value).Write(data, offset + absOffset, endianness);
+			UpdateDataSize(offset + absOffset + sizeof(double));
 		}
 
 		public void Put(byte[] data, int offset, int length) {
@@ -229,17 +229,8 @@ namespace STUN.NetBuffer {
 		#region GetMethods
 		public byte GetByte() {
 			byte res = data[absPosition];
-			absPosition += 1;
+			absPosition++;
 			return res;
-		}
-
-		public ushort GetUShort(int offset) {
-			return (ushort) new FastByte.Short().Read(data, absOffset + offset, endianness);
-		}
-		public ushort GetUShort() {
-			ushort v = (ushort) new FastByte.Short().Read(data, absPosition, endianness);
-			absPosition += 2;
-			return v;
 		}
 
 		public short GetShort(int offset) {
@@ -247,26 +238,17 @@ namespace STUN.NetBuffer {
 		}
 		public short GetShort() {
 			short result = new FastByte.Short().Read(data, absPosition, endianness);
-			absPosition += 2;
+			absPosition += sizeof(short);
 			return result;
 		}
 
-		public long GetLong(int offset) {
-			return new FastByte.Long().Read(data, absOffset + offset, endianness);
+		public ushort GetUShort(int offset) {
+			return (ushort) new FastByte.Short().Read(data, absOffset + offset, endianness);
 		}
-		public long GetLong() {
-			long result = new FastByte.Long().Read(data, absPosition, endianness);
-			absPosition += 8;
-			return result;
-		}
-
-		public ulong GetULong(int offset) {
-			return (ulong) new FastByte.Long().Read(data, absOffset + offset, endianness);
-		}
-		public ulong GetULong() {
-			ulong result = (ulong) new FastByte.Long().Read(data, absPosition, endianness);
-			absPosition += 8;
-			return result;
+		public ushort GetUShort() {
+			ushort v = (ushort) new FastByte.Short().Read(data, absPosition, endianness);
+			absPosition += sizeof(ushort);
+			return v;
 		}
 
 		public int GetInt(int offset) {
@@ -274,7 +256,7 @@ namespace STUN.NetBuffer {
 		}
 		public int GetInt() {
 			int result = new FastByte.Int().Read(data, absPosition, endianness);
-			absPosition += 4;
+			absPosition += sizeof(int);
 			return result;
 		}
 
@@ -283,7 +265,25 @@ namespace STUN.NetBuffer {
 		}
 		public uint GetUInt() {
 			uint result = (uint) new FastByte.Int().Read(data, absPosition, endianness);
-			absPosition += 4;
+			absPosition += sizeof(uint);
+			return result;
+		}
+
+		public long GetLong(int offset) {
+			return new FastByte.Long().Read(data, absOffset + offset, endianness);
+		}
+		public long GetLong() {
+			long result = new FastByte.Long().Read(data, absPosition, endianness);
+			absPosition += sizeof(long);
+			return result;
+		}
+
+		public ulong GetULong(int offset) {
+			return (ulong) new FastByte.Long().Read(data, absOffset + offset, endianness);
+		}
+		public ulong GetULong() {
+			ulong result = (ulong) new FastByte.Long().Read(data, absPosition, endianness);
+			absPosition += sizeof(ulong);
 			return result;
 		}
 
@@ -292,7 +292,7 @@ namespace STUN.NetBuffer {
 		}
 		public float GetFloat() {
 			float result = new FastByte.Float().Read(data, absPosition, endianness);
-			absPosition += 4;
+			absPosition += sizeof(float);
 			return result;
 		}
 
@@ -301,7 +301,7 @@ namespace STUN.NetBuffer {
 		}
 		public double GetDouble() {
 			double result = new FastByte.Double().Read(data, absPosition, endianness);
-			absPosition += 8;
+			absPosition += sizeof(double);
 			return result;
 		}
 
