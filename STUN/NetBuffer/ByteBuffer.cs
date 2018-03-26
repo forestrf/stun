@@ -208,6 +208,58 @@ namespace STUN.NetBuffer {
 			UpdateDataSize(offset + absOffset + sizeof(double));
 		}
 
+
+		public void PutVariableLength(int value) {
+			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
+			uint zigzag = (uint) (value << 1) ^ (uint) (value >> 31);
+			PutVariableLength(zigzag);
+		}
+		public int PutVariableLengthAt(int offset, int value) {
+			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
+			uint zigzag = (uint) (value << 1) ^ (uint) (value >> 31);
+			return PutVariableLengthAt(offset, zigzag);
+		}
+
+		public void PutVariableLength(uint value) {
+			absPosition += PutVariableLengthAt(Position, value);
+			UpdateDataSize(absPosition);
+		}
+		public int PutVariableLengthAt(int offset, uint value) {
+			int bytes = 1;
+			while (value >= 0x80) {
+				PutAt(offset + bytes++, (byte) (0x80 | value));
+				value >>= 7;
+			}
+			PutAt(offset, (byte) value);
+			return bytes;
+		}
+
+		public void PutVariableLength(long value) {
+			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
+			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> 63);
+			PutVariableLength(zigzag);
+		}
+		public int PutVariableLengthAt(int offset, long value) {
+			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
+			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> 63);
+			return PutVariableLengthAt(offset, zigzag);
+		}
+
+		public void PutVariableLength(ulong value) {
+			absPosition += PutVariableLengthAt(Position, value);
+			UpdateDataSize(absPosition);
+		}
+		public int PutVariableLengthAt(int offset, ulong value) {
+			int bytes = 1;
+			while (value >= 0x80) {
+				PutAt(offset + bytes++, (byte) (0x80 | value));
+				value >>= 7;
+			}
+			PutAt(offset, (byte) value);
+			return bytes;
+		}
+
+
 		public void Put(byte[] src, int srcOffset, int length) {
 			Buffer.BlockCopy(src, absOffset + srcOffset, data, absPosition, length);
 			absPosition += length;
@@ -304,6 +356,74 @@ namespace STUN.NetBuffer {
 		public double GetDoubleAt(int offset) {
 			return new FastByte.Double().Read(data, absOffset + offset, endianness);
 		}
+
+
+		public int GetIntVariableLength() {
+			uint zigzag = GetUIntVariableLength();
+			return (int) ((zigzag >> 1) ^ (zigzag << 31));
+		}
+		public int GetIntVariableLengthAt(int offset, out int bytes) {
+			uint zigzag = GetUIntVariableLengthAt(offset, out bytes);
+			return (int) ((zigzag >> 1) ^ (zigzag << 31));
+		}
+
+		public uint GetUIntVariableLength() {
+			int bytes;
+			uint value = GetUIntVariableLengthAt(Position, out bytes);
+			absPosition += bytes;
+			UpdateDataSize(absPosition);
+			return value;
+		}
+		public uint GetUIntVariableLengthAt(int offset, out int bytes) {
+			uint value = 0;
+			int bitOffset = 0;
+			bytes = 0;
+			while (absLength - absPosition >= 1) {
+				byte b = data[absOffset + offset + bytes];
+				value |= (0x7u & b) << bitOffset;
+				bitOffset += 7;
+				bytes++;
+				if (0 == (0x80 & b))
+					return value;
+			}
+
+			// Malformed
+			return value;
+		}
+
+		public long GetLongVariableLength() {
+			ulong zigzag = GetULongVariableLength();
+			return (long) ((zigzag >> 1) ^ (zigzag << 63));
+		}
+		public long GetLongVariableLengthAt(int offset, out int bytes) {
+			ulong zigzag = GetULongVariableLengthAt(offset, out bytes);
+			return (long) ((zigzag >> 1) ^ (zigzag << 63));
+		}
+
+		public ulong GetULongVariableLength() {
+			int bytes;
+			ulong value = GetULongVariableLengthAt(Position, out bytes);
+			absPosition += bytes;
+			UpdateDataSize(absPosition);
+			return value;
+		}
+		public ulong GetULongVariableLengthAt(int offset, out int bytes) {
+			ulong value = 0;
+			int bitOffset = 0;
+			bytes = 0;
+			while (absLength - absPosition >= 1) {
+				byte b = data[absOffset + offset + bytes];
+				value |= (0x7ul & b) << bitOffset;
+				bitOffset += 7;
+				bytes++;
+				if (0 == (0x80 & b))
+					return value;
+			}
+
+			// Malformed
+			return value;
+		}
+
 
 		public void GetBytes(int srcOffset, byte[] dst) {
 			GetBytes(srcOffset, dst, dst.Length);
