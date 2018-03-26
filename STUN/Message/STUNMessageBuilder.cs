@@ -48,7 +48,7 @@ namespace STUN.Message {
 			this.buffer.absPosition = HEADER_LENGTH;
 
 			SetMessageType(stunClass, stunMethod);
-			this.buffer.Put(4, STUNHeader.MAGIC_COOKIE);
+			this.buffer.PutAt(4, STUNHeader.MAGIC_COOKIE);
 			SetTransaction(transaction);
 		}
 
@@ -60,7 +60,7 @@ namespace STUN.Message {
 		/// <returns>This builder, never null</returns>
 		private void SetMessageType(STUNClass stunClass, STUNMethod stunMethod) {
 			ushort stunMessageType = (ushort) (0x3FFF & ((int) stunClass | (int) stunMethod));
-			buffer.Put(0, stunMessageType);
+			buffer.PutAt(0, stunMessageType);
 		}
 
 		/// <summary>
@@ -69,18 +69,18 @@ namespace STUN.Message {
 		/// <param name="transaction">The transaction value, will be clamped to last 96 bits</param>
 		/// <returns>This builder, never null</returns>
 		private void SetTransaction(Transaction transaction) {
-			buffer.Put(4 + 4 + 0, transaction.b11);
-			buffer.Put(4 + 4 + 1, transaction.b10);
-			buffer.Put(4 + 4 + 2, transaction.b9);
-			buffer.Put(4 + 4 + 3, transaction.b8);
-			buffer.Put(4 + 4 + 4, transaction.b7);
-			buffer.Put(4 + 4 + 5, transaction.b6);
-			buffer.Put(4 + 4 + 6, transaction.b5);
-			buffer.Put(4 + 4 + 7, transaction.b4);
-			buffer.Put(4 + 4 + 8, transaction.b3);
-			buffer.Put(4 + 4 + 9, transaction.b2);
-			buffer.Put(4 + 4 + 10, transaction.b1);
-			buffer.Put(4 + 4 + 11, transaction.b0);
+			buffer.PutAt(4 + 4 + 0, transaction.b11);
+			buffer.PutAt(4 + 4 + 1, transaction.b10);
+			buffer.PutAt(4 + 4 + 2, transaction.b9);
+			buffer.PutAt(4 + 4 + 3, transaction.b8);
+			buffer.PutAt(4 + 4 + 4, transaction.b7);
+			buffer.PutAt(4 + 4 + 5, transaction.b6);
+			buffer.PutAt(4 + 4 + 6, transaction.b5);
+			buffer.PutAt(4 + 4 + 7, transaction.b4);
+			buffer.PutAt(4 + 4 + 8, transaction.b3);
+			buffer.PutAt(4 + 4 + 9, transaction.b2);
+			buffer.PutAt(4 + 4 + 10, transaction.b1);
+			buffer.PutAt(4 + 4 + 11, transaction.b0);
 		}
 		
 		/// <summary>
@@ -101,7 +101,7 @@ namespace STUN.Message {
 
 		public static void UpdateHeaderAttributesLength(ref ByteBuffer buffer, int attributesLength) {
 			ushort length = (ushort) ((attributesLength - HEADER_LENGTH) & 0xFFFF);
-			buffer.Put(2, length);
+			buffer.PutAt(2, length);
 		}
 
 		/// <summary>

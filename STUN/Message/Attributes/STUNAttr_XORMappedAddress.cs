@@ -70,12 +70,12 @@ namespace STUN.Message.Attributes {
 				ipv6.Read(ref buffer);
 			}
 
-			port ^= attr.stunMessage.GetUShort(4);
+			port ^= attr.stunMessage.GetUShortAt(4);
 			if (AddressFamily.IPv4 == family) {
-				ipv4.bits ^= attr.stunMessage.GetUInt(4);
+				ipv4.bits ^= attr.stunMessage.GetUIntAt(4);
 			} else {
-				ipv6.msb ^= attr.stunMessage.GetULong(4);
-				ipv6.lsb ^= attr.stunMessage.GetULong(12);
+				ipv6.msb ^= attr.stunMessage.GetULongAt(4);
+				ipv6.lsb ^= attr.stunMessage.GetULongAt(12);
 			}
 		}
 

@@ -295,7 +295,7 @@ namespace STUN.NetBuffer {
 				return value;
 			}
 		}
-		
+
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Float {
 			[FieldOffset(0)] public float value;
@@ -367,7 +367,7 @@ namespace STUN.NetBuffer {
 			public int GetReversed() {
 				return new Int(b3, b2, b1, b0).value;
 			}
-			
+
 			public void Write(byte[] buffer, int offset, Endianness endianness) {
 				if (WantReversedEndian(endianness)) {
 					buffer[offset + 3] = b0;
@@ -396,7 +396,7 @@ namespace STUN.NetBuffer {
 				return value;
 			}
 		}
-		
+
 		[StructLayout(LayoutKind.Explicit)]
 		public struct Short {
 			[FieldOffset(0)] public short value;
