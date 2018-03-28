@@ -34,13 +34,14 @@ namespace STUN.NetBuffer {
 
 
 
-		public ByteBuffer(byte[] buffer) : this(buffer, 0) { }
-		public ByteBuffer(byte[] buffer, int offset) : this(buffer, offset, null != buffer ? buffer.Length - offset : 0) { }
-		public ByteBuffer(byte[] buffer, int offset, int length) : this() {
+		public ByteBuffer(byte[] buffer, Endianness endianness = Endianness.Big) : this(buffer, 0, endianness) { }
+		public ByteBuffer(byte[] buffer, int offset, Endianness endianness = Endianness.Big) : this(buffer, offset, null != buffer ? buffer.Length - offset : 0, endianness) { }
+		public ByteBuffer(byte[] buffer, int offset, int length, Endianness endianness = Endianness.Big) {
 			data = buffer;
 			absPosition = offset;
 			absLength = offset + length;
 			absOffset = offset;
+			this.endianness = endianness;
 		}
 
 		/// <summary>Relative to <see cref="absOffset"/></summary>
@@ -68,18 +69,6 @@ namespace STUN.NetBuffer {
 			return absLength - absPosition;
 		}
 
-		public ByteBuffer slice() {
-			ByteBuffer b = new ByteBuffer(data);
-			b.absOffset = b.absPosition = absPosition;
-			b.absLength = absLength;
-			return b;
-		}
-		public ByteBuffer flip() {
-			absLength = absPosition;
-			absPosition = absOffset;
-			return this;
-		}
-
 		public ByteBuffer GetCropToCurrentPosition() {
 			ByteBuffer b = new ByteBuffer(data);
 			b.absOffset = b.absPosition = absOffset;
@@ -92,7 +81,7 @@ namespace STUN.NetBuffer {
 		}
 
 		public void Rewind() {
-			absPosition = 0;
+			Position = 0;
 		}
 
 		public byte[] ToArray() {

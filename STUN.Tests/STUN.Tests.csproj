@@ -78,6 +78,7 @@
     <Compile Include="Message\STUNMessageBuilderTest.cs" />
     <Compile Include="Message\STUNMessageParserTest.cs" />
     <Compile Include="Message\STUNTypeLengthValueTest.cs" />
+    <Compile Include="NetBuffer\ByteBufferTest.cs" />
     <Compile Include="NetBuffer\FastByteTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />

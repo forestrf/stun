@@ -42,9 +42,13 @@ namespace STUN.Message {
 			builder.WriteAttribute(0b010, new byte[] { 0, 255, 0, 255 });
 
 			byte[] message = builder.Build().ToArray();
+			// Add some offset to test it too
+			List<byte> b = new List<byte>();
+			b.AddRange(new byte[] { 1, 2, 3 });
+			b.AddRange(message);
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(b.ToArray(), 3), attrs);
 			Assert.IsTrue(parser.isValid);
 
 			byte[] copy = new byte[20];
