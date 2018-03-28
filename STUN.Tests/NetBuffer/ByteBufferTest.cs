@@ -24,12 +24,12 @@ namespace STUN.Tests.NetBuffer {
 						ByteBuffer b = new ByteBuffer(tmp, off, len);
 						b.endianness = e;
 						{
-							Assert.AreEqual(b.absPosition, off);
-							Assert.AreEqual(b.Position, 0);
-							Assert.AreEqual(b.absLength, off + len);
-							Assert.AreEqual(b.Length, len);
-							Assert.AreEqual(b.absOffset, off);
-							Assert.AreEqual(b.endianness, e);
+							Assert.AreEqual(off, b.absPosition);
+							Assert.AreEqual(0, b.Position);
+							Assert.AreEqual(off + len, b.absLength);
+							Assert.AreEqual(len, b.Length);
+							Assert.AreEqual(off, b.absOffset);
+							Assert.AreEqual(e, b.endianness);
 						}
 
 						if (e == Endianness.Big) {
@@ -62,12 +62,12 @@ namespace STUN.Tests.NetBuffer {
 
 						Assert.IsTrue(b.GetCropToCurrentPosition().BufferEquals(new ByteBuffer(expectedMessage)), "off=" + off + ", len=" + len + ", endian=" + e);
 
-						Assert.AreEqual(b.absPosition, off + expectedMessage.Length);
-						Assert.AreEqual(b.absOffset, off);
-						Assert.AreEqual(b.Position, expectedMessage.Length);
-						Assert.AreEqual(b.Length, len);
-						Assert.AreEqual(b.absLength, off + len);
-						Assert.AreEqual(b.endianness, e);
+						Assert.AreEqual(off + expectedMessage.Length, b.absPosition);
+						Assert.AreEqual(off, b.absOffset);
+						Assert.AreEqual(expectedMessage.Length, b.Position);
+						Assert.AreEqual(len, b.Length);
+						Assert.AreEqual(off + len, b.absLength);
+						Assert.AreEqual(e, b.endianness);
 
 						Assert.IsTrue(b.BufferEquals(b));
 					}
