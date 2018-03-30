@@ -146,6 +146,12 @@ namespace STUN.NetBuffer {
 			new FastByte.Int(value).Write(data, absOffset + offset, endianness);
 			UpdateDataSize(offset + absOffset + sizeof(int));
 		}
+		public void PutDeltaCompress(int value, int previousValue) {
+			PutVariableLength(value - previousValue);
+		}
+		public void PutDeltaCompressAt(int offset, int value, int previousValue) {
+			PutVariableLengthAt(offset, value - previousValue);
+		}
 
 		public void Put(uint value) {
 			new FastByte.Int((int) value).Write(data, absPosition, endianness);
@@ -165,6 +171,12 @@ namespace STUN.NetBuffer {
 		public void PutAt(int offset, long value) {
 			new FastByte.Long(value).Write(data, absOffset + offset, endianness);
 			UpdateDataSize(offset + absOffset + sizeof(long));
+		}
+		public void PutDeltaCompress(long value, long previousValue) {
+			PutVariableLength(value - previousValue);
+		}
+		public void PutDeltaCompressAt(int offset, long value, long previousValue) {
+			PutVariableLengthAt(offset, value - previousValue);
 		}
 
 		public void Put(ulong value) {
@@ -300,6 +312,12 @@ namespace STUN.NetBuffer {
 		public int GetIntAt(int offset) {
 			return new FastByte.Int().Read(data, absOffset + offset, endianness);
 		}
+		public int GetIntDeltaCompress(int previousValue) {
+			return GetIntVariableLength() + previousValue;
+		}
+		public int GetIntDeltaCompressAt(int offset, int previousValue) {
+			return GetIntVariableLengthAt(offset, out int bytes) + previousValue;
+		}
 
 		public uint GetUInt() {
 			uint result = (uint) new FastByte.Int().Read(data, absPosition, endianness);
@@ -317,6 +335,12 @@ namespace STUN.NetBuffer {
 		}
 		public long GetLongAt(int offset) {
 			return new FastByte.Long().Read(data, absOffset + offset, endianness);
+		}
+		public long GetLongDeltaCompress(long previousValue) {
+			return GetLongVariableLength() + previousValue;
+		}
+		public long GetLongDeltaCompressAt(int offset, long previousValue) {
+			return GetLongVariableLengthAt(offset, out int bytes) + previousValue;
 		}
 
 		public ulong GetULong() {
@@ -357,8 +381,7 @@ namespace STUN.NetBuffer {
 		}
 
 		public uint GetUIntVariableLength() {
-			int bytes;
-			uint value = GetUIntVariableLengthAt(Position, out bytes);
+			uint value = GetUIntVariableLengthAt(Position, out int bytes);
 			absPosition += bytes;
 			UpdateDataSize(absPosition);
 			return value;
@@ -390,8 +413,7 @@ namespace STUN.NetBuffer {
 		}
 
 		public ulong GetULongVariableLength() {
-			int bytes;
-			ulong value = GetULongVariableLengthAt(Position, out bytes);
+			ulong value = GetULongVariableLengthAt(Position, out int bytes);
 			absPosition += bytes;
 			UpdateDataSize(absPosition);
 			return value;
