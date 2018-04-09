@@ -316,7 +316,8 @@ namespace STUN.NetBuffer {
 			return GetIntVariableLength() + previousValue;
 		}
 		public int GetIntDeltaCompressAt(int offset, int previousValue) {
-			return GetIntVariableLengthAt(offset, out int bytes) + previousValue;
+			int bytes;
+			return GetIntVariableLengthAt(offset, out bytes) + previousValue;
 		}
 
 		public uint GetUInt() {
@@ -340,7 +341,8 @@ namespace STUN.NetBuffer {
 			return GetLongVariableLength() + previousValue;
 		}
 		public long GetLongDeltaCompressAt(int offset, long previousValue) {
-			return GetLongVariableLengthAt(offset, out int bytes) + previousValue;
+			int bytes;
+			return GetLongVariableLengthAt(offset, out bytes) + previousValue;
 		}
 
 		public ulong GetULong() {
@@ -381,7 +383,8 @@ namespace STUN.NetBuffer {
 		}
 
 		public uint GetUIntVariableLength() {
-			uint value = GetUIntVariableLengthAt(Position, out int bytes);
+			int bytes;
+			uint value = GetUIntVariableLengthAt(Position, out bytes);
 			absPosition += bytes;
 			UpdateDataSize(absPosition);
 			return value;
@@ -413,7 +416,8 @@ namespace STUN.NetBuffer {
 		}
 
 		public ulong GetULongVariableLength() {
-			ulong value = GetULongVariableLengthAt(Position, out int bytes);
+			int bytes;
+			ulong value = GetULongVariableLengthAt(Position, out bytes);
 			absPosition += bytes;
 			UpdateDataSize(absPosition);
 			return value;
