@@ -212,12 +212,12 @@ namespace STUN.NetBuffer {
 
 		public void PutVariableLength(int value) {
 			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
-			uint zigzag = (uint) (value << 1) ^ (uint) (value >> 31);
+			uint zigzag = (uint) (value << 1) ^ (uint) (value >> (sizeof(int) * 8 - 1));
 			PutVariableLength(zigzag);
 		}
 		public int PutVariableLengthAt(int offset, int value) {
 			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
-			uint zigzag = (uint) (value << 1) ^ (uint) (value >> 31);
+			uint zigzag = (uint) (value << 1) ^ (uint) (value >> (sizeof(int) * 8 - 1));
 			return PutVariableLengthAt(offset, zigzag);
 		}
 
@@ -226,23 +226,17 @@ namespace STUN.NetBuffer {
 			UpdateDataSize(absPosition);
 		}
 		public int PutVariableLengthAt(int offset, uint value) {
-			int bytes = 1;
-			while (value >= 0x80) {
-				PutAt(offset + bytes++, (byte) (0x80 | value));
-				value >>= 7;
-			}
-			PutAt(offset, (byte) value);
-			return bytes;
+			return PutVariableLengthAt(offset, (ulong) value);
 		}
 
 		public void PutVariableLength(long value) {
 			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
-			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> 63);
+			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> (sizeof(long) * 8 - 1));
 			PutVariableLength(zigzag);
 		}
 		public int PutVariableLengthAt(int offset, long value) {
 			// Right shift 1, moving the MSB to the LSB, so negative numbers can be compressed too
-			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> 63);
+			ulong zigzag = (ulong) (value << 1) ^ (ulong) (value >> (sizeof(long) * 8 - 1));
 			return PutVariableLengthAt(offset, zigzag);
 		}
 
@@ -251,12 +245,12 @@ namespace STUN.NetBuffer {
 			UpdateDataSize(absPosition);
 		}
 		public int PutVariableLengthAt(int offset, ulong value) {
-			int bytes = 1;
+			int bytes = 0;
 			while (value >= 0x80) {
 				PutAt(offset + bytes++, (byte) (0x80 | value));
 				value >>= 7;
 			}
-			PutAt(offset, (byte) value);
+			PutAt(offset + bytes++, (byte) value);
 			return bytes;
 		}
 
@@ -375,11 +369,11 @@ namespace STUN.NetBuffer {
 
 		public int GetIntVariableLength() {
 			uint zigzag = GetUIntVariableLength();
-			return (int) ((zigzag >> 1) ^ (zigzag << 31));
+			return (int) ((zigzag >> 1) ^ -(zigzag & 1));
 		}
 		public int GetIntVariableLengthAt(int offset, out int bytes) {
 			uint zigzag = GetUIntVariableLengthAt(offset, out bytes);
-			return (int) ((zigzag >> 1) ^ (zigzag << 31));
+			return (int) ((zigzag >> 1) ^ -(zigzag & 1));
 		}
 
 		public uint GetUIntVariableLength() {
@@ -390,29 +384,16 @@ namespace STUN.NetBuffer {
 			return value;
 		}
 		public uint GetUIntVariableLengthAt(int offset, out int bytes) {
-			uint value = 0;
-			int bitOffset = 0;
-			bytes = 0;
-			while (absLength - absPosition >= 1) {
-				byte b = data[absOffset + offset + bytes];
-				value |= (0x7u & b) << bitOffset;
-				bitOffset += 7;
-				bytes++;
-				if (0 == (0x80 & b))
-					return value;
-			}
-
-			// Malformed
-			return value;
+			return (uint) GetULongVariableLengthAt(offset, out bytes);
 		}
 
 		public long GetLongVariableLength() {
 			ulong zigzag = GetULongVariableLength();
-			return (long) ((zigzag >> 1) ^ (zigzag << 63));
+			return (long) ((zigzag >> 1) ^ (zigzag << (sizeof(long) * 8 - 1)));
 		}
 		public long GetLongVariableLengthAt(int offset, out int bytes) {
 			ulong zigzag = GetULongVariableLengthAt(offset, out bytes);
-			return (long) ((zigzag >> 1) ^ (zigzag << 63));
+			return (long) ((zigzag >> 1) ^ (zigzag << (sizeof(long) * 8 - 1)));
 		}
 
 		public ulong GetULongVariableLength() {
@@ -428,7 +409,7 @@ namespace STUN.NetBuffer {
 			bytes = 0;
 			while (absLength - absPosition >= 1) {
 				byte b = data[absOffset + offset + bytes];
-				value |= (0x7ul & b) << bitOffset;
+				value |= (0x7ful & b) << bitOffset;
 				bitOffset += 7;
 				bytes++;
 				if (0 == (0x80 & b))

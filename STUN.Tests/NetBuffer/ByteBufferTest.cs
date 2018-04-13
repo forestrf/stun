@@ -45,7 +45,8 @@ namespace STUN.Tests.NetBuffer {
 							b.Put(820518.75f);
 							b.SkipBytes(8);
 							b.Put(6.8969621286228941E+169d);
-						} else {
+						}
+						else {
 							b.Put((ushort) 0x4756);
 							b.Put((byte) 0x11);
 							b.Put((byte) 0x70);
@@ -70,6 +71,71 @@ namespace STUN.Tests.NetBuffer {
 						Assert.AreEqual(e, b.endianness);
 
 						Assert.IsTrue(b.BufferEquals(b));
+					}
+				}
+			}
+		}
+
+		[Test]
+		public void TestVariableLength() {
+			// https://www.h-schmidt.net/FloatConverter/IEEE754.html
+
+			byte[] tmp = new byte[2000];
+			Endianness[] end = new Endianness[] { Endianness.Big, Endianness.Little };
+
+			for (int off = 0; off < 30; off++) {
+				for (int len = 200; len < 230; len++) {
+					foreach (var e in end) {
+						ByteBuffer b = new ByteBuffer(tmp, off, len);
+						b.endianness = e;
+
+						b.PutVariableLength(0);
+						b.PutVariableLength(1);
+						b.PutVariableLength(-1);
+						b.PutVariableLength((uint) 0x7f);
+						b.PutVariableLength((uint) 0x80);
+						b.PutVariableLength((uint) 0x81);
+						b.PutVariableLength((uint) 0xff);
+						b.PutVariableLength(0x7f);
+						b.PutVariableLength(0x80);
+						b.PutVariableLength(0xff);
+						b.PutVariableLength((uint) 0x7f);
+						b.PutVariableLength((uint) 0x7fff);
+						b.PutVariableLength((uint) 0xffff);
+						b.PutVariableLength((uint) 0xffffff);
+						b.PutVariableLength((uint) 0xffffffff);
+						b.PutVariableLength((ulong) 0xffffffffff);
+						b.PutVariableLength((ulong) 0xffffffffffff);
+						b.PutVariableLength((ulong) 0xffffffffffffff);
+						b.PutVariableLength((ulong) 0xffffffffffffffff);
+						b.PutVariableLength(0xffffffffff);
+						b.PutVariableLength(0xffffffffffff);
+
+
+						b.Position = 0;
+
+
+						Assert.AreEqual(0, b.GetIntVariableLength());
+						Assert.AreEqual(1, b.GetIntVariableLength());
+						Assert.AreEqual(-1, b.GetIntVariableLength());
+						Assert.AreEqual((uint) 0x7f, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0x80, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0x81, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0xff, b.GetUIntVariableLength());
+						Assert.AreEqual(0x7f, b.GetIntVariableLength());
+						Assert.AreEqual(0x80, b.GetIntVariableLength());
+						Assert.AreEqual(0xff, b.GetIntVariableLength());
+						Assert.AreEqual((uint) 0x7f, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0x7fff, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0xffff, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0xffffff, b.GetUIntVariableLength());
+						Assert.AreEqual((uint) 0xffffffff, b.GetUIntVariableLength());
+						Assert.AreEqual((ulong) 0xffffffffff, b.GetULongVariableLength());
+						Assert.AreEqual((ulong) 0xffffffffffff, b.GetULongVariableLength());
+						Assert.AreEqual((ulong) 0xffffffffffffff, b.GetULongVariableLength());
+						Assert.AreEqual((ulong) 0xffffffffffffffff, b.GetULongVariableLength());
+						Assert.AreEqual(0xffffffffff, b.GetLongVariableLength());
+						Assert.AreEqual(0xffffffffffff, b.GetLongVariableLength());
 					}
 				}
 			}
