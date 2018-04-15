@@ -30,7 +30,11 @@ namespace STUN.Message.Attributes {
 			}
 			this.port = port;
 		}
-		
+
+		public STUNAttr_MappedAddress(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
+
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			ushort length = (ushort) (4 + (family == AddressFamily.IPv4 ? AddressLength.IPv4 : AddressLength.IPv6));
 			STUNTypeLengthValue.WriteTypeLength(TYPE, length, ref buffer);
@@ -42,7 +46,8 @@ namespace STUN.Message.Attributes {
 
 			if (AddressFamily.IPv4 == family) {
 				ipv4.Write(ref buffer);
-			} else {
+			}
+			else {
 				ipv6.Write(ref buffer);
 			}
 
@@ -57,13 +62,23 @@ namespace STUN.Message.Attributes {
 
 			if (AddressFamily.IPv4 == family) {
 				ipv4.Read(ref buffer);
-			} else {
+			}
+			else {
 				ipv6.Read(ref buffer);
 			}
 		}
 
 		public bool isIPv4() {
 			return AddressFamily.IPv4 == family;
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			s.Append("Family: ").Append(family).Append("\n");
+			s.Append("IP: ").Append(isIPv4() ? ipv4.ToIPAddress().ToString() : ipv6.ToIPAddress().ToString()).Append("\n");
+			s.Append("Port: ").Append(port).Append("\n");
+			return s.ToString();
 		}
 	}
 }

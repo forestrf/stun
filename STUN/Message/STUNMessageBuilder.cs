@@ -34,7 +34,7 @@ namespace STUN.Message {
 		internal const int HEADER_LENGTH = 20;
 
 		private ByteBuffer buffer;
-		
+
 
 		public STUNMessageBuilder(byte[] buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) : this(new ByteBuffer(buffer), stunClass, stunMethod, transaction) { }
 
@@ -42,7 +42,8 @@ namespace STUN.Message {
 			if (!buffer.HasData() || buffer.Length < MINIMUM_BUFFER_SIZE) {
 				this.buffer = new ByteBuffer(new byte[MINIMUM_BUFFER_SIZE]);
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
-			} else {
+			}
+			else {
 				this.buffer = buffer;
 			}
 			this.buffer.absPosition = HEADER_LENGTH;
@@ -82,7 +83,7 @@ namespace STUN.Message {
 			buffer.PutAt(4 + 4 + 10, transaction.b1);
 			buffer.PutAt(4 + 4 + 11, transaction.b0);
 		}
-		
+
 		/// <summary>
 		/// Add a value to the STUN message.
 		/// </summary>
@@ -93,11 +94,11 @@ namespace STUN.Message {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
 			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
 		}
-		
+
 		public void WriteAttribute<T>(T attribute) where T : struct, ISTUNAttr {
 			attribute.WriteToBuffer(ref buffer);
 			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
-		} 
+		}
 
 		public static void UpdateHeaderAttributesLength(ref ByteBuffer buffer, int attributesLength) {
 			ushort length = (ushort) ((attributesLength - HEADER_LENGTH) & 0xFFFF);

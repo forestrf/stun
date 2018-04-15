@@ -66,7 +66,7 @@ namespace STUN.Message {
 
 		public byte this[int i] {
 			get {
-				switch(i) {
+				switch (i) {
 					case 0: return b11;
 					case 1: return b10;
 					case 2: return b9;

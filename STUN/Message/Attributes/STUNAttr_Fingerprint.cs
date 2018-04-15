@@ -7,8 +7,12 @@ namespace STUN.Message.Attributes {
 		public const STUNAttribute TYPE = STUNAttribute.FINGERPRINT;
 
 		private const int FINGERPRINT_XOR = 0x5354554e;
-		
+
 		public uint crc;
+
+		public STUNAttr_Fingerprint(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			int count = buffer.Position;
@@ -22,6 +26,13 @@ namespace STUN.Message.Attributes {
 		public void ReadFromBuffer(STUNAttr attr) {
 			var buffer = attr.data;
 			crc = buffer.GetUInt() ^ FINGERPRINT_XOR;
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			s.Append("crc: ").Append(crc).Append("\n");
+			return s.ToString();
 		}
 	}
 }

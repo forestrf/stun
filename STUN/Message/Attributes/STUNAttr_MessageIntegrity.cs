@@ -10,6 +10,10 @@ namespace STUN.Message.Attributes {
 
 		private HMAC_SHA1 hmacsha1Instance;
 
+		public STUNAttr_MessageIntegrity(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
+
 		public STUNAttr_MessageIntegrity(string key, ref HMAC_SHA1 hmacsha1Instance) {
 			if (null == hmacsha1Instance)
 				hmacsha1Instance = new HMAC_SHA1(Encoding.UTF8.GetBytes(key));
@@ -27,6 +31,12 @@ namespace STUN.Message.Attributes {
 
 		public void ReadFromBuffer(STUNAttr attr) {
 			throw new System.NotImplementedException();
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			return s.ToString();
 		}
 	}
 }

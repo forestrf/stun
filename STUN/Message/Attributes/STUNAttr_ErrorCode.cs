@@ -6,7 +6,7 @@ using System.Text;
 namespace STUN.Message.Attributes {
 	public struct STUNAttr_ErrorCode : ISTUNAttr {
 		public const STUNAttribute TYPE = STUNAttribute.ERROR_CODE;
-		
+
 		public ushort code;
 		public string reason;
 
@@ -15,10 +15,14 @@ namespace STUN.Message.Attributes {
 			this.reason = reason;
 		}
 
+		public STUNAttr_ErrorCode(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
+
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			ByteBuffer attrStart = buffer; // Make a copy that will retain the current position
 			STUNTypeLengthValue.WriteTypeLength(0, 0, ref buffer); // write temporal values
-			
+
 			int errorClass = code / 100;
 			int errorNumber = code % 100;
 
@@ -43,6 +47,14 @@ namespace STUN.Message.Attributes {
 			byte errorNumber = buffer.GetByte();
 			code = (ushort) (errorClass * 100 + errorNumber % 100);
 			reason = Encoding.UTF8.GetString(buffer.data, buffer.absPosition, buffer.Length - 4);
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			s.Append("Code: ").Append(code).Append("\n");
+			s.Append("Reason: ").Append(reason).Append("\n");
+			return s.ToString();
 		}
 	}
 }

@@ -16,12 +16,12 @@ namespace STUN {
 			Console.WriteLine(message);
 			System.Diagnostics.Debug.WriteLine(message);
 		}
-		
+
 		public void Debug(string message) {
 			Console.WriteLine(message);
 			System.Diagnostics.Debug.WriteLine(message);
 		}
-		
+
 		public void Trace(string message) {
 			Console.WriteLine(message);
 			System.Diagnostics.Debug.WriteLine(message);

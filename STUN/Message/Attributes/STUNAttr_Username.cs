@@ -18,6 +18,10 @@ namespace STUN.Message.Attributes {
 			usernameInBuffer = value;
 		}
 
+		public STUNAttr_Username(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
+
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			ByteBuffer attrStart = buffer; // Make a copy that will retain the current position
 			STUNTypeLengthValue.WriteTypeLength(0, 0, ref buffer); // write temporal values
@@ -26,7 +30,8 @@ namespace STUN.Message.Attributes {
 			if (null != usernameInBuffer.data) {
 				length = usernameInBuffer.Length;
 				buffer.Put(usernameInBuffer);
-			} else if (null != usernameInString) {
+			}
+			else if (null != usernameInString) {
 				length = Encoding.UTF8.GetBytes(usernameInString, 0, usernameInString.Length, buffer.data, buffer.absPosition);
 			}
 			if (length <= 512) {
@@ -34,12 +39,19 @@ namespace STUN.Message.Attributes {
 			}
 
 			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) length, ref attrStart); // Write definitive values
-			
+
 			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {
 			usernameInString = Encoding.UTF8.GetString(attr.data.data, attr.data.absPosition, Math.Min(512, attr.data.Length));
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			s.Append("Username: ").Append(usernameInString).Append("\n");
+			return s.ToString();
 		}
 	}
 }

@@ -11,6 +11,10 @@ namespace STUN.Message.Attributes {
 			this.priority = priority;
 		}
 
+		public STUNAttr_Priority(STUNAttr attr) : this() {
+			ReadFromBuffer(attr);
+		}
+
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, 4, ref buffer);
 			buffer.Put(priority);
@@ -20,6 +24,13 @@ namespace STUN.Message.Attributes {
 		public void ReadFromBuffer(STUNAttr attr) {
 			var buffer = attr.data;
 			priority = buffer.GetUInt();
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append(TYPE).Append("\n");
+			s.Append("Priority: ").Append(priority).Append("\n");
+			return s.ToString();
 		}
 	}
 }

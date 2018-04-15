@@ -49,7 +49,7 @@ namespace STUN.Message {
 
 			transaction = new Transaction(new ByteBuffer(buffer.data, buffer.absPosition));
 			buffer.Position += transaction.Length;
-			
+
 			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
 				return;
 			}
@@ -77,6 +77,46 @@ namespace STUN.Message {
 
 		public ByteBuffer GetHeader() {
 			return new ByteBuffer(buffer.data, buffer.absOffset, STUNMessageBuilder.HEADER_LENGTH);
+		}
+
+		/// <summary>
+		/// Get a Human Readable description of the STUN message
+		/// </summary>
+		public override string ToString() {
+			System.Text.StringBuilder s = new System.Text.StringBuilder();
+
+			/*
+			public readonly STUNClass stunClass;
+			public readonly STUNMethod stunMethod;
+			public readonly Transaction transaction;
+			*/
+			s.Append("Length: ").Append(length).Append("\n");
+			s.Append("Class: ").Append(stunClass).Append("\n");
+			s.Append("Method: ").Append(stunMethod).Append("\n");
+			s.Append("Transaction: ").Append(transaction).Append("\n");
+
+			List<STUNAttr> attrs = new List<STUNAttr>();
+			FillAttributesArray(attrs);
+
+			s.Append("Attributes (Count: ").Append(attrs.Count).Append("):\n\n");
+			foreach (var attr in attrs) {
+				ISTUNAttr parsed = new STUNAttr();
+				switch (attr.type) {
+					case STUNAttribute.ERROR_CODE: parsed = new STUNAttr_ErrorCode(); break;
+					case STUNAttribute.FINGERPRINT: parsed = new STUNAttr_Fingerprint(); break;
+					case STUNAttribute.MAPPED_ADDRESS: parsed = new STUNAttr_MappedAddress(); break;
+					case STUNAttribute.MESSAGE_INTEGRITY: parsed = new STUNAttr_MessageIntegrity(); break;
+					case STUNAttribute.PRIORITY: parsed = new STUNAttr_Priority(); break;
+					case STUNAttribute.SOFTWARE: parsed = new STUNAttr_Software(); break;
+					case STUNAttribute.USE_CANDIDATE: parsed = new STUNAttr_UseCandidate(); break;
+					case STUNAttribute.USERNAME: parsed = new STUNAttr_Username(); break;
+					case STUNAttribute.XOR_MAPPED_ADDRESS: parsed = new STUNAttr_XORMappedAddress(); break;
+				}
+				parsed.ReadFromBuffer(attr);
+				s.Append(parsed.ToString()).Append("\n");
+			}
+
+			return s.ToString();
 		}
 	}
 }

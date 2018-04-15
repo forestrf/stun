@@ -64,7 +64,8 @@ namespace STUN.NetBuffer {
 					buffer[offset + 2] = b5;
 					buffer[offset + 1] = b6;
 					buffer[offset] = b7;
-				} else {
+				}
+				else {
 					buffer[offset] = b0;
 					buffer[offset + 1] = b1;
 					buffer[offset + 2] = b2;
@@ -85,7 +86,8 @@ namespace STUN.NetBuffer {
 					b5 = buffer[offset + 2];
 					b6 = buffer[offset + 1];
 					b7 = buffer[offset];
-				} else {
+				}
+				else {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 					b2 = buffer[offset + 2];
@@ -138,7 +140,8 @@ namespace STUN.NetBuffer {
 					buffer[offset + 2] = b5;
 					buffer[offset + 1] = b6;
 					buffer[offset] = b7;
-				} else {
+				}
+				else {
 					buffer[offset] = b0;
 					buffer[offset + 1] = b1;
 					buffer[offset + 2] = b2;
@@ -159,7 +162,8 @@ namespace STUN.NetBuffer {
 					b5 = buffer[offset + 2];
 					b6 = buffer[offset + 1];
 					b7 = buffer[offset];
-				} else {
+				}
+				else {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 					b2 = buffer[offset + 2];
@@ -201,7 +205,8 @@ namespace STUN.NetBuffer {
 					buffer[offset + 2] = b1;
 					buffer[offset + 1] = b2;
 					buffer[offset] = b3;
-				} else {
+				}
+				else {
 					buffer[offset] = b0;
 					buffer[offset + 1] = b1;
 					buffer[offset + 2] = b2;
@@ -214,7 +219,8 @@ namespace STUN.NetBuffer {
 					b1 = buffer[offset + 2];
 					b2 = buffer[offset + 1];
 					b3 = buffer[offset];
-				} else {
+				}
+				else {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 					b2 = buffer[offset + 2];
@@ -251,7 +257,8 @@ namespace STUN.NetBuffer {
 					buffer[offset + 2] = b1;
 					buffer[offset + 1] = b2;
 					buffer[offset] = b3;
-				} else {
+				}
+				else {
 					buffer[offset] = b0;
 					buffer[offset + 1] = b1;
 					buffer[offset + 2] = b2;
@@ -264,7 +271,8 @@ namespace STUN.NetBuffer {
 					b1 = buffer[offset + 2];
 					b2 = buffer[offset + 1];
 					b3 = buffer[offset];
-				} else {
+				}
+				else {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 					b2 = buffer[offset + 2];
@@ -296,7 +304,8 @@ namespace STUN.NetBuffer {
 				if (WantReversedEndian(endianness)) {
 					buffer[offset + 1] = b0;
 					buffer[offset] = b1;
-				} else {
+				}
+				else {
 					buffer[offset] = b0;
 					buffer[offset + 1] = b1;
 				}
@@ -305,7 +314,8 @@ namespace STUN.NetBuffer {
 				if (WantReversedEndian(endianness)) {
 					b0 = buffer[offset + 1];
 					b1 = buffer[offset];
-				} else {
+				}
+				else {
 					b0 = buffer[offset];
 					b1 = buffer[offset + 1];
 				}

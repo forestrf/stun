@@ -19,12 +19,12 @@ namespace STUN.Message.Attributes {
 			if (data.HasData()) buffer.Put(data);
 			STUNTypeLengthValue.AddPadding(ref buffer);
 		}
-		
+
 		public void ReadFromBuffer(STUNAttr attr) {
 			// Not intended to be used this way
 			throw new System.NotImplementedException();
 		}
-		
+
 		private static int AttributeIndexOf(IList<STUNAttr> attributes, STUNAttribute type) {
 			for (int i = 0; i < attributes.Count; i++) {
 				if (type == attributes[i].type) {
