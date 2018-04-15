@@ -15,10 +15,6 @@ namespace STUN.Message {
 		public readonly bool isValid;
 		public ByteBuffer buffer;
 
-		public static bool IsSTUN(byte[] buffer, int startPosition) {
-			return 0 == (0xFE & buffer[startPosition]);
-		}
-
 		/// <summary>
 		/// Create a parser from the input stream.
 		/// </summary>
@@ -85,22 +81,17 @@ namespace STUN.Message {
 		public override string ToString() {
 			System.Text.StringBuilder s = new System.Text.StringBuilder();
 
-			/*
-			public readonly STUNClass stunClass;
-			public readonly STUNMethod stunMethod;
-			public readonly Transaction transaction;
-			*/
 			s.Append("Length: ").Append(length).Append("\n");
 			s.Append("Class: ").Append(stunClass).Append("\n");
 			s.Append("Method: ").Append(stunMethod).Append("\n");
-			s.Append("Transaction: ").Append(transaction).Append("\n");
+			s.Append("Transaction: ").Append(transaction.ToString()).Append("\n");
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			FillAttributesArray(attrs);
 
 			s.Append("Attributes (Count: ").Append(attrs.Count).Append("):\n\n");
 			foreach (var attr in attrs) {
-				ISTUNAttr parsed = new STUNAttr();
+				ISTUNAttr parsed = null;
 				switch (attr.type) {
 					case STUNAttribute.ERROR_CODE: parsed = new STUNAttr_ErrorCode(); break;
 					case STUNAttribute.FINGERPRINT: parsed = new STUNAttr_Fingerprint(); break;
@@ -111,8 +102,10 @@ namespace STUN.Message {
 					case STUNAttribute.USE_CANDIDATE: parsed = new STUNAttr_UseCandidate(); break;
 					case STUNAttribute.USERNAME: parsed = new STUNAttr_Username(); break;
 					case STUNAttribute.XOR_MAPPED_ADDRESS: parsed = new STUNAttr_XORMappedAddress(); break;
+					default: parsed = attr; break;
 				}
 				parsed.ReadFromBuffer(attr);
+
 				s.Append(parsed.ToString()).Append("\n");
 			}
 

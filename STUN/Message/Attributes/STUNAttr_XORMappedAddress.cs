@@ -92,7 +92,7 @@ namespace STUN.Message.Attributes {
 
 		public override string ToString() {
 			var s = new System.Text.StringBuilder();
-			s.Append(TYPE).Append("\n");
+			s.Append("TYPE=").Append(TYPE).Append("\n");
 			s.Append("Family: ").Append(family).Append("\n");
 			s.Append("IP: ").Append(isIPv4() ? ipv4.ToIPAddress().ToString() : ipv6.ToIPAddress().ToString()).Append("\n");
 			s.Append("Port: ").Append(port).Append("\n");

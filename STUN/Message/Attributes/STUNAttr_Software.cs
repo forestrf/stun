@@ -35,7 +35,7 @@ namespace STUN.Message.Attributes {
 
 		public override string ToString() {
 			var s = new System.Text.StringBuilder();
-			s.Append(TYPE).Append("\n");
+			s.Append("TYPE=").Append(TYPE).Append("\n");
 			s.Append("Software: ").Append(software).Append("\n");
 			return s.ToString();
 		}

@@ -22,7 +22,7 @@ namespace STUN.Message.Attributes {
 
 		public void ReadFromBuffer(STUNAttr attr) {
 			// Not intended to be used this way
-			throw new System.NotImplementedException();
+			this = attr;
 		}
 
 		private static int AttributeIndexOf(IList<STUNAttr> attributes, STUNAttribute type) {
@@ -32,6 +32,19 @@ namespace STUN.Message.Attributes {
 				}
 			}
 			return -1;
+		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			s.Append("TYPE=").Append(type).Append("\n");
+
+			for (int i = 0; i < data.Length; i++) {
+				s.Append(data[i].ToString("X2"));
+				if (i < data.Length - 1) s.Append(":");
+			}
+			s.Append("\n");
+
+			return s.ToString();
 		}
 	}
 }

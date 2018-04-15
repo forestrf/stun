@@ -129,5 +129,14 @@ namespace STUN.Message {
 			b10 = buffer[offset + 1];
 			b11 = buffer[offset];
 		}
+
+		public override string ToString() {
+			var s = new System.Text.StringBuilder();
+			for (int i = 0; i < 12; i++) {
+				s.Append(this[i].ToString("X2"));
+				if (i < 11) s.Append(":");
+			}
+			return s.ToString();
+		}
 	}
 }
