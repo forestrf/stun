@@ -32,16 +32,16 @@ namespace STUN.Message {
 	public class STUNHeaderTest {
 		[Test]
 		public void groupExtracionFromMessageType() {
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(0b0000_0001_0001_0000));
-			Assert.AreEqual(STUNClass.Indication, STUNHeader.Class(0b0000_0000_0001_0000));
-			Assert.AreEqual(STUNClass.Success, STUNHeader.Class(0b0000_0001_0000_0000));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.GetClass(0b0000_0001_0001_0000));
+			Assert.AreEqual(STUNClass.Indication, STUNHeader.GetClass(0b0000_0000_0001_0000));
+			Assert.AreEqual(STUNClass.Success, STUNHeader.GetClass(0b0000_0001_0000_0000));
 		}
 
 		[Test]
 		public void methodExtractionFromMessageType() {
-			Assert.AreEqual((STUNMethod) 0b1111_1110_1110_1111, STUNHeader.Method(0b1111_1111_1111_1111));
-			Assert.AreEqual((STUNMethod) 0b1111_1110_1110_1111, STUNHeader.Method(0b1111_1110_1110_1111));
-			Assert.AreEqual((STUNMethod) 0b1010_1010_0100_1010, STUNHeader.Method(0b1010_1011_0101_1010));
+			Assert.AreEqual((STUNMethod) 0b1111_1110_1110_1111, STUNHeader.GetMethod(0b1111_1111_1111_1111));
+			Assert.AreEqual((STUNMethod) 0b1111_1110_1110_1111, STUNHeader.GetMethod(0b1111_1110_1110_1111));
+			Assert.AreEqual((STUNMethod) 0b1010_1010_0100_1010, STUNHeader.GetMethod(0b1010_1011_0101_1010));
 		}
 
 		[Test]

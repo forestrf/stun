@@ -30,7 +30,8 @@ namespace STUN.Message.Attributes {
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {
-			throw new System.NotImplementedException();
+			// TO DO
+			Logger.Warn("ReadFromBuffer is not implemented in STUNAttr_MessageIntegrity");
 		}
 
 		public override string ToString() {

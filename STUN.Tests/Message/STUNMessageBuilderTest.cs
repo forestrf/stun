@@ -55,9 +55,9 @@ namespace STUN.Message {
 			// check length without header
 			Assert.AreEqual(message.Length - 20, new ByteBuffer(message).GetUShortAt(2));
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(new ByteBuffer(message).GetUShortAt(0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.GetClass(new ByteBuffer(message).GetUShortAt(0)));
 			// check method
-			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(message).GetUShortAt(0)));
+			Assert.AreEqual(STUNMethod.Binding, STUNHeader.GetMethod(new ByteBuffer(message).GetUShortAt(0)));
 			// check magic cookie
 			Assert.AreEqual(STUNHeader.MAGIC_COOKIE, magicCookie);
 			// check transaction
@@ -104,9 +104,9 @@ namespace STUN.Message {
 			Assert.AreEqual(20, header.Length);
 
 			// check group
-			Assert.AreEqual(STUNClass.Error, STUNHeader.Class(new ByteBuffer(header).GetUShortAt(0)));
+			Assert.AreEqual(STUNClass.Error, STUNHeader.GetClass(new ByteBuffer(header).GetUShortAt(0)));
 			// check method
-			Assert.AreEqual(STUNMethod.Binding, STUNHeader.Method(new ByteBuffer(header).GetUShortAt(0)));
+			Assert.AreEqual(STUNMethod.Binding, STUNHeader.GetMethod(new ByteBuffer(header).GetUShortAt(0)));
 			// check tlv length
 			Assert.AreEqual(20 + 4, new ByteBuffer(header).GetUShortAt(2));
 			// check magic cookie

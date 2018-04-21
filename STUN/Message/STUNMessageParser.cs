@@ -75,6 +75,15 @@ namespace STUN.Message {
 			return new ByteBuffer(buffer.data, buffer.absOffset, STUNMessageBuilder.HEADER_LENGTH);
 		}
 
+		public static int AttributeIndexOf(List<STUNAttr> attrs, STUNAttribute type, int startIndex = 0) {
+			for (int i = startIndex; i < attrs.Count; i++) {
+				if (type == attrs[i].type) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
 		/// <summary>
 		/// Get a Human Readable description of the STUN message
 		/// </summary>

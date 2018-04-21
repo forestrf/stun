@@ -72,6 +72,10 @@ namespace STUN.Message.Attributes {
 			return AddressFamily.IPv4 == family;
 		}
 
+		public IPEndPoint ToIPEndPoint() {
+			return new IPEndPoint(isIPv4() ? ipv4.ToIPAddress() : ipv6.ToIPAddress(), port);
+		}
+
 		public override string ToString() {
 			var s = new System.Text.StringBuilder();
 			s.Append("TYPE=").Append(TYPE).Append("\n");

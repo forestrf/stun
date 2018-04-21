@@ -128,5 +128,9 @@ namespace STUN.Message {
 				WriteAttribute(new STUNAttr_Fingerprint());
 			return buffer.GetCropToCurrentPosition();
 		}
+
+		public override string ToString() {
+			return new STUNMessageParser(buffer.GetCropToCurrentPosition(), new System.Collections.Generic.List<STUNAttr>()).ToString();
+		}
 	}
 }
