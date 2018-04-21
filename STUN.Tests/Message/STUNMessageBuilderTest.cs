@@ -126,8 +126,6 @@ namespace STUN.Message {
 				0x6E, 0x7F, 0x1E, 0xFF, 0x00, 0x25, 0x00, 0x00, 0x00, 0x08, 0x00, 0x14, 0xF5, 0xC6, 0x0F, 0x17,
 				0xF5, 0xBB, 0xC0, 0x2D, 0xA6, 0xDE, 0x64, 0x4B, 0x36, 0xF8, 0xB6, 0xBE, 0x79, 0xA0, 0xA6, 0x16
 			};
-			
-			HMAC_SHA1 hmacGenerator = null;
 
 			// Test using an offseted ByteBuffer
 			var msg = new STUNMessageBuilder(new ByteBuffer(new byte[1024], 30, 700),
@@ -136,7 +134,7 @@ namespace STUN.Message {
 			msg.WriteAttribute(new STUNAttr_Username("a:b"));
 			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
 			msg.WriteAttribute(new STUNAttr_UseCandidate());
-			var stunReq = msg.Build("pass", false, ref hmacGenerator);
+			var stunReq = msg.Build("pass", false);
 			
 
 			CollectionAssert.AreEqual(reference, stunReq.ToArray());

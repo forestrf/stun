@@ -59,7 +59,7 @@ namespace STUN.Crypto {
 		}
 
 
-		public static void computeHMAC_SHA1(byte[] secret, ByteBuffer data, ByteBuffer output) {
+		public static void computeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
@@ -73,14 +73,18 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="data">Password</param>
 		/// <returns>20 byte HMAC_SHA1</returns>
-		public static void computeHMAC_SHA1(byte[] secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			if (null == bi || bi.Length != 64 + data.Length) bi = new byte[64 + data.Length];
+
+			int wantedBiLength = 64 + data.Length;
+			if (null == bi || bi.Length < wantedBiLength) bi = new byte[wantedBiLength];
+			else Array.Clear(bi, secret.Length, bi.Length - secret.Length);
 			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 20];
+			else Array.Clear(bo, secret.Length, bo.Length - secret.Length);
 
 			// Copy secret to both arrays
-			Array.Copy(secret, bi, secret.Length);
-			Array.Copy(secret, bo, secret.Length);
+			Array.Copy(secret.data, secret.absPosition, bi, 0, secret.Length);
+			Array.Copy(secret.data, secret.absPosition, bo, 0, secret.Length);
 
 			for (int i = 0; i < 64; i++) {
 				bi[i] = (byte) (bi[i] ^ 0x36);
@@ -91,15 +95,15 @@ namespace STUN.Crypto {
 			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA1(bi) to bo
-			computeSHA1(bi, output.data, output.absOffset, ref processed, ref wordblock);
+			computeSHA1(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
 			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA1(bo)
-			computeSHA1(bo, output.data, output.absOffset, ref processed, ref wordblock);
+			computeSHA1(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 
-		public static void computeHMAC_SHA256(byte[] secret, ByteBuffer data, ByteBuffer output) {
+		public static void computeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
@@ -113,14 +117,17 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>32 byte HMAC_SHA256</returns>
-		public static void computeHMAC_SHA256(byte[] secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
-			if (null == bi || bi.Length != 64 + data.Length) bi = new byte[64 + data.Length];
+			int wantedBiLength = 64 + data.Length;
+			if (null == bi || bi.Length < wantedBiLength) bi = new byte[wantedBiLength];
+			else Array.Clear(bi, secret.Length, bi.Length - secret.Length);
 			if (null == bo || bo.Length != 64 + 20) bo = new byte[64 + 32];
+			else Array.Clear(bo, secret.Length, bo.Length - secret.Length);
 
 			// Copy secret to both arrays
-			Array.Copy(secret, bi, secret.Length);
-			Array.Copy(secret, bo, secret.Length);
+			Array.Copy(secret.data, secret.absPosition, bi, 0, secret.Length);
+			Array.Copy(secret.data, secret.absPosition, bo, 0, secret.Length);
 
 			for (int i = 0; i < 64; i++) {
 				bi[i] = (byte) (bi[i] ^ 0x36);
@@ -131,11 +138,11 @@ namespace STUN.Crypto {
 			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA256(bi) to bo
-			computeSHA256(bi, output.data, output.absOffset, ref processed, ref wordblock);
+			computeSHA256(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
 			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA256(bo)
-			computeSHA256(bo, output.data, output.absOffset, ref processed, ref wordblock);
+			computeSHA256(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -143,7 +150,7 @@ namespace STUN.Crypto {
 		/// </summary>
 		/// <param name="input">Input byte array</param>
 		/// <returns>20 byte SHA1 of input</returns>
-		public static void computeSHA1(byte[] input, byte[] output20, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeSHA1(byte[] input, int inputLength, byte[] output20, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, i, temp;
 			uint h0 = 0x67452301;
@@ -154,7 +161,7 @@ namespace STUN.Crypto {
 			uint blockstart = 0;
 
 			// Calculate how long the padded message should be
-			int newinputlength = input.Length + 1;
+			int newinputlength = inputLength + 1;
 			while ((newinputlength % 64) != 56) // length mod 512bits = 448bits
 			{
 				newinputlength++;
@@ -165,15 +172,15 @@ namespace STUN.Crypto {
 			if (null == processed || processed.Length < processedLength)
 				processed = new byte[processedLength];
 			else
-				Array.Clear(processed, input.Length, processedLength - input.Length);
-			Array.Copy(input, processed, input.Length);
+				Array.Clear(processed, inputLength, processedLength - inputLength);
+			Array.Copy(input, processed, inputLength);
 
 			// Pad data with an 1
-			processed[input.Length] = 0x80;
+			processed[inputLength] = 0x80;
 
 			// Pad data with big endian 64bit length of message
 			// We do only 32 bits becouse input.length is 32 bit
-			bytes_from_big_endian((uint) input.Length * 8, ref processed, processedLength - 4);
+			bytes_from_big_endian((uint) inputLength * 8, ref processed, processedLength - 4);
 
 			// Block of 32 bits values used in calculations
 			if (null == wordblock || wordblock.Length < 80)
@@ -240,7 +247,7 @@ namespace STUN.Crypto {
 		/// Compute SHA-256 digest
 		/// </summary>
 		/// <param name="input">Input array</param>
-		public static void computeSHA256(byte[] input, byte[] output32, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
+		public static void computeSHA256(byte[] input, int inputLength, byte[] output32, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, f, g, h, i, s0, s1, t1, t2;
 			uint h0 = 0x6a09e667;
@@ -254,7 +261,7 @@ namespace STUN.Crypto {
 			uint blockstart = 0;
 
 			// Calculate how long the padded message should be
-			int newinputlength = input.Length + 1;
+			int newinputlength = inputLength + 1;
 			while ((newinputlength % 64) != 56) // length mod 512bits = 448bits
 			{
 				newinputlength++;
@@ -265,18 +272,18 @@ namespace STUN.Crypto {
 			if (null == processed || processed.Length < processedLength)
 				processed = new byte[processedLength];
 			else
-				Array.Clear(processed, input.Length, processedLength - input.Length);
-			Array.Copy(input, processed, input.Length);
+				Array.Clear(processed, inputLength, processedLength - inputLength);
+			Array.Copy(input, processed, inputLength);
 
 			// Pad data with an 1
-			processed[input.Length] = 0x80;
+			processed[inputLength] = 0x80;
 
 			// Pad data with big endian 64bit length of message
 			// We do only 32 bits becouse input.length is 32 bit
-			processed[processedLength - 4] = (byte) (((input.Length * 8) & 0xFF000000) >> 24);
-			processed[processedLength - 3] = (byte) (((input.Length * 8) & 0x00FF0000) >> 16);
-			processed[processedLength - 2] = (byte) (((input.Length * 8) & 0x0000FF00) >> 8);
-			processed[processedLength - 1] = (byte) (((input.Length * 8) & 0x000000FF));
+			processed[processedLength - 4] = (byte) (((inputLength * 8) & 0xFF000000) >> 24);
+			processed[processedLength - 3] = (byte) (((inputLength * 8) & 0x00FF0000) >> 16);
+			processed[processedLength - 2] = (byte) (((inputLength * 8) & 0x0000FF00) >> 8);
+			processed[processedLength - 1] = (byte) (((inputLength * 8) & 0x000000FF));
 
 			// Block of 32 bits values used in calculations
 			if (null == wordblock || wordblock.Length < 64)

@@ -122,8 +122,8 @@ namespace STUN.Message {
 		/// <summary>
 		/// Build a byte representation of the message.
 		/// </summary>
-		public ByteBuffer Build(string key, bool addFingerprint, ref HMAC_SHA1 hmacGenerator) {
-			WriteAttribute(new STUNAttr_MessageIntegrity(key, ref hmacGenerator));
+		public ByteBuffer Build(string key, bool addFingerprint) {
+			WriteAttribute(new STUNAttr_MessageIntegrity(key));
 			if (addFingerprint)
 				WriteAttribute(new STUNAttr_Fingerprint());
 			return buffer.GetCropToCurrentPosition();

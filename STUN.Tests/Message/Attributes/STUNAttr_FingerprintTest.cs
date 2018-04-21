@@ -15,15 +15,13 @@ namespace STUN.Message.Attributes {
 				0x80, 0x28, 0x00, 0x04, 0x1E, 0xC5, 0xAA, 0x8B
 			};
 			
-			HMAC_SHA1 hmacGenerator = null;
-			
 			var msg = new STUNMessageBuilder(new byte[1024],
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(120, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10));
 			msg.WriteAttribute(new STUNAttr_Username("a:b"));
 			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
 			msg.WriteAttribute(new STUNAttr_UseCandidate());
-			var stunReq = msg.Build("pass", true, ref hmacGenerator);
+			var stunReq = msg.Build("pass", true);
 			
 			CollectionAssert.AreEqual(reference, stunReq.ToArray());
 		}
