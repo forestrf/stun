@@ -19,8 +19,7 @@ namespace STUN.Message {
 		/// Create a parser from the input stream.
 		/// </summary>
 		/// <param name="inputStream">The input stream, must not be null</param>
-		public STUNMessageParser(ByteBuffer inputStream, List<STUNAttr> attrs) : this() {
-			if (null == attrs) return;
+		public STUNMessageParser(ByteBuffer inputStream, List<STUNAttr> attrs = null) : this() {
 			if (inputStream.Length < STUNMessageBuilder.HEADER_LENGTH) {
 				Logger.Error("The message is not long enough");
 				return;
@@ -50,7 +49,8 @@ namespace STUN.Message {
 				return;
 			}
 
-			FillAttributesArray(attrs);
+			if (null != attrs)
+				FillAttributesArray(attrs);
 
 			// check CRC if any, and fingerprint. TO DO
 

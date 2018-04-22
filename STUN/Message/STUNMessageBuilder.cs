@@ -30,11 +30,14 @@ namespace STUN.Message {
 	/// A message builder for well-formed STUN messages.
 	/// </summary>
 	public struct STUNMessageBuilder {
-		private static readonly int MINIMUM_BUFFER_SIZE = 1024;
+		private static readonly int MINIMUM_BUFFER_SIZE = 512;
 		internal const int HEADER_LENGTH = 20;
 
 		private ByteBuffer buffer;
 
+		public readonly STUNClass stunClass;
+		public readonly STUNMethod stunMethod;
+		public readonly Transaction transaction;
 
 		public STUNMessageBuilder(byte[] buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) : this(new ByteBuffer(buffer), stunClass, stunMethod, transaction) { }
 
@@ -46,7 +49,11 @@ namespace STUN.Message {
 			else {
 				this.buffer = buffer;
 			}
-			this.buffer.absPosition = HEADER_LENGTH;
+			this.buffer.Position = HEADER_LENGTH;
+
+			this.stunClass = stunClass;
+			this.stunMethod = stunMethod;
+			this.transaction = transaction;
 
 			SetMessageType(stunClass, stunMethod);
 			this.buffer.PutAt(4, STUNHeader.MAGIC_COOKIE);
@@ -126,11 +133,11 @@ namespace STUN.Message {
 			WriteAttribute(new STUNAttr_MessageIntegrity(key));
 			if (addFingerprint)
 				WriteAttribute(new STUNAttr_Fingerprint());
-			return buffer.GetCropToCurrentPosition();
+			return Build();
 		}
 
 		public override string ToString() {
-			return new STUNMessageParser(buffer.GetCropToCurrentPosition(), new System.Collections.Generic.List<STUNAttr>()).ToString();
+			return new STUNMessageParser(Build(), new System.Collections.Generic.List<STUNAttr>()).ToString();
 		}
 	}
 }
