@@ -32,20 +32,12 @@ namespace STUN.Crypto {
 
 		// Convert 4 bytes to big endian uint32
 		static uint big_endian_from_bytes(byte[] input, uint offset) {
-			uint r = 0;
-			r |= (((uint) input[offset]) << 24);
-			r |= (((uint) input[offset + 1]) << 16);
-			r |= (((uint) input[offset + 2]) << 8);
-			r |= (((uint) input[offset + 3]));
-			return r;
+			return (uint) new FastByte.Int().Read(input, (int) offset, Endianness.Big);
 		}
 
 		// Convert big endian uint32 to bytes
 		static void bytes_from_big_endian(uint input, ref byte[] output, int offset) {
-			output[offset] = (byte) ((input & 0xFF000000) >> 24);
-			output[offset + 1] = (byte) ((input & 0x00FF0000) >> 16);
-			output[offset + 2] = (byte) ((input & 0x0000FF00) >> 8);
-			output[offset + 3] = (byte) ((input & 0x000000FF));
+			new FastByte.Int((int) input).Write(output, offset, Endianness.Big);
 		}
 
 		// SHA-224/SHA-256 choice function
@@ -59,12 +51,12 @@ namespace STUN.Crypto {
 		}
 
 
-		public static void computeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
+		public static void ComputeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
 			uint[] wordblock = null;
-			computeHMAC_SHA1(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
+			ComputeHMAC_SHA1(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -73,7 +65,7 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="data">Password</param>
 		/// <returns>20 byte HMAC_SHA1</returns>
-		public static void computeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void ComputeHMAC_SHA1(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
 
 			int wantedBiLength = 64 + data.Length;
@@ -95,20 +87,20 @@ namespace STUN.Crypto {
 			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA1(bi) to bo
-			computeSHA1(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
+			ComputeSHA1(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
 			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA1(bo)
-			computeSHA1(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
+			ComputeSHA1(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 
-		public static void computeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
+		public static void ComputeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output) {
 			byte[] bi = null;
 			byte[] bo = null;
 			byte[] processed = null;
 			uint[] wordblock = null;
-			computeHMAC_SHA256(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
+			ComputeHMAC_SHA256(secret, data, output, ref bi, ref bo, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -117,7 +109,7 @@ namespace STUN.Crypto {
 		/// <param name="secret">Secret</param>
 		/// <param name="value">Password</param>
 		/// <returns>32 byte HMAC_SHA256</returns>
-		public static void computeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
+		public static void ComputeHMAC_SHA256(ByteBuffer secret, ByteBuffer data, ByteBuffer output, ref byte[] bi, ref byte[] bo, ref byte[] processed, ref uint[] wordblock) {
 			// Create two arrays, bi and bo
 			int wantedBiLength = 64 + data.Length;
 			if (null == bi || bi.Length < wantedBiLength) bi = new byte[wantedBiLength];
@@ -138,11 +130,11 @@ namespace STUN.Crypto {
 			Array.Copy(data.data, data.absOffset, bi, 64, data.Length);
 
 			// Append SHA256(bi) to bo
-			computeSHA256(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
+			ComputeSHA256(bi, wantedBiLength, output.data, output.absOffset, ref processed, ref wordblock);
 			Array.Copy(output.data, output.absOffset, bo, 64, 20);
 
 			// Return SHA256(bo)
-			computeSHA256(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
+			ComputeSHA256(bo, bo.Length, output.data, output.absOffset, ref processed, ref wordblock);
 		}
 
 		/// <summary>
@@ -150,7 +142,7 @@ namespace STUN.Crypto {
 		/// </summary>
 		/// <param name="input">Input byte array</param>
 		/// <returns>20 byte SHA1 of input</returns>
-		public static void computeSHA1(byte[] input, int inputLength, byte[] output20, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
+		public static void ComputeSHA1(byte[] input, int inputLength, byte[] output20, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, i, temp;
 			uint h0 = 0x67452301;
@@ -247,7 +239,7 @@ namespace STUN.Crypto {
 		/// Compute SHA-256 digest
 		/// </summary>
 		/// <param name="input">Input array</param>
-		public static void computeSHA256(byte[] input, int inputLength, byte[] output32, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
+		public static void ComputeSHA256(byte[] input, int inputLength, byte[] output32, int outputOffset, ref byte[] processed, ref uint[] wordblock) {
 			// Initialize working parameters
 			uint a, b, c, d, e, f, g, h, i, s0, s1, t1, t2;
 			uint h0 = 0x6a09e667;

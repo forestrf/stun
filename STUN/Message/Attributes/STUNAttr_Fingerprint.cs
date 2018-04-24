@@ -8,6 +8,8 @@ namespace STUN.Message.Attributes {
 
 		private const int FINGERPRINT_XOR = 0x5354554e;
 
+		private ByteBuffer copiedBuffer;
+
 		public uint crc;
 
 		public STUNAttr_Fingerprint(STUNAttr attr) : this() {
@@ -21,17 +23,28 @@ namespace STUN.Message.Attributes {
 			crc = Crc32.CRC32.Calculate(buffer.data, buffer.absOffset, count) ^ FINGERPRINT_XOR;
 			buffer.Put(crc);
 			STUNTypeLengthValue.AddPadding(ref buffer);
+
+			copiedBuffer = new ByteBuffer(buffer.data, buffer.absOffset, count);
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {
 			var buffer = attr.data;
 			crc = buffer.GetUInt() ^ FINGERPRINT_XOR;
+
+			copiedBuffer = attr.stunMessage;
+			copiedBuffer.Length -= 8;
+		}
+
+		public bool Check() {
+			var calculatedCrc = Crc32.CRC32.Calculate(copiedBuffer.data, copiedBuffer.absOffset, copiedBuffer.Length);
+			return crc == calculatedCrc;
 		}
 
 		public override string ToString() {
 			var s = new System.Text.StringBuilder();
 			s.Append("TYPE=").Append(TYPE).Append("\n");
 			s.Append("crc: ").Append(crc).Append("\n");
+			s.Append("Valid fingerprint: ").Append(Check()).Append("\n");
 			return s.ToString();
 		}
 	}

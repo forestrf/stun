@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using STUN.Crypto;
 using STUN.Message.Enums;
+using System.Collections.Generic;
 
 namespace STUN.Message.Attributes {
 	[TestFixture]
@@ -21,9 +22,22 @@ namespace STUN.Message.Attributes {
 			msg.WriteAttribute(new STUNAttr_Username("a:b"));
 			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
 			msg.WriteAttribute(new STUNAttr_UseCandidate());
-			var stunReq = msg.Build("pass", true);
-			
+			msg.WriteAttribute(new STUNAttr_MessageIntegrity("pass"));
+			msg.WriteAttribute(new STUNAttr_Fingerprint());
+			var stunReq = msg.Build();
+
 			CollectionAssert.AreEqual(reference, stunReq.ToArray());
+
+			var attrs = new List<STUNAttr>();
+			var parsed = new STUNMessageParser(stunReq, attrs);
+			int fingerprintIndex = STUNMessageParser.AttributeLastIndexOf(attrs, STUNAttribute.FINGERPRINT);
+			Assert.AreEqual(4, fingerprintIndex);
+			fingerprintIndex = STUNMessageParser.AttributeIndexOf(attrs, STUNAttribute.FINGERPRINT);
+			Assert.AreEqual(4, fingerprintIndex);
+			var fingerprint = new STUNAttr_Fingerprint(attrs[fingerprintIndex]);
+			Assert.IsTrue(fingerprint.Check());
+			stunReq[5]++;
+			Assert.IsFalse(fingerprint.Check());
 		}
 	}
 }

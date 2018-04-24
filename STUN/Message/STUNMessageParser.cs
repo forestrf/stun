@@ -52,8 +52,6 @@ namespace STUN.Message {
 			if (null != attrs)
 				FillAttributesArray(attrs);
 
-			// check CRC if any, and fingerprint. TO DO
-
 			isValid = true;
 		}
 
@@ -77,6 +75,15 @@ namespace STUN.Message {
 
 		public static int AttributeIndexOf(List<STUNAttr> attrs, STUNAttribute type, int startIndex = 0) {
 			for (int i = startIndex; i < attrs.Count; i++) {
+				if (type == attrs[i].type) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		public static int AttributeLastIndexOf(List<STUNAttr> attrs, STUNAttribute type, int startIndex = 0) {
+			for (int i = attrs.Count - 1 - startIndex; i >= 0; i--) {
 				if (type == attrs[i].type) {
 					return i;
 				}

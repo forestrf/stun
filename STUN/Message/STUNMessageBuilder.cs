@@ -126,15 +126,6 @@ namespace STUN.Message {
 		public ByteBuffer Build() {
 			return buffer.GetCropToCurrentPosition();
 		}
-		/// <summary>
-		/// Build a byte representation of the message.
-		/// </summary>
-		public ByteBuffer Build(string key, bool addFingerprint) {
-			WriteAttribute(new STUNAttr_MessageIntegrity(key));
-			if (addFingerprint)
-				WriteAttribute(new STUNAttr_Fingerprint());
-			return Build();
-		}
 
 		public override string ToString() {
 			return new STUNMessageParser(Build(), new System.Collections.Generic.List<STUNAttr>()).ToString();

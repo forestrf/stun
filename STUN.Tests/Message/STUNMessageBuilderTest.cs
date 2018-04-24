@@ -134,8 +134,8 @@ namespace STUN.Message {
 			msg.WriteAttribute(new STUNAttr_Username("a:b"));
 			msg.WriteAttribute(new STUNAttr_Priority(0x6e7f1eff));
 			msg.WriteAttribute(new STUNAttr_UseCandidate());
-			var stunReq = msg.Build("pass", false);
-			
+			msg.WriteAttribute(new STUNAttr_MessageIntegrity("pass"));
+			var stunReq = msg.Build();
 
 			CollectionAssert.AreEqual(reference, stunReq.ToArray());
 		}

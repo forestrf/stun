@@ -24,8 +24,9 @@ namespace STUN.Message.Attributes {
 			msg.WriteAttribute(new STUNAttr_Username(username));
 			msg.WriteAttribute(new STUNAttr_Priority(priority));
 			msg.WriteAttribute(new STUNAttr_UseCandidate());
-			var stunReq = msg.Build("pass", false);
-			
+			msg.WriteAttribute(new STUNAttr_MessageIntegrity("pass"));
+			var stunReq = msg.Build();
+
 			CollectionAssert.AreEqual(reference, stunReq.ToArray());
 
 			var attrs = new List<STUNAttr>();

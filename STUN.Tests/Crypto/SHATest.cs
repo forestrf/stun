@@ -21,7 +21,7 @@ namespace STUN.Crypto {
 
 			
 			for (int dataLength = 0; dataLength < bytes512.Length; dataLength++) {
-				SHA.computeSHA1(bytes512, dataLength, output, 0, ref tmp1, ref tmp2);
+				SHA.ComputeSHA1(bytes512, dataLength, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha1managed.ComputeHash(new ByteBuffer(bytes512, 0, dataLength).ToArray()), output);
 			}
 			
@@ -30,7 +30,7 @@ namespace STUN.Crypto {
 			var sha256managed = new SHA256Managed();
 
 			for (int dataLength = 0; dataLength < bytes512.Length; dataLength++) {
-				SHA.computeSHA256(bytes512, dataLength, output, 0, ref tmp1, ref tmp2);
+				SHA.ComputeSHA256(bytes512, dataLength, output, 0, ref tmp1, ref tmp2);
 				Assert.AreEqual(sha256managed.ComputeHash(new ByteBuffer(bytes512, 0, dataLength).ToArray()), output);
 			}
 
