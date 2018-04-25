@@ -68,7 +68,7 @@ namespace STUN.Tests.NetBuffer {
 				Assert.AreEqual(n, new FastByte.Long().Read(GetLittleEndian(n), 0, Endianness.Little));
 			}
 		}
-		
+
 		[Test]
 		public void IntTest() {
 			Random r = new Random(0);

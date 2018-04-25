@@ -34,7 +34,7 @@ namespace STUN.Message {
 		public void typePosition() {
 			ByteBuffer result = new ByteBuffer(new byte[1024]);
 			STUNTypeLengthValue.Value(257, new byte[] { }, ref result);
-			
+
 			Assert.AreEqual(1, result[0]);
 			Assert.AreEqual(1, result[1]);
 			Assert.AreEqual(0, result[2]);

@@ -129,7 +129,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1), attrs);
-			
+
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
@@ -145,7 +145,7 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1), attrs);
-			
+
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
 		}
@@ -161,9 +161,35 @@ namespace STUN.Message {
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1), attrs);
-			
+
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
+		}
+
+		[Test]
+		public void wrongLengthOfAttributes() {
+			byte[] reference = new byte[] {
+				0x00, 0x01, 0x00, 0x2C, 0x21, 0x12, 0xA4, 0x42, 0x0A, 0x14, 0x1E, 0x28, 0x32, 0x3C, 0x46, 0x50,
+				0x5A, 0x64, 0x6E, 0x78, 0x00, 0x06, 0x00, 0x03, 0x61, 0x3A, 0x62, 0x00, 0x00, 0x24, 0x00, 0x04,
+				0x6E, 0x7F, 0x1E, 0xFF, 0x00, 0x25, 0x00, 0x00, 0x00, 0x08, 0x00, 0x14, 0xF5, 0xC6, 0x0F, 0x17,
+				0xF5, 0xBB, 0xC0, 0x2D, 0xA6, 0xDE, 0x64, 0x4B, 0x36, 0xF8, 0xB6, 0xBE, 0x79, 0xA0, 0xA6, 0x16
+			};
+
+			STUNMessageParser parsed;
+
+			Assert.IsTrue(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+
+			// Length too long
+			reference[3] = 0x3c;
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+
+			// Length too short
+			reference[3] = 0x04;
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+
+			// Length not % 4
+			reference[3] = 0x2d;
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
 		}
 	}
 }

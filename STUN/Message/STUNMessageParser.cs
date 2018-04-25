@@ -31,8 +31,8 @@ namespace STUN.Message {
 			stunMethod = (STUNMethod) (STUNMethodConst.Mask & messageType);
 
 			length = buffer.GetUShort();
-			if (0 != length % 4) {
-				Logger.Warn("STUN header reports a length that is not a multiple of 4");
+			if (0 != length % 4 || STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
+				Logger.Error("STUN header reports a wrong length");
 				return;
 			}
 
@@ -45,10 +45,6 @@ namespace STUN.Message {
 			transaction = new Transaction(new ByteBuffer(buffer.data, buffer.absPosition));
 			buffer.Position += transaction.Length;
 
-			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
-				return;
-			}
-
 			if (null != attrs)
 				FillAttributesArray(attrs);
 
@@ -57,14 +53,13 @@ namespace STUN.Message {
 
 		public void FillAttributesArray(List<STUNAttr> attributes) {
 			attributes.Clear();
-			buffer.Rewind();
-			buffer.SkipBytes(STUNMessageBuilder.HEADER_LENGTH);
+			buffer.Position = STUNMessageBuilder.HEADER_LENGTH;
 			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
-				STUNAttribute type;
-				ushort length;
-				STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out length);
-				STUNAttr attr = new STUNAttr(type, new ByteBuffer(buffer.data, buffer.absPosition, length), new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length));
-				buffer.Position += length;
+				STUNAttribute attrType;
+				ushort attrLength;
+				STUNTypeLengthValue.ReadTypeLength(ref buffer, out attrType, out attrLength);
+				STUNAttr attr = new STUNAttr(attrType, new ByteBuffer(buffer.data, buffer.absPosition, attrLength), new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length));
+				buffer.Position += attrLength;
 				STUNTypeLengthValue.AddPadding(ref buffer);
 				attributes.Add(attr);
 			}
