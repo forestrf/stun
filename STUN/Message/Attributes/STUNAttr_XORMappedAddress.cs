@@ -13,6 +13,8 @@ namespace STUN.Message.Attributes {
 		public IPv6Holder ipv6;
 		private AddressFamily family;
 
+		public STUNAttr_XORMappedAddress(IPEndPoint endPoint) : this(endPoint.Address, (ushort) endPoint.Port) { }
+
 		public STUNAttr_XORMappedAddress(IPAddress address, ushort port) {
 			switch (address.AddressFamily) {
 				case System.Net.Sockets.AddressFamily.InterNetwork:

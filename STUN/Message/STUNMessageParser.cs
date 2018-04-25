@@ -56,6 +56,7 @@ namespace STUN.Message {
 		}
 
 		public void FillAttributesArray(List<STUNAttr> attributes) {
+			attributes.Clear();
 			buffer.Rewind();
 			buffer.SkipBytes(STUNMessageBuilder.HEADER_LENGTH);
 			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
@@ -89,6 +90,15 @@ namespace STUN.Message {
 				}
 			}
 			return -1;
+		}
+
+		public static bool TryParse(ByteBuffer buffer, out STUNMessageParser parsed) {
+			if (0 == (0xFE & buffer[0])) {
+				parsed = new STUNMessageParser(buffer);
+				return parsed.isValid;
+			}
+			parsed = default(STUNMessageParser);
+			return false;
 		}
 
 		/// <summary>
