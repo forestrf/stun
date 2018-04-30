@@ -1,4 +1,4 @@
-using STUN.NetBuffer;
+using BBuffer;
 using System;
 
 namespace STUN.Message {

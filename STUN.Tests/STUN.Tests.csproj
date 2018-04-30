@@ -80,8 +80,6 @@
     <Compile Include="Message\STUNMessageBuilderTest.cs" />
     <Compile Include="Message\STUNMessageParserTest.cs" />
     <Compile Include="Message\STUNTypeLengthValueTest.cs" />
-    <Compile Include="NetBuffer\ByteBufferTest.cs" />
-    <Compile Include="NetBuffer\FastByteTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
@@ -93,6 +91,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BBuffer\BBuffer\BBuffer.csproj">
+      <Project>{11aa562b-3ab6-4cdd-a8a5-1ee4b95b03e6}</Project>
+      <Name>BBuffer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\stun\STUN.csproj">
       <Project>{e579594b-db1f-4ff5-95dd-3e25528e64c1}</Project>
       <Name>STUN</Name>

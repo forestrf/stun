@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
+using BBuffer;
 using NUnit.Framework;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 
 namespace STUN.Message {
 	/**

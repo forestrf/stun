@@ -20,10 +20,9 @@
  * SOFTWARE.
  */
 
-using STUN.Crypto;
+using BBuffer;
 using STUN.Message.Attributes;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 
 namespace STUN.Message {
 	/// <summary>

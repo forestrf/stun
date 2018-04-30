@@ -20,10 +20,10 @@
  * SOFTWARE.
  */
 
+using BBuffer;
 using NUnit.Framework;
 using STUN.Message.Attributes;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 using System;
 using System.Collections.Generic;
 

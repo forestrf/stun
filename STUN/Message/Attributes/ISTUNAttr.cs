@@ -1,4 +1,4 @@
-﻿using STUN.NetBuffer;
+﻿using BBuffer;
 
 namespace STUN.Message.Attributes {
 	public interface ISTUNAttr {

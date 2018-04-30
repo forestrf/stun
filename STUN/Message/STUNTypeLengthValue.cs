@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-using STUN.NetBuffer;
+using BBuffer;
 
 namespace STUN.Message {
 	/// <summary>

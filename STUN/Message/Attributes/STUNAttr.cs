@@ -1,5 +1,5 @@
+using BBuffer;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 using System.Collections.Generic;
 
 namespace STUN.Message.Attributes {

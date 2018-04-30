@@ -1,6 +1,6 @@
+using BBuffer;
 using STUN.Crypto;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 
 namespace STUN.Message.Attributes {
 	public struct STUNAttr_Fingerprint : ISTUNAttr {

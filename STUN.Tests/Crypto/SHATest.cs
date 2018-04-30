@@ -1,5 +1,5 @@
+using BBuffer;
 using NUnit.Framework;
-using STUN.NetBuffer;
 using System.Security.Cryptography;
 
 namespace STUN.Crypto {

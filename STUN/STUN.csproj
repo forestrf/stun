@@ -38,8 +38,6 @@
     <Compile Include="Message\Attributes\STUNAttr_IceControlling.cs" />
     <Compile Include="Message\Attributes\STUNAttr_IceControlled.cs" />
     <Compile Include="Utils\AddressFamily.cs" />
-    <Compile Include="NetBuffer\ByteBuffer.cs" />
-    <Compile Include="NetBuffer\FastByte.cs" />
     <Compile Include="Crypto\Crc32c.cs" />
     <Compile Include="Crypto\HMACSHA1.cs" />
     <Compile Include="Crypto\SHA.cs" />
@@ -68,6 +66,12 @@
     <Compile Include="Message\STUNTypeLengthValue.cs" />
     <Compile Include="Utils\IPv4Holder.cs" />
     <Compile Include="Utils\IPv6Holder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BBuffer\BBuffer\BBuffer.csproj">
+      <Project>{11aa562b-3ab6-4cdd-a8a5-1ee4b95b03e6}</Project>
+      <Name>BBuffer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

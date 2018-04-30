@@ -1,6 +1,6 @@
+using BBuffer;
 using STUN.Message.Attributes;
 using STUN.Message.Enums;
-using STUN.NetBuffer;
 using System.Collections.Generic;
 
 namespace STUN.Message {
