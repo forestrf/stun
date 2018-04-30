@@ -35,6 +35,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Message\Attributes\STUNAttr_IceControlling.cs" />
+    <Compile Include="Message\Attributes\STUNAttr_IceControlled.cs" />
     <Compile Include="Utils\AddressFamily.cs" />
     <Compile Include="NetBuffer\ByteBuffer.cs" />
     <Compile Include="NetBuffer\FastByte.cs" />

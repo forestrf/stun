@@ -121,6 +121,8 @@ namespace STUN.Message {
 					case STUNAttribute.PRIORITY: parsed = new STUNAttr_Priority(); break;
 					case STUNAttribute.SOFTWARE: parsed = new STUNAttr_Software(); break;
 					case STUNAttribute.USE_CANDIDATE: parsed = new STUNAttr_UseCandidate(); break;
+					case STUNAttribute.ICE_CONTROLLING: parsed = new STUNAttr_IceControlling(); break;
+					case STUNAttribute.ICE_CONTROLLED: parsed = new STUNAttr_IceControlled(); break;
 					case STUNAttribute.USERNAME: parsed = new STUNAttr_Username(); break;
 					case STUNAttribute.XOR_MAPPED_ADDRESS: parsed = new STUNAttr_XORMappedAddress(); break;
 					default: parsed = attr; break;
