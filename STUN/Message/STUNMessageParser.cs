@@ -55,13 +55,7 @@ namespace STUN.Message {
 			attributes.Clear();
 			buffer.Position = STUNMessageBuilder.HEADER_LENGTH;
 			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
-				STUNAttribute attrType;
-				ushort attrLength;
-				STUNTypeLengthValue.ReadTypeLength(ref buffer, out attrType, out attrLength);
-				STUNAttr attr = new STUNAttr(attrType, new ByteBuffer(buffer.data, buffer.absPosition, attrLength), new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length));
-				buffer.Position += attrLength;
-				STUNTypeLengthValue.AddPadding(ref buffer);
-				attributes.Add(attr);
+				attributes.Add(new STUNAttr(ref buffer));
 			}
 		}
 
