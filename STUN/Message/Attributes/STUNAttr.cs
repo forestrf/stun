@@ -19,13 +19,13 @@ namespace STUN.Message.Attributes {
 			data = new ByteBuffer(buffer.data, buffer.absPosition, attrLength);
 			stunMessage = new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length);
 			buffer.Position += attrLength;
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			STUNTypeLengthValue.WriteTypeLength(type, (ushort) data.Length, ref buffer);
 			if (data.HasData()) buffer.Put(data);
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {

@@ -22,7 +22,7 @@ namespace STUN.Message.Attributes {
 			STUNMessageBuilder.UpdateHeaderAttributesLength(ref buffer, buffer.Position + 4);
 			crc = Crc32.CRC32.Calculate(buffer.data, buffer.absOffset, count) ^ FINGERPRINT_XOR;
 			buffer.Put(crc);
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 
 			copiedBuffer = new ByteBuffer(buffer.data, buffer.absOffset, count);
 		}

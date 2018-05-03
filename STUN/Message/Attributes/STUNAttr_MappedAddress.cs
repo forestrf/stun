@@ -53,7 +53,7 @@ namespace STUN.Message.Attributes {
 				ipv6.Write(ref buffer);
 			}
 
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {

@@ -61,7 +61,7 @@ namespace STUN.Message.Attributes {
 			for (int i = 4; i < length; i++)
 				attr[i] = (byte) (attr[i] ^ buffer[i]);
 
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {

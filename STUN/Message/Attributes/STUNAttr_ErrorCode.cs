@@ -37,7 +37,7 @@ namespace STUN.Message.Attributes {
 
 			STUNTypeLengthValue.WriteTypeLength(TYPE, (ushort) (4 + length), ref attrStart); // Write definitive values
 
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {

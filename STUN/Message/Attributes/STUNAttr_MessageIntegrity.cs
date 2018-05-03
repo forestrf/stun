@@ -23,7 +23,7 @@ namespace STUN.Message.Attributes {
 			STUNMessageBuilder.UpdateHeaderAttributesLength(ref buffer, buffer.Position + HMAC_LENGTH);
 			HMAC_SHA1.ComputeHash(key, buffer.data, buffer.absOffset, count, buffer.data, buffer.absPosition);
 			buffer.Position += HMAC_LENGTH;
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {

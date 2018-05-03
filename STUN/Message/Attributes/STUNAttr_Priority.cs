@@ -18,7 +18,7 @@ namespace STUN.Message.Attributes {
 		public void WriteToBuffer(ref ByteBuffer buffer) {
 			STUNTypeLengthValue.WriteTypeLength(TYPE, 4, ref buffer);
 			buffer.Put(priority);
-			STUNTypeLengthValue.AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public void ReadFromBuffer(STUNAttr attr) {
