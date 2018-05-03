@@ -37,8 +37,7 @@ namespace STUN.Message {
 			buffer.Put((ushort) type);
 			buffer.Put((ushort) value.Length);
 			buffer.Put(value);
-
-			AddPadding(ref buffer);
+			buffer.Pad4();
 		}
 
 		public static void WriteTypeLength(Enums.STUNAttribute type, ushort length, ref ByteBuffer buffer) {
@@ -48,10 +47,6 @@ namespace STUN.Message {
 		public static void ReadTypeLength(ref ByteBuffer buffer, out Enums.STUNAttribute type, out ushort length) {
 			type = (Enums.STUNAttribute) buffer.GetUShort();
 			length = buffer.GetUShort();
-		}
-		public static void AddPadding(ref ByteBuffer buffer) {
-			int padding = (4 - (buffer.Position & 0x3)) & 0x3;
-			buffer.Position += padding;
 		}
 	}
 }
