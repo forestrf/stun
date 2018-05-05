@@ -6,16 +6,18 @@ namespace STUN.Message.Attributes {
 		public readonly STUNAttribute type;
 		public readonly ByteBuffer data;
 		public readonly ByteBuffer stunMessage;
+		public readonly bool isValid;
 
 		public STUNAttr(STUNAttribute type, ByteBuffer data, ByteBuffer stunMessage) {
 			this.type = type;
 			this.data = data;
 			this.stunMessage = stunMessage;
+			isValid = true;
 		}
 
 		public STUNAttr(ref ByteBuffer buffer) {
 			ushort attrLength;
-			STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out attrLength);
+			isValid = STUNTypeLengthValue.ReadTypeLength(ref buffer, out type, out attrLength);
 			data = new ByteBuffer(buffer.data, buffer.absPosition, attrLength);
 			stunMessage = new ByteBuffer(buffer.data, buffer.absOffset, buffer.Length);
 			buffer.Position += attrLength;
@@ -37,11 +39,15 @@ namespace STUN.Message.Attributes {
 			var s = new System.Text.StringBuilder();
 			s.Append("TYPE=").Append(type).Append("\n");
 
-			for (int i = 0; i < data.Length; i++) {
-				s.Append(data[i].ToString("X2"));
-				if (i < data.Length - 1) s.Append(":");
+			if (isValid) {
+				for (int i = 0; i < data.Length; i++) {
+					s.Append(data[i].ToString("X2"));
+					if (i < data.Length - 1) s.Append(":");
+				}
+				s.Append("\n");
+			} else {
+				s.Append("Invalid attribute (length too large)").Append("\n");
 			}
-			s.Append("\n");
 
 			return s.ToString();
 		}

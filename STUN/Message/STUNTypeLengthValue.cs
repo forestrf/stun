@@ -44,9 +44,10 @@ namespace STUN.Message {
 			buffer.Put((ushort) type);
 			buffer.Put(length);
 		}
-		public static void ReadTypeLength(ref ByteBuffer buffer, out Enums.STUNAttribute type, out ushort length) {
+		public static bool ReadTypeLength(ref ByteBuffer buffer, out Enums.STUNAttribute type, out ushort length) {
 			type = (Enums.STUNAttribute) buffer.GetUShort();
 			length = buffer.GetUShort();
+			return length <= buffer.Remaining();
 		}
 	}
 }

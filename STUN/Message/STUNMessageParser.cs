@@ -55,7 +55,12 @@ namespace STUN.Message {
 			attributes.Clear();
 			buffer.Position = STUNMessageBuilder.HEADER_LENGTH;
 			while (buffer.Position < STUNMessageBuilder.HEADER_LENGTH + length) {
-				attributes.Add(new STUNAttr(ref buffer));
+				var attr = new STUNAttr(ref buffer);
+				if (attr.isValid) {
+					attributes.Add(attr);
+				} else {
+					return;
+				}
 			}
 		}
 

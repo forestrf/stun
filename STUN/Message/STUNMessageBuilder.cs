@@ -123,7 +123,7 @@ namespace STUN.Message {
 		/// Build a byte representation of the message.
 		/// </summary>
 		public ByteBuffer Build() {
-			return buffer.GetCropToCurrentPosition();
+			return buffer.FromStartToPosition();
 		}
 
 		public override string ToString() {
