@@ -38,7 +38,7 @@
     <Compile Include="Message\Attributes\STUNAttr_IceControlling.cs" />
     <Compile Include="Message\Attributes\STUNAttr_IceControlled.cs" />
     <Compile Include="Utils\AddressFamily.cs" />
-    <Compile Include="Crypto\Crc32c.cs" />
+    <Compile Include="Crypto\Crc32.cs" />
     <Compile Include="Crypto\HMACSHA1.cs" />
     <Compile Include="Crypto\SHA.cs" />
     <Compile Include="Logger\ILogger.cs" />
