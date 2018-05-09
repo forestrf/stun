@@ -1,38 +1,40 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace STUN {
 	public static class Logger {
-		private const string KEYWORD = "STUN_";
 		public static ILogger logger = new InternalLogger();
 
-		[Conditional(KEYWORD + "TRACEVERBOSE"), Conditional(KEYWORD + "TRACE"), Conditional(KEYWORD + "DEBUG"), Conditional(KEYWORD + "INFO"), Conditional(KEYWORD + "WARN"), Conditional(KEYWORD + "ERROR")]
-		public static void Error(string message) {
-			if (logger != null) logger.Error(message);
+		private static object key = new object();
+
+		[Conditional("TRACEVERBOSE"), Conditional("TRACE"), Conditional("DEBUG"), Conditional("INFO"), Conditional("WARN"), Conditional("ERROR")]
+		public static void Error(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.Error(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 
-		[Conditional(KEYWORD + "TRACEVERBOSE"), Conditional(KEYWORD + "TRACE"), Conditional(KEYWORD + "DEBUG"), Conditional(KEYWORD + "INFO"), Conditional(KEYWORD + "WARN")]
-		public static void Warn(string message) {
-			if (logger != null) logger.Warn(message);
+		[Conditional("TRACEVERBOSE"), Conditional("TRACE"), Conditional("DEBUG"), Conditional("INFO"), Conditional("WARN")]
+		public static void Warn(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.Warn(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 
-		[Conditional(KEYWORD + "TRACEVERBOSE"), Conditional(KEYWORD + "TRACE"), Conditional(KEYWORD + "DEBUG"), Conditional(KEYWORD + "INFO")]
-		public static void Info(string message) {
-			if (logger != null) logger.Info(message);
+		[Conditional("TRACEVERBOSE"), Conditional("TRACE"), Conditional("DEBUG"), Conditional("INFO")]
+		public static void Info(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.Info(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 
-		[Conditional(KEYWORD + "TRACEVERBOSE"), Conditional(KEYWORD + "TRACE"), Conditional(KEYWORD + "DEBUG")]
-		public static void Debug(string message) {
-			if (logger != null) logger.Debug(message);
+		[Conditional("TRACEVERBOSE"), Conditional("TRACE"), Conditional("DEBUG")]
+		public static void Debug(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.Debug(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 
-		[Conditional(KEYWORD + "TRACEVERBOSE"), Conditional(KEYWORD + "TRACE")]
-		public static void Trace(string message) {
-			if (logger != null) logger.Trace(message);
+		[Conditional("TRACEVERBOSE"), Conditional("TRACE")]
+		public static void Trace(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.Trace(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 
-		[Conditional(KEYWORD + "TRACEVERBOSE")]
-		public static void TraceVerbose(string message) {
-			if (logger != null) logger.TraceVerbose(message);
+		[Conditional("TRACEVERBOSE")]
+		public static void TraceVerbose(string message, ConsoleColor FC = (ConsoleColor) (-1), ConsoleColor BC = (ConsoleColor) (-1)) {
+			if (logger != null) lock (key) logger.TraceVerbose(message, FC == (ConsoleColor) (-1) ? Console.ForegroundColor : FC, BC == (ConsoleColor) (-1) ? Console.BackgroundColor : BC);
 		}
 	}
 }
