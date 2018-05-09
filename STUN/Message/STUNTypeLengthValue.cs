@@ -33,7 +33,7 @@ namespace STUN.Message {
 		/// <param name="type">The type</param>
 		/// <param name="value">The value</param>
 		/// <returns>The TLV bytes, never null</returns>
-		public static void Value(int type, byte[] value, ref ByteBuffer buffer) {
+		public static void Value(ushort type, ByteBuffer value, ref ByteBuffer buffer) {
 			buffer.Put((ushort) type);
 			buffer.Put((ushort) value.Length);
 			buffer.Put(value);

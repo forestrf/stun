@@ -37,7 +37,7 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Error, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
-			builder.WriteAttribute(0b111, new byte[] { 255 });
+			builder.WriteAttribute(0b111, new ByteBuffer(new byte[] { 255 }));
 
 			byte[] message = builder.Build().ToArray();
 
@@ -87,7 +87,7 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Error, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.WriteAttribute(0xABABA, new byte[20]);
+			builder.WriteAttribute(0xBABA, new ByteBuffer(new byte[20]));
 
 			byte[] header = builder.GetHeader().ToArray();
 

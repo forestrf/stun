@@ -96,7 +96,7 @@ namespace STUN.Message {
 		/// <param name="type">The message type</param>
 		/// <param name="value">The message value</param>
 		/// <returns>This builder, never null</returns>
-		public void WriteAttribute(int type, byte[] value) {
+		public void WriteAttribute(ushort type, ByteBuffer value) {
 			STUNTypeLengthValue.Value(type, value, ref buffer);
 			UpdateHeaderAttributesLength(ref buffer, buffer.Position);
 		}

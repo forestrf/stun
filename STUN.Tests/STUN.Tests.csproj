@@ -82,6 +82,7 @@
     <Compile Include="Message\STUNTypeLengthValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="Utils\IPv6HolderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

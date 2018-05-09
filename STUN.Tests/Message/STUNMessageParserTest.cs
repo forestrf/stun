@@ -38,8 +38,8 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Error, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
-			builder.WriteAttribute(0b111, new byte[] { 255 });
-			builder.WriteAttribute(0b010, new byte[] { 0, 255, 0, 255 });
+			builder.WriteAttribute(0b111, new ByteBuffer(new byte[] { 255 }));
+			builder.WriteAttribute(0b010, new ByteBuffer(new byte[] { 0, 255, 0, 255 }));
 
 			byte[] message = builder.Build().ToArray();
 			// Add some offset to test it too
@@ -123,7 +123,7 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new ByteBuffer(new byte[] { 255, 255 }));
 
 			byte[] message = builder.Build().ToArray();
 
@@ -139,7 +139,7 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new ByteBuffer(new byte[] { 255, 255 }));
 
 			byte[] message = builder.Build().ToArray();
 
@@ -155,7 +155,7 @@ namespace STUN.Message {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
-			builder.WriteAttribute(0b11, new byte[] { 255, 255 });
+			builder.WriteAttribute(0b11, new ByteBuffer(new byte[] { 255, 255 }));
 
 			byte[] message = builder.Build().ToArray();
 
