@@ -57,6 +57,8 @@ namespace STUN.Message {
 			SetMessageType(stunClass, stunMethod);
 			this.buffer.PutAt(4, STUNHeader.MAGIC_COOKIE);
 			SetTransaction(transaction);
+
+			UpdateHeaderAttributesLength(ref this.buffer, this.buffer.Position);
 		}
 
 		/// <summary>

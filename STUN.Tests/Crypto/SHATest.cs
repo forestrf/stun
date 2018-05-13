@@ -41,13 +41,13 @@ namespace STUN.Crypto {
 
 			for (int keyLength = 0; keyLength < key.Length; keyLength++) {
 				for (int dataLength = 0; dataLength < bytes512.Length; dataLength++) {
-					HMAC_SHA1.ComputeHash(key, keyLength, bytes512, 0, dataLength, output, 0);
+					HMAC_SHA1.ComputeHash(new ByteBuffer(key, 0, keyLength), new ByteBuffer(bytes512, 0, dataLength), output, 0);
 					Assert.AreEqual(new HMACSHA1(new ByteBuffer(key, 0, keyLength).ToArray()).ComputeHash(bytes512, 0, dataLength), output);
 				}
 			}
 
 
-			HMAC_SHA1.ComputeHash(key, key.Length, bytes512, 40, 200, output, 0);
+			HMAC_SHA1.ComputeHash(new ByteBuffer(key, 0, key.Length), new ByteBuffer(bytes512, 40, 200), output, 0);
 			Assert.AreEqual(new HMACSHA1(key).ComputeHash(bytes512, 40, 200), output);
 		}
 	}

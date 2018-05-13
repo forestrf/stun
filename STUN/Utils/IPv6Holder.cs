@@ -11,7 +11,7 @@ namespace STUN.Utils {
 		public IPv6Holder(IPAddress address, bool tryUsingReflection = true) {
 			if (tryUsingReflection) {
 				if (field != null) {
-					ushort[] m_Numbers = (ushort[]) field.GetValue(address);
+					var m_Numbers = (ushort[]) field.GetValue(address);
 					msb = ((ulong) m_Numbers[0] << 48) | ((ulong) m_Numbers[1] << 32) | (uint) (m_Numbers[2] << 16) | m_Numbers[3];
 					lsb = ((ulong) m_Numbers[4] << 48) | ((ulong) m_Numbers[5] << 32) | (uint) (m_Numbers[6] << 16) | m_Numbers[7];
 					return;
