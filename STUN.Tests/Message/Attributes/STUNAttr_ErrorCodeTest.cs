@@ -82,7 +82,7 @@ namespace STUN.Message.Attributes {
 				builder.Append((char) (i * 5));
 			}
 
-			var msg = new STUNMessageBuilder(new byte[256],
+			var msg = new STUNMessageBuilder(null,
 				STUNClass.Success, STUNMethod.Binding,
 				new Transaction(new byte[12] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
 			msg.WriteAttribute(new STUNAttr_ErrorCode(543, builder.ToString()));

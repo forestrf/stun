@@ -29,8 +29,9 @@ namespace STUN.Message {
 	/// A message builder for well-formed STUN messages.
 	/// </summary>
 	public struct STUNMessageBuilder {
-		private static readonly int MINIMUM_BUFFER_SIZE = 512;
 		internal const int HEADER_LENGTH = 20;
+		private const int MINIMUM_BUFFER_SIZE = HEADER_LENGTH;
+		public static int AUTOMATIC_BUFFER_SIZE = 2048;
 
 		private ByteBuffer buffer;
 
@@ -42,7 +43,7 @@ namespace STUN.Message {
 
 		public STUNMessageBuilder(ByteBuffer buffer, STUNClass stunClass, STUNMethod stunMethod, Transaction transaction) {
 			if (!buffer.HasData() || buffer.Length < MINIMUM_BUFFER_SIZE) {
-				this.buffer = new ByteBuffer(new byte[MINIMUM_BUFFER_SIZE]);
+				this.buffer = new ByteBuffer(new byte[AUTOMATIC_BUFFER_SIZE]);
 				Logger.Warn("The buffer is null or not large enough (" + MINIMUM_BUFFER_SIZE + " bytes). A different internal buffer has been allocated");
 			}
 			else {

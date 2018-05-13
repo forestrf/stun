@@ -55,7 +55,7 @@ namespace STUN.Message {
 		[Test]
 		public void resultingSizeZeroLValue() {
 			ByteBuffer result = new ByteBuffer(new byte[1024]);
-			STUNTypeLengthValue.Value(0, new ByteBuffer(new byte[0]), ref result);
+			STUNTypeLengthValue.Value(0, new ByteBuffer(ByteBuffer.ZeroLengthBuffer), ref result);
 
 			Assert.AreEqual(4, result.Position);
 		}

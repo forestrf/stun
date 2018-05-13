@@ -11,7 +11,7 @@ namespace STUN.Message {
 		public readonly STUNClass stunClass;
 		public readonly STUNMethod stunMethod;
 		public readonly ushort length;
-		public readonly Transaction transaction;
+		public Transaction transaction; // Not readonly to allow passing it by ref, but changing it does not change the internal buffer
 		public readonly bool isValid;
 		public ByteBuffer buffer;
 
