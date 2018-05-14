@@ -2,11 +2,11 @@
 
 namespace STUN {
 	public interface ILogger {
-		void Error(string message, ConsoleColor FC, ConsoleColor BC);
-		void Warn(string message, ConsoleColor FC, ConsoleColor BC);
-		void Info(string message, ConsoleColor FC, ConsoleColor BC);
-		void Debug(string message, ConsoleColor FC, ConsoleColor BC);
-		void Trace(string message, ConsoleColor FC, ConsoleColor BC);
-		void TraceVerbose(string message, ConsoleColor FC, ConsoleColor BC);
+		void Error(string message);
+		void Warn(string message);
+		void Info(string message);
+		void Debug(string message);
+		void Trace(string message);
+		void TraceVerbose(string message);
 	}
 }
