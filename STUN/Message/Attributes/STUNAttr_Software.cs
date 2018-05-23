@@ -10,7 +10,7 @@ namespace STUN.Message.Attributes {
 		public string software;
 
 		public STUNAttr_Software(string software) {
-			this.software = software;
+			this.software = null != software ? software : "";
 		}
 
 		public STUNAttr_Software(STUNAttr attr) : this() {

@@ -14,7 +14,7 @@ namespace STUN.Message.Attributes {
 		}
 
 		public STUNAttr_MessageIntegrity(string key) {
-			this.key = key;
+			this.key = null != key ? key : "";
 		}
 
 		public void WriteToBuffer(ref ByteBuffer buffer) {

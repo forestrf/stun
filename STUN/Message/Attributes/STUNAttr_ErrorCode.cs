@@ -12,7 +12,7 @@ namespace STUN.Message.Attributes {
 
 		public STUNAttr_ErrorCode(ushort code, string reason) {
 			this.code = code;
-			this.reason = reason;
+			this.reason = null != reason ? reason : "";
 		}
 
 		public STUNAttr_ErrorCode(STUNAttr attr) : this() {

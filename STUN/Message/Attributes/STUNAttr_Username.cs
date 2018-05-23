@@ -11,7 +11,7 @@ namespace STUN.Message.Attributes {
 		public string usernameInString;
 
 		public STUNAttr_Username(string value) : this() {
-			usernameInString = value;
+			usernameInString = null != value ? value : "";
 		}
 
 		public STUNAttr_Username(ByteBuffer value) : this() {
