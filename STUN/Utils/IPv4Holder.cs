@@ -3,7 +3,7 @@ using System;
 using System.Net;
 
 namespace STUN.Utils {
-	public struct IPv4Holder {
+	public struct IPv4Holder : IEquatable<IPv4Holder> {
 		internal uint bits;
 
 		public IPv4Holder(IPAddress address) {
@@ -26,6 +26,10 @@ namespace STUN.Utils {
 			buffer.Put(bits);
 
 			return new IPAddress(address);
+		}
+
+		public bool Equals(IPv4Holder other) {
+			return bits == other.bits;
 		}
 
 		public byte this[int i] {

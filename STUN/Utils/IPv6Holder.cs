@@ -1,9 +1,10 @@
 ﻿using BBuffer;
+using System;
 using System.Net;
 using System.Reflection;
 
 namespace STUN.Utils {
-	public struct IPv6Holder {
+	public struct IPv6Holder : IEquatable<IPv6Holder> {
 		private static FieldInfo field = typeof(IPAddress).GetField("m_Numbers", BindingFlags.NonPublic | BindingFlags.Instance);
 
 		internal ulong msb, lsb;
@@ -39,7 +40,11 @@ namespace STUN.Utils {
 
 			return new IPAddress(address);
 		}
-		
+
+		public bool Equals(IPv6Holder other) {
+			return msb == other.msb && lsb == other.lsb;
+		}
+
 		public byte this[int i] {
 			get {
 				if (i < 8) {
