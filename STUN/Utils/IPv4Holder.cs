@@ -27,5 +27,14 @@ namespace STUN.Utils {
 
 			return new IPAddress(address);
 		}
+
+		public byte this[int i] {
+			get {
+				return (byte) (0xffu & (bits >> ((3 - i) * 8)));
+			}
+			set {
+				bits = (bits & (~(0xffu << ((3 - i) * 8)))) | ((uint) value << ((3 - i) * 8));
+			}
+		}
 	}
 }

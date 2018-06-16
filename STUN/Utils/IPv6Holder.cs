@@ -39,5 +39,24 @@ namespace STUN.Utils {
 
 			return new IPAddress(address);
 		}
+		
+		public byte this[int i] {
+			get {
+				if (i < 8) {
+					return (byte) (0xff & (msb >> ((7 - i - 8) * 8)));
+				}
+				else {
+					return (byte) (0xff & (lsb >> ((7 - i) * 8)));
+				}
+			}
+			set {
+				if (i < 8) {
+					msb = (msb & (~(0xfful << ((7 - i) * 8)))) | ((ulong) value << ((7 - i) * 8));
+				}
+				else {
+					lsb = (lsb & (~(0xfful << ((7 - i - 8) * 8)))) | ((ulong) value << ((7 - i - 8) * 8));
+				}
+			}
+		}
 	}
 }
