@@ -1,7 +1,7 @@
 STUN
 ====
 Ported by ASH KATCHAP from [hf/stun](https://github.com/hf/stun)
-Needs the library [BBuffers](https://github.com/forestrf/BBuffer)
+Needs the libraries [BBuffers](https://github.com/forestrf/BBuffer) and [NoGcSockets](https://github.com/forestrf/No-gc-sockets) 
 
 This is a small, pure-C# library that implements the STUN message format with a message builder, a message parser, and its attributes.
 

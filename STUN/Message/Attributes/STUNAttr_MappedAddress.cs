@@ -1,4 +1,5 @@
 using BBuffer;
+using NoGcSockets;
 using STUN.Message.Enums;
 using STUN.Utils;
 using System;
@@ -30,6 +31,18 @@ namespace STUN.Message.Attributes {
 				default:
 					throw new Exception();
 			}
+			this.port = port;
+		}
+		public STUNAttr_MappedAddress(IPv4Holder ipv4, ushort port) {
+			family = AddressFamily.IPv4;
+			this.ipv4 = ipv4;
+			ipv6 = new IPv6Holder();
+			this.port = port;
+		}
+		public STUNAttr_MappedAddress(IPv6Holder ipv6, ushort port) {
+			family = AddressFamily.IPv6;
+			ipv4 = new IPv4Holder();
+			this.ipv6 = ipv6;
 			this.port = port;
 		}
 

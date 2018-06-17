@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer", "..\BBuffer\BBuff
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer.Tests", "..\BBuffer\BBuffer.Tests\BBuffer.Tests.csproj", "{A2E33957-51EC-47A7-B5CC-5383C390FD25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets", "..\No-gc-sockets\NoGcSockets\NoGcSockets.csproj", "{822AC68E-35C3-4AAD-8F00-3BD0E445743F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets.Tests", "..\No-gc-sockets\NoGcSockets.Tests\NoGcSockets.Tests.csproj", "{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A2E33957-51EC-47A7-B5CC-5383C390FD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E33957-51EC-47A7-B5CC-5383C390FD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E33957-51EC-47A7-B5CC-5383C390FD25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{822AC68E-35C3-4AAD-8F00-3BD0E445743F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{822AC68E-35C3-4AAD-8F00-3BD0E445743F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{822AC68E-35C3-4AAD-8F00-3BD0E445743F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{822AC68E-35C3-4AAD-8F00-3BD0E445743F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
