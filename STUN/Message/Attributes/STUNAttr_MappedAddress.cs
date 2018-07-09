@@ -15,6 +15,14 @@ namespace STUN.Message.Attributes {
 		private AddressFamily family;
 
 		public STUNAttr_MappedAddress(IPEndPoint endPoint) : this(endPoint.Address, (ushort) endPoint.Port) { }
+		public STUNAttr_MappedAddress(IPEndPointStruct endPoint) {
+			if (System.Net.Sockets.AddressFamily.InterNetwork == endPoint.addressFamily) {
+				this = new STUNAttr_MappedAddress(endPoint.ipv4, endPoint.port);
+			}
+			else {
+				this = new STUNAttr_MappedAddress(endPoint.ipv6, endPoint.port);
+			}
+		}
 
 		public STUNAttr_MappedAddress(IPAddress address, ushort port) {
 			switch (address.AddressFamily) {
@@ -89,6 +97,15 @@ namespace STUN.Message.Attributes {
 
 		public IPEndPoint ToIPEndPoint() {
 			return new IPEndPoint(isIPv4() ? ipv4.ToIPAddress() : ipv6.ToIPAddress(), port);
+		}
+
+		public IPEndPointStruct ToIPEndPointStruct() {
+			if (AddressFamily.IPv4 == family) {
+				return new IPEndPointStruct(ipv4, port);
+			}
+			else {
+				return new IPEndPointStruct(ipv6, port);
+			}
 		}
 
 		public override string ToString() {
