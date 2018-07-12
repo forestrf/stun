@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using STUN.Crypto;
 using STUN.Message.Enums;
 using System.Collections.Generic;
 

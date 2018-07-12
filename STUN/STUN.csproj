@@ -38,9 +38,6 @@
     <Compile Include="Message\Attributes\STUNAttr_IceControlling.cs" />
     <Compile Include="Message\Attributes\STUNAttr_IceControlled.cs" />
     <Compile Include="Utils\AddressFamily.cs" />
-    <Compile Include="Crypto\Crc32.cs" />
-    <Compile Include="Crypto\HMACSHA1.cs" />
-    <Compile Include="Crypto\SHA.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\InternalLogger.cs" />
     <Compile Include="Logger\Logger.cs" />
@@ -69,6 +66,10 @@
     <ProjectReference Include="..\..\BBuffer\BBuffer\BBuffer.csproj">
       <Project>{11aa562b-3ab6-4cdd-a8a5-1ee4b95b03e6}</Project>
       <Name>BBuffer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HashUtils\HashUtils\HashUtils.csproj">
+      <Project>{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}</Project>
+      <Name>HashUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\No-gc-sockets\NoGcSockets\NoGcSockets.csproj">
       <Project>{822ac68e-35c3-4aad-8f00-3bd0e445743f}</Project>

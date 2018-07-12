@@ -1,5 +1,5 @@
 using BBuffer;
-using STUN.Crypto;
+using HashUtils;
 using STUN.Message.Enums;
 
 namespace STUN.Message.Attributes {

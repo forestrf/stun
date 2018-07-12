@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets", "..\No-gc-soc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets.Tests", "..\No-gc-sockets\NoGcSockets.Tests\NoGcSockets.Tests.csproj", "{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils", "..\HashUtils\HashUtils\HashUtils.csproj", "{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils.Tests", "..\HashUtils\HashUtils.Tests\HashUtils.Tests.csproj", "{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
