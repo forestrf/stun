@@ -58,7 +58,8 @@ namespace STUN.Message {
 				var attr = new STUNAttr(ref buffer);
 				if (attr.isValid) {
 					attributes.Add(attr);
-				} else {
+				}
+				else {
 					return;
 				}
 			}

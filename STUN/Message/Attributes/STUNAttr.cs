@@ -45,7 +45,8 @@ namespace STUN.Message.Attributes {
 					if (i < data.Length - 1) s.Append(":");
 				}
 				s.Append("\n");
-			} else {
+			}
+			else {
 				s.Append("Invalid attribute (length too large)").Append("\n");
 			}
 
