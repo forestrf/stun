@@ -71,7 +71,7 @@
       <Project>{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}</Project>
       <Name>HashUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\No-gc-sockets\NoGcSockets\NoGcSockets.csproj">
+    <ProjectReference Include="..\..\NoGcSockets\NoGcSockets\NoGcSockets.csproj">
       <Project>{822ac68e-35c3-4aad-8f00-3bd0e445743f}</Project>
       <Name>NoGcSockets</Name>
     </ProjectReference>
