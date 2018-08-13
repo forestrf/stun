@@ -21,7 +21,7 @@ namespace STUN.Message {
 		/// <param name="inputStream">The input stream, must not be null</param>
 		public STUNMessageParser(ByteBuffer inputStream, List<STUNAttr> attrs = null) : this() {
 			if (inputStream.Length < STUNMessageBuilder.HEADER_LENGTH) {
-				Logger.Error("The message is not long enough");
+				Logger.TraceVerbose("The message is not long enough");
 				return;
 			}
 			buffer = inputStream;
@@ -32,13 +32,13 @@ namespace STUN.Message {
 
 			length = buffer.GetUShort();
 			if (0 != length % 4 || STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
-				Logger.Error("STUN header reports a wrong length");
+				Logger.TraceVerbose("STUN header reports a wrong length");
 				return;
 			}
 
 			uint magickCookie = buffer.GetUInt();
 			if (STUNHeader.MAGIC_COOKIE != magickCookie) {
-				Logger.Warn("Wrong Magic Cookie");
+				Logger.Trace("Wrong Magic Cookie");
 				return;
 			}
 
