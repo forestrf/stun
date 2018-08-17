@@ -2,7 +2,6 @@ using BBuffer;
 using NoGcSockets;
 using STUN.Message.Enums;
 using STUN.Utils;
-using System;
 using System.Net;
 
 namespace STUN.Message.Attributes {
