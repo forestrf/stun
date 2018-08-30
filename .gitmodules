@@ -1,0 +1,9 @@
+[submodule "BBuffer"]
+	path = BBuffer
+	url = https://github.com/forestrf/BBuffer.git
+[submodule "HashUtils"]
+	path = HashUtils
+	url = https://github.com/forestrf/HashUtils.git
+[submodule "No-gc-sockets"]
+	path = No-gc-sockets
+	url = https://github.com/forestrf/No-gc-sockets.git

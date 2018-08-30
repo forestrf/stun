@@ -22,7 +22,6 @@
 
 using BBuffer;
 using NUnit.Framework;
-using STUN.Message.Enums;
 
 namespace STUN.Message {
 	/**

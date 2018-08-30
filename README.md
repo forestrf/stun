@@ -2,9 +2,9 @@ STUN
 ====
 Ported by ASH KATCHAP from [hf/stun](https://github.com/hf/stun)
 Needs the libraries: 
-[HashUtils](https://github.com/forestrf/HashUtils)
-[BBuffers](https://github.com/forestrf/BBuffer), 
-[NoGcSockets](https://github.com/forestrf/No-gc-sockets), 
+[HashUtils](https://github.com/forestrf/HashUtils), 
+[BBuffers](https://github.com/forestrf/BBuffer) and 
+[NoGcSockets](https://github.com/forestrf/No-gc-sockets). This repository is configured to download them thanks to git submodules.
 
 This is a small, pure-C# library that implements the STUN message format with a message builder, a message parser, and its attributes.
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace STUN {
+﻿namespace STUN {
 	public interface ILogger {
 		void Error(string message);
 		void Warn(string message);
