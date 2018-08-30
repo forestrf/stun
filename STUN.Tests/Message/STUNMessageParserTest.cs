@@ -34,7 +34,7 @@ namespace STUN.Message {
 	[TestFixture]
 	public class STUNMessageParserTest {
 		[Test]
-		public void parsing() {
+		public void Parsing() {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Error, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1));
@@ -81,14 +81,14 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void shortHeader() {
+		public void ShortHeader() {
 			List<STUNAttr> attrs = new List<STUNAttr>();
 			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]), attrs);
 			Assert.IsFalse(parser.isValid);
 		}
 
 		[Test]
-		public void headerDoesNotStartWith00() {
+		public void HeaderDoesNotStartWith00() {
 			byte[] header = new byte[20];
 			header[0] = 255;
 
@@ -98,7 +98,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void lengthNotAMultipleOf4() {
+		public void LengthNotAMultipleOf4() {
 			byte[] header = new byte[20];
 
 			header[2] = 0;
@@ -110,7 +110,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void noTLV() {
+		public void NoTLV() {
 			byte[] header = new byte[20];
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
@@ -119,7 +119,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void eosAtReadingFirstTLVHeader() {
+		public void EosAtReadingFirstTLVHeader() {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
@@ -135,7 +135,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void eosAtReadingFirstTLVValue() {
+		public void EosAtReadingFirstTLVValue() {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
@@ -151,7 +151,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void eosAtReadingFirstTLVPadding() {
+		public void EosAtReadingFirstTLVPadding() {
 			STUNMessageBuilder builder = new STUNMessageBuilder(null,
 				STUNClass.Request, STUNMethod.Binding,
 				new Transaction(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10));
@@ -167,7 +167,7 @@ namespace STUN.Message {
 		}
 
 		[Test]
-		public void wrongLengthOfAttributes() {
+		public void WrongLengthOfAttributes() {
 			byte[] reference = new byte[] {
 				0x00, 0x01, 0x00, 0x2C, 0x21, 0x12, 0xA4, 0x42, 0x0A, 0x14, 0x1E, 0x28, 0x32, 0x3C, 0x46, 0x50,
 				0x5A, 0x64, 0x6E, 0x78, 0x00, 0x06, 0x00, 0x03, 0x61, 0x3A, 0x62, 0x00, 0x00, 0x24, 0x00, 0x04,
@@ -175,21 +175,19 @@ namespace STUN.Message {
 				0xF5, 0xBB, 0xC0, 0x2D, 0xA6, 0xDE, 0x64, 0x4B, 0x36, 0xF8, 0xB6, 0xBE, 0x79, 0xA0, 0xA6, 0x16
 			};
 
-			STUNMessageParser parsed;
-
-			Assert.IsTrue(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+			Assert.IsTrue(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _1));
 
 			// Length too long
 			reference[3] = 0x3c;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _2));
 
 			// Length too short
 			reference[3] = 0x04;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _3));
 
 			// Length not % 4
 			reference[3] = 0x2d;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out parsed));
+			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _4));
 		}
 	}
 }
