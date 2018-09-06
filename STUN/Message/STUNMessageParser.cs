@@ -45,7 +45,7 @@ namespace STUN.Message {
 
 			uint magickCookie = buffer.GetUInt();
 			if (STUNHeader.MAGIC_COOKIE != magickCookie) {
-				Logger.Trace("Wrong Magic Cookie");
+				Logger.TraceVerbose("Wrong Magic Cookie");
 				return;
 			}
 
