@@ -15,6 +15,13 @@ namespace STUN.Message {
 		public readonly bool isValid;
 		public ByteBuffer buffer;
 
+		/*
+		It checks that the first two
+		bits are 0, that the magic cookie field has the correct value, that
+		the message length is sensible, and that the method value is a
+		supported method
+		*/
+
 		/// <summary>
 		/// Create a parser from the input stream.
 		/// </summary>
