@@ -18,7 +18,7 @@ namespace STUN.Message {
 		/// <summary>msb</summary>
 		public byte b11;
 
-		public int Length { get { return 12; } }
+		public const ushort Length = 12;
 
 		public Transaction(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7, byte b8, byte b9, byte b10, byte b11) {
 			this.b0 = b0;

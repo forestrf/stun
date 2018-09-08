@@ -74,6 +74,7 @@
     <Compile Include="Message\Attributes\STUNAttr_XORMappedAddressTest.cs" />
     <Compile Include="Message\STUNHeaderTest.cs" />
     <Compile Include="Message\STUNMessageBuilderTest.cs" />
+    <Compile Include="Message\STUNMessageParserBenchmark.cs" />
     <Compile Include="Message\STUNMessageParserTest.cs" />
     <Compile Include="Message\STUNTypeLengthValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

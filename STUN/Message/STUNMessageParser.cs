@@ -15,42 +15,22 @@ namespace STUN.Message {
 		public readonly bool isValid;
 		public ByteBuffer buffer;
 
-		/*
-		It checks that the first two
-		bits are 0, that the magic cookie field has the correct value, that
-		the message length is sensible, and that the method value is a
-		supported method
-		*/
-
 		/// <summary>
 		/// Create a parser from the input stream.
 		/// </summary>
-		/// <param name="inputStream">The input stream, must not be null</param>
-		public STUNMessageParser(ByteBuffer inputStream, List<STUNAttr> attrs = null) : this() {
-			if (inputStream.Length < STUNMessageBuilder.HEADER_LENGTH) {
-				Logger.TraceVerbose("STUN message is not long enough. It may not be a STUN message");
-				return;
-			}
-			buffer = inputStream;
+		/// <param name="buffer">The input stream, must not be null</param>
+		public STUNMessageParser(ByteBuffer buffer, List<STUNAttr> attrs = null) : this() {
+			if (!IsValidSTUN(buffer)) return;
 
 			ushort messageType = buffer.GetUShort();
 			stunClass = (STUNClass) (STUNClassConst.Mask & messageType);
 			stunMethod = (STUNMethod) (STUNMethodConst.Mask & messageType);
-
 			length = buffer.GetUShort();
-			if (0 != length % 4 || STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) {
-				Logger.TraceVerbose("STUN header reports a wrong length. It may not be a STUN message");
-				return;
-			}
-
 			uint magickCookie = buffer.GetUInt();
-			if (STUNHeader.MAGIC_COOKIE != magickCookie) {
-				Logger.TraceVerbose("Wrong Magic Cookie");
-				return;
-			}
+			transaction = new Transaction(buffer.GetBuffer(Transaction.Length));
 
-			transaction = new Transaction(new ByteBuffer(buffer.data, buffer.absPosition));
-			buffer.Position += transaction.Length;
+			// Set buffer already, needed for FillAttributesArray and future working with this object
+			this.buffer = buffer;
 
 			if (null != attrs)
 				FillAttributesArray(attrs);
@@ -94,13 +74,14 @@ namespace STUN.Message {
 			return -1;
 		}
 
-		public static bool TryParse(ByteBuffer buffer, out STUNMessageParser parsed) {
-			if (0 == (0xFE & buffer[0])) {
-				parsed = new STUNMessageParser(buffer);
-				return parsed.isValid;
-			}
-			parsed = default(STUNMessageParser);
-			return false;
+		public static bool IsValidSTUN(ByteBuffer buffer) {
+			if (buffer.Length < STUNMessageBuilder.HEADER_LENGTH) return false;
+			if (0 != (0xFEEE & buffer.GetUShort())) return false; // Invalid STUNClass, STUNMethod or first 2 bits are not zero
+			var length = buffer.GetUShort();
+			if ((length & 0x3) != 0) return false; // Message's length must be a multiple of 4 bytes (aka the 2 least significant bits must be 0)
+			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) return false; // Reported length does mot match buffer's length
+			if (STUNHeader.MAGIC_COOKIE != buffer.GetUInt()) return false; // Magic cookie MUST match
+			return true;
 		}
 
 		/// <summary>

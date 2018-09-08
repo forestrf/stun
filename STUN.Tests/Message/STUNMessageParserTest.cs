@@ -59,7 +59,7 @@ namespace STUN.Message {
 			Assert.AreEqual(STUNMethod.Binding, parser.stunMethod);
 			var transaction = parser.transaction;
 			Assert.AreEqual(1, transaction[0]);
-			for (int i = 1; i < transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
+			for (int i = 1; i < Transaction.Length; i++) Assert.AreEqual(0, transaction[i]);
 			Assert.IsTrue(0 == parser.length % 4);
 			Assert.IsTrue(parser.isValid);
 
@@ -175,19 +175,19 @@ namespace STUN.Message {
 				0xF5, 0xBB, 0xC0, 0x2D, 0xA6, 0xDE, 0x64, 0x4B, 0x36, 0xF8, 0xB6, 0xBE, 0x79, 0xA0, 0xA6, 0x16
 			};
 
-			Assert.IsTrue(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _1));
+			Assert.IsTrue(new STUNMessageParser(new ByteBuffer(reference)).isValid);
 
 			// Length too long
 			reference[3] = 0x3c;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _2));
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
 
 			// Length too short
 			reference[3] = 0x04;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _3));
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
 
 			// Length not % 4
 			reference[3] = 0x2d;
-			Assert.IsFalse(STUNMessageParser.TryParse(new ByteBuffer(reference), out var _4));
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
 		}
 	}
 }
