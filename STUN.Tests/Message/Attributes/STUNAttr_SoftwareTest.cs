@@ -27,7 +27,7 @@ namespace STUN.Message.Attributes {
 			CollectionAssert.AreEqual(expected, stunReq.ToArray());
 
 			var attrs = new List<STUNAttr>();
-			var parser = new STUNMessageParser(stunReq, attrs);
+			var parser = new STUNMessageParser(stunReq, false, attrs);
 			Assert.IsTrue(parser.isValid);
 
 			STUNAttr_Software parsedAttr = new STUNAttr_Software();

@@ -17,7 +17,7 @@ namespace STUN.Message {
 
 			Bench("Ok", 100000, 20, (iterations) => {
 				for (int i = 0; i < iterations; i++) {
-					Assert.IsTrue(new STUNMessageParser(b).isValid);
+					Assert.IsTrue(new STUNMessageParser(b, false).isValid);
 				}
 			});
 		}

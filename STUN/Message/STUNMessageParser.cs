@@ -19,8 +19,8 @@ namespace STUN.Message {
 		/// Create a parser from the input stream.
 		/// </summary>
 		/// <param name="buffer">The input stream, must not be null</param>
-		public STUNMessageParser(ByteBuffer buffer, List<STUNAttr> attrs = null) : this() {
-			if (!IsValidSTUN(buffer)) return;
+		public STUNMessageParser(ByteBuffer buffer, bool skipValidTest, List<STUNAttr> attrs = null) : this() {
+			if (!skipValidTest && !IsValidSTUN(buffer)) return;
 
 			ushort messageType = buffer.GetUShort();
 			stunClass = (STUNClass) (STUNClassConst.Mask & messageType);
@@ -76,7 +76,9 @@ namespace STUN.Message {
 
 		public static bool IsValidSTUN(ByteBuffer buffer) {
 			if (buffer.Length < STUNMessageBuilder.HEADER_LENGTH) return false;
-			if (0 != (0xFEEE & buffer.GetUShort())) return false; // Invalid STUNClass, STUNMethod or first 2 bits are not zero
+			if (0 != (0xFE & buffer[0])) return false; // Invalid STUNClass, STUNMethod or first 2 bits are not zero
+			if (0 != (0xEE & buffer[1])) return false; // Invalid STUNClass, STUNMethod or first 2 bits are not zero
+			buffer.Position += 2;
 			var length = buffer.GetUShort();
 			if ((length & 0x3) != 0) return false; // Message's length must be a multiple of 4 bytes (aka the 2 least significant bits must be 0)
 			if (STUNMessageBuilder.HEADER_LENGTH + length != buffer.Length) return false; // Reported length does mot match buffer's length

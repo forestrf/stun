@@ -23,6 +23,7 @@
 using BBuffer;
 using STUN.Message.Attributes;
 using STUN.Message.Enums;
+using System.Collections.Generic;
 
 namespace STUN.Message {
 	/// <summary>
@@ -130,7 +131,7 @@ namespace STUN.Message {
 		}
 
 		public override string ToString() {
-			return new STUNMessageParser(Build(), new System.Collections.Generic.List<STUNAttr>()).ToString();
+			return new STUNMessageParser(Build(), false, new List<STUNAttr>()).ToString();
 		}
 	}
 }

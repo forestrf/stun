@@ -48,7 +48,7 @@ namespace STUN.Message {
 			b.AddRange(message);
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(b.ToArray(), 3), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(b.ToArray(), 3), false, attrs);
 			Assert.IsTrue(parser.isValid);
 
 			byte[] copy = new byte[20];
@@ -83,7 +83,7 @@ namespace STUN.Message {
 		[Test]
 		public void ShortHeader() {
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(new byte[19]), false, attrs);
 			Assert.IsFalse(parser.isValid);
 		}
 
@@ -93,7 +93,7 @@ namespace STUN.Message {
 			header[0] = 255;
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), false, attrs);
 			Assert.IsFalse(parser.isValid);
 		}
 
@@ -105,7 +105,7 @@ namespace STUN.Message {
 			header[3] = 3;
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), false, attrs);
 			Assert.IsFalse(parser.isValid);
 		}
 
@@ -114,7 +114,7 @@ namespace STUN.Message {
 			byte[] header = new byte[20];
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(header), false, attrs);
 			Assert.IsFalse(parser.isValid);
 		}
 
@@ -128,7 +128,7 @@ namespace STUN.Message {
 			byte[] message = builder.Build().ToArray();
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 1), false, attrs);
 
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
@@ -144,7 +144,7 @@ namespace STUN.Message {
 			byte[] message = builder.Build().ToArray();
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 1), false, attrs);
 
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
@@ -160,7 +160,7 @@ namespace STUN.Message {
 			byte[] message = builder.Build().ToArray();
 
 			List<STUNAttr> attrs = new List<STUNAttr>();
-			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1), attrs);
+			STUNMessageParser parser = new STUNMessageParser(new ByteBuffer(message, 0, 20 + 4 + 2 + 1), false, attrs);
 
 			Assert.IsFalse(parser.isValid);
 			Assert.AreEqual(0, attrs.Count, "Wrong number of attributes");
@@ -175,19 +175,19 @@ namespace STUN.Message {
 				0xF5, 0xBB, 0xC0, 0x2D, 0xA6, 0xDE, 0x64, 0x4B, 0x36, 0xF8, 0xB6, 0xBE, 0x79, 0xA0, 0xA6, 0x16
 			};
 
-			Assert.IsTrue(new STUNMessageParser(new ByteBuffer(reference)).isValid);
+			Assert.IsTrue(new STUNMessageParser(new ByteBuffer(reference), false).isValid);
 
 			// Length too long
 			reference[3] = 0x3c;
-			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference), false).isValid);
 
 			// Length too short
 			reference[3] = 0x04;
-			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference), false).isValid);
 
 			// Length not % 4
 			reference[3] = 0x2d;
-			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference)).isValid);
+			Assert.IsFalse(new STUNMessageParser(new ByteBuffer(reference), false).isValid);
 		}
 	}
 }
