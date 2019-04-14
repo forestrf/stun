@@ -7,17 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUN", "STUN\STUN.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STUN.Tests", "STUN.Tests\STUN.Tests.csproj", "{D9B4E76E-2E35-48B4-8D3C-0674276476F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer", "..\BBuffer\BBuffer\BBuffer.csproj", "{11AA562B-3AB6-4CDD-A8A5-1EE4B95B03E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer", "BBuffer\BBuffer\BBuffer.csproj", "{11AA562B-3AB6-4CDD-A8A5-1EE4B95B03E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer.Tests", "..\BBuffer\BBuffer.Tests\BBuffer.Tests.csproj", "{A2E33957-51EC-47A7-B5CC-5383C390FD25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BBuffer.Tests", "BBuffer\BBuffer.Tests\BBuffer.Tests.csproj", "{A2E33957-51EC-47A7-B5CC-5383C390FD25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets", "..\No-gc-sockets\NoGcSockets\NoGcSockets.csproj", "{822AC68E-35C3-4AAD-8F00-3BD0E445743F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets", "No-gc-sockets\NoGcSockets\NoGcSockets.csproj", "{822AC68E-35C3-4AAD-8F00-3BD0E445743F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets.Tests", "..\No-gc-sockets\NoGcSockets.Tests\NoGcSockets.Tests.csproj", "{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoGcSockets.Tests", "No-gc-sockets\NoGcSockets.Tests\NoGcSockets.Tests.csproj", "{4E5C3781-1F62-4BB6-9363-DE1AFDC7E8EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils", "..\HashUtils\HashUtils\HashUtils.csproj", "{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils", "HashUtils\HashUtils\HashUtils.csproj", "{A1C99CC4-1FF8-4B0C-A805-5248E8A56B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils.Tests", "..\HashUtils\HashUtils.Tests\HashUtils.Tests.csproj", "{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashUtils.Tests", "HashUtils\HashUtils.Tests\HashUtils.Tests.csproj", "{FA7A3029-8DB1-4F0E-8BB6-7EB1797F892B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
